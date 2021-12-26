@@ -20,6 +20,7 @@ class _ReaderScreenState extends State<ReaderScreen>
   StackCollection<PessoaCategory> previousCategories;
   PessoaCategory? currentCategory;
   PessoaText? currentText;
+  bool isInIndex = true;
 
   _ReaderScreenState()
       : previousCategories = StackCollection(),
@@ -44,17 +45,18 @@ class _ReaderScreenState extends State<ReaderScreen>
           if (!snapshot.hasData) return CircularProgressIndicator();
 
           final fetchedCategory = snapshot.data as PessoaCategory;
-          final subCategories =
-              fetchedCategory.subcategories?.map((cat) => ListTile(
+          final subcategories =
+              fetchedCategory.subcategories?.map((subcategory) => ListTile(
                         horizontalTitleGap: 8.0,
                         minLeadingWidth: 0.0,
                         leading: Icon(Icons.subdirectory_arrow_right_rounded),
-                        title:
-                            Text(cat.title, style: bonitoTextTheme.headline4),
+                        title: Text(subcategory.title,
+                            style: bonitoTextTheme.headline4),
                         onTap: () {
                           setState(() {
                             previousCategories.push(fetchedCategory);
-                            currentCategory = cat;
+                            currentCategory = subcategory;
+                            isInIndex = false;
                           });
                         },
                       )) ??
@@ -88,7 +90,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                   color: Colors.white70,
                   tiles: [
                     ...texts,
-                    ...subCategories,
+                    ...subcategories,
                     if (previousCategories.isNotEmpty)
                       ListTile(
                           horizontalTitleGap: 8.0,
@@ -97,7 +99,13 @@ class _ReaderScreenState extends State<ReaderScreen>
                           title: Text("Back", style: bonitoTextTheme.headline4),
                           onTap: () {
                             setState(() {
-                              currentCategory = previousCategories.pop()!;
+                              final previousCategory =
+                                  previousCategories.pop()!;
+
+                              isInIndex = previousCategories.isEmpty;
+
+                              currentCategory =
+                                  isInIndex ? null : previousCategory;
                             });
                           }),
                   ],
