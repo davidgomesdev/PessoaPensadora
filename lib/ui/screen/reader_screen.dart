@@ -35,7 +35,7 @@ class _ReaderScreenState extends State<ReaderScreen>
       : currentCategory = initialCategory,
         previousCategories = StackCollection(),
         // // TODO: this is only when debugging
-        // currentText = initialCategory.subcategories[0].texts[0],
+        currentText = initialCategory.subcategories![0].texts[0],
         super();
 
   @override
@@ -81,33 +81,36 @@ class _ReaderScreenState extends State<ReaderScreen>
           child: SafeArea(
         child: SlideTransition(
           position: _offsetAnimation,
-          child: ListView(padding: EdgeInsets.only(top: 24.0), children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                currentCategory.title,
-                style: bonitoTextTheme.headline3,
+          child: ListView(
+            padding: EdgeInsets.only(top: 24.0),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  currentCategory.title,
+                  style: bonitoTextTheme.headline3,
+                ),
               ),
-            ),
-            ...ListTile.divideTiles(
-              color: Colors.white70,
-              tiles: [
-                ...texts,
-                ...subCategories,
-                if (previousCategories.isNotEmpty)
-                  ListTile(
-                      horizontalTitleGap: 8.0,
-                      minLeadingWidth: 0.0,
-                      leading: Icon(Icons.arrow_back_rounded),
-                      title: Text("Back", style: bonitoTextTheme.headline4),
-                      onTap: () {
-                        setState(() {
-                          currentCategory = previousCategories.pop()!;
-                        });
-                      }),
-              ],
-            ),
-          ]),
+              ...ListTile.divideTiles(
+                color: Colors.white70,
+                tiles: [
+                  ...texts,
+                  ...subCategories,
+                  if (previousCategories.isNotEmpty)
+                    ListTile(
+                        horizontalTitleGap: 8.0,
+                        minLeadingWidth: 0.0,
+                        leading: Icon(Icons.arrow_back_rounded),
+                        title: Text("Back", style: bonitoTextTheme.headline4),
+                        onTap: () {
+                          setState(() {
+                            currentCategory = previousCategories.pop()!;
+                          });
+                        }),
+                ],
+              ),
+            ],
+          ),
         ),
       )),
       body: Container(
@@ -120,6 +123,7 @@ class _ReaderScreenState extends State<ReaderScreen>
             ));
           } else {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 24.0),
@@ -128,16 +132,17 @@ class _ReaderScreenState extends State<ReaderScreen>
                           style: bonitoTextTheme.subtitle2)),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: Center(
-                      child: Text(currentText!.title,
-                          style: bonitoTextTheme.subtitle1)),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 16.0),
+                  child: Text(currentText!.title,
+                      style: bonitoTextTheme.subtitle1),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Text(
                     currentText!.content,
-                    textAlign: TextAlign.start,
+                    textAlign: TextAlign.left,
+                    style: bonitoTextTheme.bodyText2!.copyWith(height: 1.4),
                   ),
                 )
               ],
