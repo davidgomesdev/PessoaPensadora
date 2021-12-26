@@ -19,18 +19,6 @@ class _ReaderScreenState extends State<ReaderScreen>
   PessoaCategory currentCategory;
   PessoaText? currentText;
 
-  late final AnimationController _controller = AnimationController(
-    duration: const Duration(seconds: 2),
-    vsync: this,
-  );
-  late final Animation<Offset> _offsetAnimation = Tween<Offset>(
-    begin: Offset.zero,
-    end: const Offset(1.5, 0.0),
-  ).animate(CurvedAnimation(
-    parent: _controller,
-    curve: Curves.elasticIn,
-  ));
-
   _ReaderScreenState(PessoaCategory initialCategory)
       : currentCategory = initialCategory,
         previousCategories = StackCollection(),
@@ -54,10 +42,6 @@ class _ReaderScreenState extends State<ReaderScreen>
                 setState(() {
                   previousCategories.push(currentCategory);
                   currentCategory = cat;
-
-                  _controller.animateTo(0,
-                      duration: Duration(milliseconds: 1500),
-                      curve: Curves.easeIn);
                 });
               },
             )) ??
@@ -79,38 +63,35 @@ class _ReaderScreenState extends State<ReaderScreen>
       appBar: AppBar(),
       drawer: Drawer(
           child: SafeArea(
-        child: SlideTransition(
-          position: _offsetAnimation,
-          child: ListView(
-            padding: EdgeInsets.only(top: 24.0),
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  currentCategory.title,
-                  style: bonitoTextTheme.headline3,
-                ),
+        child: ListView(
+          padding: EdgeInsets.only(top: 24.0),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                currentCategory.title,
+                style: bonitoTextTheme.headline3,
               ),
-              ...ListTile.divideTiles(
-                color: Colors.white70,
-                tiles: [
-                  ...texts,
-                  ...subCategories,
-                  if (previousCategories.isNotEmpty)
-                    ListTile(
-                        horizontalTitleGap: 8.0,
-                        minLeadingWidth: 0.0,
-                        leading: Icon(Icons.arrow_back_rounded),
-                        title: Text("Back", style: bonitoTextTheme.headline4),
-                        onTap: () {
-                          setState(() {
-                            currentCategory = previousCategories.pop()!;
-                          });
-                        }),
-                ],
-              ),
-            ],
-          ),
+            ),
+            ...ListTile.divideTiles(
+              color: Colors.white70,
+              tiles: [
+                ...texts,
+                ...subCategories,
+                if (previousCategories.isNotEmpty)
+                  ListTile(
+                      horizontalTitleGap: 8.0,
+                      minLeadingWidth: 0.0,
+                      leading: Icon(Icons.arrow_back_rounded),
+                      title: Text("Back", style: bonitoTextTheme.headline4),
+                      onTap: () {
+                        setState(() {
+                          currentCategory = previousCategories.pop()!;
+                        });
+                      }),
+              ],
+            ),
+          ],
         ),
       )),
       body: Container(
@@ -155,7 +136,6 @@ class _ReaderScreenState extends State<ReaderScreen>
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 }
