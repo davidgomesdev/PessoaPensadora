@@ -10,7 +10,10 @@ final _getCategoryLinkRegex = new RegExp("'(/categorias/toggle/.*?)'");
 
 final client = RetryClient(http.Client(),
     retries: 5,
-    when: (response) => [500, 502, 503].contains(response.statusCode));
+    when: (response) => [500, 502, 503].contains(response.statusCode),
+    onRetry: (req, res, count) {
+      print("$req -> $res @ $count");
+    });
 
 class ArquivoPessoaService {
   String? cookie;
@@ -32,17 +35,38 @@ class ArquivoPessoaService {
   }
 
   Future<PessoaCategory> fetchCategory(PessoaCategory category) async {
-    final categoryUrl = category._link;
+    final categoryLink = category._link;
 
-    if (categoryUrl == null)
+    if (categoryLink == null)
       return Future.error(Exception("No URL for ${category.title}"));
 
-    final categoryHtml = (await _getHtmlDoc(categoryUrl)).body;
+    final categoryHtml = (await _getHtmlDoc(categoryLink)).body;
 
     if (categoryHtml == null)
       return Future.error("No html on ${category.title}");
 
     return _parseCategory(categoryHtml);
+  }
+
+  Future<PessoaText> fetchText(PessoaText text) async {
+    final textLink = text._link;
+
+    if (textLink == null)
+      return Future.error(Exception("No URL for ${text.title}"));
+
+    final textHtml = await _getHtmlDoc(textLink);
+
+    final textTitle =
+        textHtml.getElementsByClassName("titulo-texto").first.text;
+    final textContent = textHtml.firstWhereOrNull<String>(
+        (e, param) => e.getElementsByClassName(param).firstOrNull?.text ?? '',
+        ["texto-poesia", "texto-prosa"]);
+
+    if (textContent == null)
+      throw Exception("No text content in HTML $_BASE_URL$textLink");
+
+    return PessoaText._internal(textLink,
+        title: textTitle, content: textContent);
   }
 
   Future<Document> _getHtmlDoc(String link) async {
@@ -58,10 +82,6 @@ class ArquivoPessoaService {
 
     final categoryHtml = await _getHtmlDoc(categoryLink);
     final subcategoriesHtml = categoryHtml.getElementsByClassName("categoria");
-    final textsLinks = categoryHtml
-        .querySelectorAll("a.titulo-texto")
-        .map((e) => e.attributes["href"]!)
-        .toList();
 
     final subCategories = subcategoriesHtml.map((cat) {
       final subcategoryLink = _getCategoryLink(category);
@@ -70,8 +90,10 @@ class ArquivoPessoaService {
           title: cat.getElementsByClassName("titulo-categoria").first.text,
           texts: []);
     });
-    final texts =
-        await Future.wait(textsLinks.map((e) async => await _parseText(e)));
+    final texts = categoryHtml
+        .querySelectorAll("a.titulo-texto")
+        .map((e) => PessoaText._internal(e.attributes["href"]!, title: e.text))
+        .toList();
 
     return PessoaCategory._internal(categoryLink,
         title: title, texts: texts, subcategories: subCategories);
@@ -86,21 +108,6 @@ class ArquivoPessoaService {
 
     return categoryLink;
   }
-
-  Future<PessoaText> _parseText(String link) async {
-    final textHtml = await _getHtmlDoc(link);
-
-    final textTitle =
-        textHtml.getElementsByClassName("titulo-texto").first.text;
-    final textContent = textHtml.firstWhereOrNull<String>(
-        (e, param) => e.getElementsByClassName(param).firstOrNull?.text ?? '',
-        ["texto-poesia", "texto-prosa"]);
-
-    if (textContent == null)
-      throw Exception("No text content in HTML $_BASE_URL$link");
-
-    return PessoaText(textTitle, textContent);
-  }
 }
 
 class PessoaCategory {
@@ -109,13 +116,17 @@ class PessoaCategory {
   final Iterable<PessoaText> texts;
   final Iterable<PessoaCategory>? subcategories;
 
-  PessoaCategory._internal(String _link,
+  PessoaCategory._internal(String? _link,
       {required String title, required this.texts, this.subcategories})
       : _link = _link,
         title = title.trim();
 
-  PessoaCategory({required this.title, required this.texts, this.subcategories})
-      : _link = null;
+  PessoaCategory(
+      {required String title,
+      required Iterable<PessoaText> texts,
+      Iterable<PessoaCategory>? subcategories})
+      : this._internal(null,
+            title: title, texts: texts, subcategories: subcategories);
 }
 
 class PessoaIndex extends PessoaCategory {
@@ -125,12 +136,16 @@ class PessoaIndex extends PessoaCategory {
 }
 
 class PessoaText {
+  final String? _link;
   final String title;
-  final String content;
+  final String? content;
 
-  PessoaText(String title, String content)
+  PessoaText._internal(this._link, {required String title, String? content})
       : title = title.trim(),
-        content = content.trim();
+        content = content?.trim();
+
+  PessoaText({required String title, required String? content})
+      : this._internal(null, title: title, content: content);
 }
 
 extension HandyFetching<T> on T {

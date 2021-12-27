@@ -126,33 +126,44 @@ class _ReaderScreenState extends State<ReaderScreen>
               style: bonitoTextTheme.headline2,
             ));
           } else {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 24.0),
-                    child: Center(
-                        child: Text(currentCategory?.title ?? 'Índice',
-                            style: bonitoTextTheme.subtitle2)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 16.0),
-                    child: Text(currentText.title,
-                        style: bonitoTextTheme.subtitle1),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      currentText.content,
-                      textAlign: TextAlign.left,
-                      style: bonitoTextTheme.bodyText2!.copyWith(height: 1.4),
+            return FutureBuilder(
+                future: widget.service.fetchText(currentText),
+                builder: (ctx, snapshot) {
+                  if (snapshot.hasError) return Text("Error ${snapshot.error}");
+
+                  if (!snapshot.hasData) return CircularProgressIndicator();
+
+                  final fetchedText = snapshot.data as PessoaText;
+
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: Center(
+                              child: Text(currentCategory?.title ?? 'Índice',
+                                  style: bonitoTextTheme.subtitle2)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 16.0),
+                          child: Text(fetchedText.title,
+                              style: bonitoTextTheme.subtitle1),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            fetchedText.content ?? 'NO TEXT',
+                            textAlign: TextAlign.left,
+                            style: bonitoTextTheme.bodyText2!
+                                .copyWith(height: 1.4),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
-              ),
-            );
+                  );
+                });
           }
         }(),
       ),
