@@ -4,6 +4,8 @@ import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 
+import '../util/generic_extensions.dart';
+
 const _BASE_URL = "http://arquivopessoa.net";
 const _INDEX_LINK = "/sidebar";
 
@@ -36,7 +38,6 @@ class ArquivoPessoaService {
   }
 
   Future<PessoaCategory> fetchCategory(PessoaCategory category) async {
-    print("fetching $category");
     final link = category._link;
 
     if (link == null)
@@ -50,24 +51,24 @@ class ArquivoPessoaService {
   }
 
   Future<PessoaText> fetchText(PessoaText text) async {
-    final textLink = text._link;
+    final link = text._link;
 
-    if (textLink == null)
+    if (link == null)
       return Future.error(Exception("No URL for ${text.title}"));
 
-    final textHtml = await _getHtmlDoc(textLink);
+    final html = await _getHtmlDoc(link);
 
-    final textTitle =
-        textHtml.getElementsByClassName("titulo-texto").first.text;
-    final textContent = textHtml.firstWhereOrNull<String>(
-            (e, param) => e.getElementsByClassName(param).firstOrNull?.text ?? '',
+    final title = html.getElementsByClassName("titulo-texto").first.text;
+    final author = html.getElementsByClassName("autor").first.text;
+    final content = html.firstWhereOrNull<String>(
+        (e, param) => e.getElementsByClassName(param).firstOrNull?.text,
         ["texto-poesia", "texto-prosa"]);
 
-    if (textContent == null)
-      throw Exception("No text content in HTML $_BASE_URL$textLink");
+    if (content == null)
+      throw Exception("No text content in HTML $_BASE_URL$link");
 
-    return PessoaText._internal(textLink,
-        title: textTitle, content: textContent);
+    return PessoaText._internal(link,
+        title: title, content: content, author: author);
   }
 
   Future<Document> _getHtmlDoc(String link) async {
@@ -143,30 +144,20 @@ class PessoaText with EquatableMixin {
   final String? _link;
   final String title;
   final String? content;
+  final String? author;
 
-  PessoaText._internal(this._link, {required String title, String? content})
+  PessoaText._internal(this._link,
+      {required String title, String? content, String? author})
       : title = title.trim(),
-        content = content?.trim();
+        content = content?.trim(),
+        author = author?.trim();
 
-  PessoaText({required String title, required String? content})
-      : this._internal(null, title: title, content: content);
+  PessoaText(
+      {required String title,
+      required String? content,
+      required String? author})
+      : this._internal(null, title: title, content: content, author: author);
 
   @override
   List<Object?> get props => [_link, title];
-}
-
-extension HandyFetching<T> on T {
-  R? firstWhereOrNull<R>(R getFn(T self, String param), List<String> params) {
-    for (final param in params) {
-      final result = getFn(this, param);
-
-      if (result != null) return result;
-    }
-
-    return null;
-  }
-}
-
-extension NullableImprovement<E> on Iterable<E> {
-  E? get firstOrNull => isNotEmpty ? first : null;
 }

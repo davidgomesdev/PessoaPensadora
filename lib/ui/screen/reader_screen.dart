@@ -141,13 +141,13 @@ class _ReaderScreenState extends State<ReaderScreen>
                           padding: const EdgeInsets.only(top: 24.0),
                           child: Center(
                               child: Text(currentCategory?.title ?? 'Índice',
-                                  style: bonitoTextTheme.subtitle2)),
+                                  style: bonitoTextTheme.subtitle1)),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 16.0),
                           child: Text(fetchedText.title,
-                              style: bonitoTextTheme.subtitle1),
+                              style: bonitoTextTheme.headline5),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -157,7 +157,16 @@ class _ReaderScreenState extends State<ReaderScreen>
                             style: bonitoTextTheme.bodyText2!
                                 .copyWith(height: 1.4),
                           ),
-                        )
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Text(
+                              fetchedText.author ?? 'NO AUTHOR',
+                              style: bonitoTextTheme.subtitle2,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   );
