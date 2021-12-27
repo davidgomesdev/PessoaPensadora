@@ -5,6 +5,7 @@ class StackCollection<T> {
 
   void push(T element) {
     _queue.addLast(element);
+    _queue.forEach(print);
   }
 
   T? pop() {

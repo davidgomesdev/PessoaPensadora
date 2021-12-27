@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
@@ -21,31 +22,31 @@ class ArquivoPessoaService {
   Future<PessoaIndex> getIndex() async {
     final indexHtml = await _getHtmlDoc(_INDEX_LINK);
 
-    final categories = await Future.wait(indexHtml
+    final categories = indexHtml
         .getElementsByClassName("indice")
         .first
         .children
-        .map((category) async {
+        .map((category) {
       final subcategoryLink = _getCategoryLink(category);
       return PessoaCategory._internal(subcategoryLink,
           title: category.querySelector(".titulo-categoria")!.text, texts: []);
-    }));
+    });
 
     return PessoaIndex(categories: categories);
   }
 
   Future<PessoaCategory> fetchCategory(PessoaCategory category) async {
-    final categoryLink = category._link;
+    print("fetching $category");
+    final link = category._link;
 
-    if (categoryLink == null)
+    if (link == null)
       return Future.error(Exception("No URL for ${category.title}"));
 
-    final categoryHtml = (await _getHtmlDoc(categoryLink)).body;
+    final html = (await _getHtmlDoc(link)).documentElement;
 
-    if (categoryHtml == null)
-      return Future.error("No html on ${category.title}");
+    if (html == null) return Future.error("No html on ${category.title}");
 
-    return _parseCategory(categoryHtml);
+    return _parseCategory(link, html);
   }
 
   Future<PessoaText> fetchText(PessoaText text) async {
@@ -59,7 +60,7 @@ class ArquivoPessoaService {
     final textTitle =
         textHtml.getElementsByClassName("titulo-texto").first.text;
     final textContent = textHtml.firstWhereOrNull<String>(
-        (e, param) => e.getElementsByClassName(param).firstOrNull?.text ?? '',
+            (e, param) => e.getElementsByClassName(param).firstOrNull?.text ?? '',
         ["texto-poesia", "texto-prosa"]);
 
     if (textContent == null)
@@ -76,26 +77,23 @@ class ArquivoPessoaService {
     return parse(html);
   }
 
-  Future<PessoaCategory> _parseCategory(Element category) async {
-    final title = category.querySelector(".titulo-categoria")!.text;
-    final categoryLink = _getCategoryLink(category);
-
-    final categoryHtml = await _getHtmlDoc(categoryLink);
-    final subcategoriesHtml = categoryHtml.getElementsByClassName("categoria");
+  Future<PessoaCategory> _parseCategory(String link, Element html) async {
+    final title = html.querySelector(".titulo-categoria")!.text;
+    final subcategoriesHtml = html.getElementsByClassName("categoria");
 
     final subCategories = subcategoriesHtml.map((cat) {
-      final subcategoryLink = _getCategoryLink(category);
+      final subcategoryLink = _getCategoryLink(cat);
 
       return PessoaCategory._internal(subcategoryLink,
           title: cat.getElementsByClassName("titulo-categoria").first.text,
           texts: []);
     });
-    final texts = categoryHtml
+    final texts = html
         .querySelectorAll("a.titulo-texto")
         .map((e) => PessoaText._internal(e.attributes["href"]!, title: e.text))
         .toList();
 
-    return PessoaCategory._internal(categoryLink,
+    return PessoaCategory._internal(link,
         title: title, texts: texts, subcategories: subCategories);
   }
 
@@ -110,7 +108,7 @@ class ArquivoPessoaService {
   }
 }
 
-class PessoaCategory {
+class PessoaCategory with EquatableMixin {
   final String? _link;
   final String title;
   final Iterable<PessoaText> texts;
@@ -127,15 +125,21 @@ class PessoaCategory {
       Iterable<PessoaCategory>? subcategories})
       : this._internal(null,
             title: title, texts: texts, subcategories: subcategories);
+
+  @override
+  List<Object?> get props => [_link, title];
 }
 
-class PessoaIndex extends PessoaCategory {
+class PessoaIndex extends PessoaCategory with EquatableMixin {
   PessoaIndex({required Iterable<PessoaCategory> categories})
       : super._internal(_INDEX_LINK,
             title: "Índice", texts: [], subcategories: categories);
+
+  @override
+  List<Object?> get props => super.props;
 }
 
-class PessoaText {
+class PessoaText with EquatableMixin {
   final String? _link;
   final String title;
   final String? content;
@@ -146,6 +150,9 @@ class PessoaText {
 
   PessoaText({required String title, required String? content})
       : this._internal(null, title: title, content: content);
+
+  @override
+  List<Object?> get props => [_link, title];
 }
 
 extension HandyFetching<T> on T {

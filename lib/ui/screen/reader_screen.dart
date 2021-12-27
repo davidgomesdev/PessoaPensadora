@@ -17,10 +17,10 @@ class ReaderScreen extends StatefulWidget {
 
 class _ReaderScreenState extends State<ReaderScreen>
     with SingleTickerProviderStateMixin {
-  StackCollection<PessoaCategory> previousCategories;
+  final StackCollection<PessoaCategory> previousCategories;
+
   PessoaCategory? currentCategory;
   PessoaText? currentText;
-  bool isInIndex = true;
 
   _ReaderScreenState()
       : previousCategories = StackCollection(),
@@ -45,6 +45,7 @@ class _ReaderScreenState extends State<ReaderScreen>
           if (!snapshot.hasData) return CircularProgressIndicator();
 
           final fetchedCategory = snapshot.data as PessoaCategory;
+
           final subcategories =
               fetchedCategory.subcategories?.map((subcategory) => ListTile(
                         horizontalTitleGap: 8.0,
@@ -54,9 +55,10 @@ class _ReaderScreenState extends State<ReaderScreen>
                             style: bonitoTextTheme.headline4),
                         onTap: () {
                           setState(() {
-                            previousCategories.push(fetchedCategory);
+                            if (currentCategory != null)
+                              previousCategories.push(fetchedCategory);
+
                             currentCategory = subcategory;
-                            isInIndex = false;
                           });
                         },
                       )) ??
@@ -91,7 +93,7 @@ class _ReaderScreenState extends State<ReaderScreen>
                   tiles: [
                     ...texts,
                     ...subcategories,
-                    if (previousCategories.isNotEmpty)
+                    if (currentCategory != null)
                       ListTile(
                           horizontalTitleGap: 8.0,
                           minLeadingWidth: 0.0,
@@ -99,13 +101,9 @@ class _ReaderScreenState extends State<ReaderScreen>
                           title: Text("Back", style: bonitoTextTheme.headline4),
                           onTap: () {
                             setState(() {
-                              final previousCategory =
-                                  previousCategories.pop()!;
+                              final previousCategory = previousCategories.pop();
 
-                              isInIndex = previousCategories.isEmpty;
-
-                              currentCategory =
-                                  isInIndex ? null : previousCategory;
+                              currentCategory = previousCategory;
                             });
                           }),
                   ],
