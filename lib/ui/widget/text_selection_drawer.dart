@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pessoa_bonito/collection/Stack.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
+import 'package:pessoa_bonito/util/logger_factory.dart';
 
 class TextSelectionDrawer extends StatefulWidget {
   final ArquivoPessoaService service;
@@ -10,14 +11,14 @@ class TextSelectionDrawer extends StatefulWidget {
   final PessoaCategory? initialCategory;
 
   final Function(PessoaCategory?) setCurrentCategoryCallback;
-  final Function(PessoaText) setCurrentText;
+  final Function(PessoaText) setCurrentTextCallback;
 
   TextSelectionDrawer({
     Key? key,
     required this.service,
     required this.initialCategory,
     required this.setCurrentCategoryCallback,
-    required this.setCurrentText,
+    required this.setCurrentTextCallback,
   })  : previousCategories = StackCollection(),
         super(key: key);
 
@@ -41,18 +42,22 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   Widget build(BuildContext context) {
     final scrollController =
         ScrollController(initialScrollOffset: _currentScroll);
+
     scrollController.addListener(() {
       _currentScroll = scrollController.offset;
     });
-
-    print(currentCategory);
 
     return FutureBuilder(
         future: currentCategory == null
             ? widget.service.getIndex()
             : widget.service.fetchCategory(currentCategory!),
         builder: (ctx, snapshot) {
-          if (snapshot.hasError) return Text("Error ${snapshot.error}");
+          if (snapshot.hasError) {
+            logger.e(
+                "Error building drawer", snapshot.error, snapshot.stackTrace);
+
+            return Text("Error ${snapshot.error}");
+          }
 
           if (!snapshot.hasData) return CircularProgressIndicator();
 
@@ -71,10 +76,13 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                               widget.previousCategories.push(fetchedCategory);
 
                             setCurrentCategory(subcategory);
+
+                            logger.i('Navigated to "${subcategory.title}"');
                           });
                         },
                       )) ??
                   [];
+
           final texts = fetchedCategory.texts.map((text) => ListTile(
                 horizontalTitleGap: 8.0,
                 minLeadingWidth: 0.0,
@@ -82,7 +90,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                 title: Text(text.title, style: bonitoTextTheme.headline4),
                 onTap: () {
                   setState(() {
-                    widget.setCurrentText(text);
+                    widget.setCurrentTextCallback(text);
                     Navigator.pop(context);
                   });
                 },
@@ -117,7 +125,16 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                               final previousCategory =
                                   widget.previousCategories.pop();
 
+                              logger
+                                  .d('Setting current category to previous...');
+
                               setCurrentCategory(previousCategory);
+
+                              if (previousCategory == null)
+                                logger.i("Backed to index");
+                              else
+                                logger.i('Backed category to previous '
+                                    '"${previousCategory.title}"');
                             });
                           }),
                   ],

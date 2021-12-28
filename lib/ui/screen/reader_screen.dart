@@ -35,7 +35,7 @@ class _ReaderScreenState extends State<ReaderScreen>
         service: widget.service,
         initialCategory: currentCategory,
         setCurrentCategoryCallback: setCurrentCategory,
-        setCurrentText: setCurrentText,
+        setCurrentTextCallback: setCurrentText,
       ),
       body: Container(
         child: () {
