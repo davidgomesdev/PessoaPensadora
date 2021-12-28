@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pessoa_bonito/collection/Stack.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
+import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
 
 import '../bonito_theme.dart';
 
@@ -17,16 +17,10 @@ class ReaderScreen extends StatefulWidget {
 
 class _ReaderScreenState extends State<ReaderScreen>
     with SingleTickerProviderStateMixin {
-  final StackCollection<PessoaCategory> previousCategories;
-
   PessoaCategory? currentCategory;
   PessoaText? currentText;
 
-  double _currentDrawerScroll = 0.0;
-
-  _ReaderScreenState()
-      : previousCategories = StackCollection(),
-        super();
+  _ReaderScreenState() : super();
 
   @override
   void initState() {
@@ -37,90 +31,11 @@ class _ReaderScreenState extends State<ReaderScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      drawer: FutureBuilder(
-        future: currentCategory == null
-            ? widget.service.getIndex()
-            : widget.service.fetchCategory(currentCategory!),
-        builder: (ctx, snapshot) {
-          if (snapshot.hasError) return Text("Error ${snapshot.error}");
-
-          if (!snapshot.hasData) return CircularProgressIndicator();
-
-          final fetchedCategory = snapshot.data as PessoaCategory;
-
-          final subcategories =
-              fetchedCategory.subcategories?.map((subcategory) => ListTile(
-                        horizontalTitleGap: 8.0,
-                        minLeadingWidth: 0.0,
-                        leading: Icon(Icons.subdirectory_arrow_right_rounded),
-                        title: Text(subcategory.title,
-                            style: bonitoTextTheme.headline4),
-                        onTap: () {
-                          setState(() {
-                            if (currentCategory != null)
-                              previousCategories.push(fetchedCategory);
-
-                            currentCategory = subcategory;
-                          });
-                        },
-                      )) ??
-                  [];
-          final texts = fetchedCategory.texts.map((text) => ListTile(
-                horizontalTitleGap: 8.0,
-                minLeadingWidth: 0.0,
-                leading: Icon(Icons.text_snippet_rounded),
-                title: Text(text.title, style: bonitoTextTheme.headline4),
-                onTap: () {
-                  setState(() {
-                    currentText = text;
-                    Navigator.pop(context);
-                  });
-                },
-              ));
-
-          final scroll =
-              ScrollController(initialScrollOffset: _currentDrawerScroll);
-          scroll.addListener(() {
-            _currentDrawerScroll = scroll.offset;
-          });
-
-          return Drawer(
-              child: SafeArea(
-            child: ListView(
-              controller: scroll,
-              padding: EdgeInsets.only(top: 24.0),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    fetchedCategory.title,
-                    style: bonitoTextTheme.headline3,
-                  ),
-                ),
-                ...ListTile.divideTiles(
-                  color: Colors.white70,
-                      tiles: [
-                        ...texts,
-                        ...subcategories,
-                        if (currentCategory != null)
-                          ListTile(
-                              horizontalTitleGap: 8.0,
-                              minLeadingWidth: 0.0,
-                              leading: Icon(Icons.arrow_back_rounded),
-                              title: Text("Back", style: bonitoTextTheme.headline4),
-                              onTap: () {
-                                setState(() {
-                                  final previousCategory = previousCategories.pop();
-
-                                  currentCategory = previousCategory;
-                                });
-                              }),
-                      ],
-                    ),
-                  ],
-            ),
-          ));
-        },
+      drawer: TextSelectionDrawer(
+        service: widget.service,
+        initialCategory: currentCategory,
+        setCurrentCategoryCallback: setCurrentCategory,
+        setCurrentText: setCurrentText,
       ),
       body: Container(
         child: () {
@@ -185,6 +100,10 @@ class _ReaderScreenState extends State<ReaderScreen>
       ),
     );
   }
+
+  void setCurrentText(PessoaText text) => setState(() => currentText = text);
+
+  void setCurrentCategory(PessoaCategory? cat) => currentCategory = cat;
 
   @override
   void dispose() {

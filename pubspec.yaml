@@ -17,6 +17,7 @@ dependencies:
   html: ^0.15.0
   http: ^0.13.3
   equatable: ^2.0.3
+  logger: ^1.1.0
 
 dev_dependencies:
   flutter_test:
