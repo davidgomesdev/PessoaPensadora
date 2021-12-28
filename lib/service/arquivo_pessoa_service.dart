@@ -70,7 +70,7 @@ class ArquivoPessoaService {
 
     logger.i("Retrieved text HTML");
 
-    final title = html.getElementsByClassName("titulo-texto").first.text;
+    final title = html.getElementsByClassName("titulo-texto").first.text.trim();
     final author = html.getElementsByClassName("autor").first.text;
     final content = html.firstWhereOrNull<String>(
         (e, param) => e.getElementsByClassName(param).firstOrNull?.text,
@@ -90,13 +90,14 @@ class ArquivoPessoaService {
   }
 
   Future<PessoaCategory> _parseCategory(String link, Element html) async {
-    final title = html.querySelector(".titulo-categoria")!.text;
+    final title = html.querySelector(".titulo-categoria")!.text.trim();
     final subcategoriesHtml = html.getElementsByClassName("categoria");
 
     logger.d('Parsing "$title"');
 
     final subCategories = subcategoriesHtml.map((cat) {
-      final title = cat.getElementsByClassName("titulo-categoria").first.text;
+      final title =
+          cat.getElementsByClassName("titulo-categoria").first.text.trim();
       final link = _getCategoryLink(cat);
 
       return PessoaCategory._internal(link, title: title, texts: []);
