@@ -22,6 +22,8 @@ class _ReaderScreenState extends State<ReaderScreen>
   PessoaCategory? currentCategory;
   PessoaText? currentText;
 
+  double _currentDrawerScroll = 0.0;
+
   _ReaderScreenState()
       : previousCategories = StackCollection(),
         super();
@@ -76,9 +78,16 @@ class _ReaderScreenState extends State<ReaderScreen>
                 },
               ));
 
+          final scroll =
+              ScrollController(initialScrollOffset: _currentDrawerScroll);
+          scroll.addListener(() {
+            _currentDrawerScroll = scroll.offset;
+          });
+
           return Drawer(
               child: SafeArea(
             child: ListView(
+              controller: scroll,
               padding: EdgeInsets.only(top: 24.0),
               children: [
                 Padding(
@@ -90,25 +99,25 @@ class _ReaderScreenState extends State<ReaderScreen>
                 ),
                 ...ListTile.divideTiles(
                   color: Colors.white70,
-                  tiles: [
-                    ...texts,
-                    ...subcategories,
-                    if (currentCategory != null)
-                      ListTile(
-                          horizontalTitleGap: 8.0,
-                          minLeadingWidth: 0.0,
-                          leading: Icon(Icons.arrow_back_rounded),
-                          title: Text("Back", style: bonitoTextTheme.headline4),
-                          onTap: () {
-                            setState(() {
-                              final previousCategory = previousCategories.pop();
+                      tiles: [
+                        ...texts,
+                        ...subcategories,
+                        if (currentCategory != null)
+                          ListTile(
+                              horizontalTitleGap: 8.0,
+                              minLeadingWidth: 0.0,
+                              leading: Icon(Icons.arrow_back_rounded),
+                              title: Text("Back", style: bonitoTextTheme.headline4),
+                              onTap: () {
+                                setState(() {
+                                  final previousCategory = previousCategories.pop();
 
-                              currentCategory = previousCategory;
-                            });
-                          }),
+                                  currentCategory = previousCategory;
+                                });
+                              }),
+                      ],
+                    ),
                   ],
-                ),
-              ],
             ),
           ));
         },
