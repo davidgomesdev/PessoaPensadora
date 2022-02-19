@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:pessoa_bonito/collection/Stack.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
@@ -8,69 +9,81 @@ import 'package:pessoa_bonito/util/logger_factory.dart';
 class TextSelectionDrawer extends StatefulWidget {
   final ArquivoPessoaService service;
 
-  final StackCollection<PessoaCategory> previousCategories;
-  final PessoaCategory? initialCategory;
+  final PessoaCategory? selectedTextCategory;
 
-  // TODO: change to streams
-  final Function(PessoaCategory?) setCurrentCategoryCallback;
-  final Function(PessoaText) setCurrentTextCallback;
+  final Sink<PessoaText> selectionSink;
 
   TextSelectionDrawer({
     Key? key,
+    required this.selectionSink,
     required this.service,
-    required this.initialCategory,
-    required this.setCurrentCategoryCallback,
-    required this.setCurrentTextCallback,
-  })  : previousCategories = StackCollection(),
-        super(key: key);
+    required this.selectedTextCategory,
+  }) : super(key: key);
 
   @override
   _TextSelectionDrawerState createState() => _TextSelectionDrawerState();
 }
 
 class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
-  PessoaCategory? currentCategory;
+  StreamController<PessoaCategory?> categoryStream =
+      StreamController.broadcast();
 
   @override
   void initState() {
     super.initState();
+  }
 
-    currentCategory = widget.initialCategory;
+  @override
+  void dispose() {
+    super.dispose();
+    categoryStream.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    // prevents possible "race condition" of null
-    final currentCategory = this.currentCategory;
+    return StreamBuilder<PessoaCategory?>(
+      initialData: widget.selectedTextCategory,
+      stream: categoryStream.stream,
+      builder: (ctx, snapshot) {
+        final category = snapshot.data;
 
-    return FutureBuilder<PessoaCategory>(
-        future: currentCategory == null
-            ? widget.service.getIndex()
-            : widget.service.fetchCategory(currentCategory),
-        builder: (ctx, snapshot) {
-          if (snapshot.hasError) {
-            log.e("Error building drawer", snapshot.error, snapshot.stackTrace);
+        return FutureBuilder<PessoaCategory>(
+            future: category == null
+                ? widget.service.getIndex()
+                : widget.service
+                    .fetchCategory(category, category.previousCategory),
+            builder: (ctx, snapshot) {
+              if (snapshot.hasError) {
+                log.e("Error building drawer", snapshot.error,
+                    snapshot.stackTrace);
 
-            return Text("Error ${snapshot.error}");
-          }
+                return Text("Error ${snapshot.error}");
+              }
 
-          final category = snapshot.data;
+              final fetchedCategory = snapshot.data;
+              final isLoading =
+                  snapshot.connectionState == ConnectionState.waiting;
 
-          return Drawer(
-            child: SafeArea(
-              child: (category == null)
-                  ? Center(
-                  child: SpinKitThreeBounce(
-                    color: Colors.white,
-                    size: 24.0,
-                  ))
-                  : buildListView(category),
-            ),
-          );
-        });
+              return Drawer(
+                child: SafeArea(
+                  child: (isLoading)
+                      ? Center(
+                          child: SpinKitThreeBounce(
+                          color: Colors.white,
+                          size: 24.0,
+                        ))
+                      : buildListView(
+                          fetchedCategory!,
+                          isIndex: category == null,
+                        ),
+                ),
+              );
+            });
+      },
+    );
   }
 
-  Widget buildListView(PessoaCategory category) {
+  Widget buildListView(PessoaCategory category, {required bool isIndex}) {
     final subcategories = category.subcategories?.map((subcategory) => ListTile(
               horizontalTitleGap: 8.0,
               minLeadingWidth: 0.0,
@@ -78,10 +91,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               title: Text(subcategory.title, style: bonitoTextTheme.headline4),
               onTap: () {
                 setState(() {
-                  if (currentCategory != null)
-                    widget.previousCategories.push(category);
-
-                  setCurrentCategory(subcategory);
+                  categoryStream.add(subcategory);
 
                   log.i('Navigated to "${subcategory.title}"');
                 });
@@ -96,7 +106,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           title: Text(text.title, style: bonitoTextTheme.headline4),
           onTap: () {
             setState(() {
-              widget.setCurrentTextCallback(text);
+              widget.selectionSink.add(text);
               Navigator.pop(context);
             });
           },
@@ -123,7 +133,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             ],
           ),
         ),
-        if (currentCategory != null)
+        if (!isIndex)
           ListTile(
               horizontalTitleGap: 8.0,
               minLeadingWidth: 0.0,
@@ -131,25 +141,17 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               title: Text("Back", style: bonitoTextTheme.headline4),
               onTap: () {
                 setState(() {
-                  final previousCategory = widget.previousCategories.pop();
-
-                  log.d('Setting current category to previous...');
-
-                  setCurrentCategory(previousCategory);
+                  final previousCategory = category.previousCategory;
+                  categoryStream.add(previousCategory);
 
                   if (previousCategory == null)
-                    log.i("Backed to index");
+                    log.i("Backing to index");
                   else
-                    log.i('Backed category to previous '
+                    log.i('Backing to previous category '
                         '"${previousCategory.title}"');
                 });
               }),
       ],
     );
-  }
-
-  void setCurrentCategory(PessoaCategory? category) {
-    currentCategory = category;
-    widget.setCurrentCategoryCallback(category);
   }
 }

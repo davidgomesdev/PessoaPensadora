@@ -4,7 +4,7 @@ final log = Logger(
   level: Level.debug,
   filter: ProductionFilter(),
   printer: PrettyPrinter(
-      methodCount: 0,
+      methodCount: 1,
       errorMethodCount: 5,
       lineLength: 120,
       colors: true,

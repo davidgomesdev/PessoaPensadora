@@ -4,7 +4,7 @@ import 'package:pessoa_bonito/ui/bonito_theme.dart';
 
 class TextReader extends StatelessWidget {
   final ArquivoPessoaService service;
-  final PessoaCategory? currentCategory;
+  final PessoaCategory currentCategory;
   final PessoaText currentText;
 
   const TextReader(
@@ -17,7 +17,7 @@ class TextReader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: service.fetchText(currentText),
+        future: service.fetchText(currentText, currentCategory),
         builder: (ctx, snapshot) {
           if (snapshot.hasError) return Text("Error ${snapshot.error}");
 
@@ -31,9 +31,8 @@ class TextReader extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 24.0),
-                  child: Center(
-                      child: getCategoryWidget(
-                          currentCategory?.title ?? 'Índice')),
+                  child:
+                      Center(child: getCategoryWidget(currentCategory.title)),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(

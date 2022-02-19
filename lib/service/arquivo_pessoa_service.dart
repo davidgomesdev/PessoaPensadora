@@ -39,7 +39,8 @@ class ArquivoPessoaService {
     return PessoaIndex(categories: categories);
   }
 
-  Future<PessoaCategory> fetchCategory(PessoaCategory category) async {
+  Future<PessoaCategory> fetchCategory(
+      PessoaCategory category, PessoaCategory? previousCategory) async {
     final link = category._link;
 
     if (link == null)
@@ -57,10 +58,10 @@ class ArquivoPessoaService {
 
     log.i('Finished parsing category ("${category.title}")');
 
-    return fetchedCategory;
+    return fetchedCategory.then((builder) => builder.build(previousCategory));
   }
 
-  Future<PessoaText> fetchText(PessoaText text) async {
+  Future<PessoaText> fetchText(PessoaText text, PessoaCategory category) async {
     final link = text._link;
 
     if (link == null)
@@ -72,14 +73,15 @@ class ArquivoPessoaService {
 
     final title = html.getElementsByClassName("titulo-texto").first.text.trim();
     final author = html.getElementsByClassName("autor").first.text;
-    var content = html.firstWhereOrNull<String>(
-      (e, param) => e.getElementsByClassName(param).firstOrNull?.text,
-      ["texto-poesia", "texto-prosa"],
-    )?._removeRedundantText();
+    var content = html
+        .firstWhereOrNull<String>(
+          (e, param) => e.getElementsByClassName(param).firstOrNull?.text,
+          ["texto-poesia", "texto-prosa"],
+        )
+        ?._removeRedundantText()
+        .replaceFirst(RegExp('^$title *\n'), '');
 
-    log.i('Parsed text "$title"');
-
-    return PessoaText._internal(link,
+    return PessoaText._internal(link, category,
         title: title, content: content, author: author);
   }
 
@@ -90,7 +92,8 @@ class ArquivoPessoaService {
     return parse(html);
   }
 
-  Future<PessoaCategory> _parseCategory(String link, Element html) async {
+  Future<PessoaCategoryBuilder> _parseCategory(
+      String link, Element html) async {
     final title = html.querySelector(".titulo-categoria")!.text.trim();
     final subcategoriesHtml = html.getElementsByClassName("categoria");
 
@@ -101,22 +104,22 @@ class ArquivoPessoaService {
           cat.getElementsByClassName("titulo-categoria").first.text.trim();
       final link = _getCategoryLink(cat);
 
-      return PessoaCategory._internal(link, title: title, texts: []);
+      return PessoaCategoryBuilder(link, title: title, textBuilders: []);
     });
 
     log.i("Parsed subcategories");
 
     final texts = html
         .querySelectorAll("a.titulo-texto")
-        .map((e) => PessoaText._internal(e.attributes["href"]!, title: e.text))
+        .map((e) => PessoaTextBuilder(e.attributes["href"]!, title: e.text))
         .toList();
 
     log.i("Parsed texts");
 
     log.i('Finished parsing category ("$title")');
 
-    return PessoaCategory._internal(link,
-        title: title, texts: texts, subcategories: subCategories);
+    return PessoaCategoryBuilder(link,
+        title: title, textBuilders: texts, subcategories: subCategories);
   }
 
   String _getCategoryLink(Element html) {
@@ -133,28 +136,55 @@ class ArquivoPessoaService {
 class PessoaCategory with EquatableMixin {
   final String? _link;
   final String title;
-  final Iterable<PessoaText> texts;
-  final Iterable<PessoaCategory>? subcategories;
+  late Iterable<PessoaText> texts;
+  final PessoaCategory? previousCategory;
+  late Iterable<PessoaCategory>? subcategories;
 
-  PessoaCategory._internal(String? _link,
-      {required String title, required this.texts, this.subcategories})
+  PessoaCategory._(String? _link,
+      {required String title,
+      required this.texts,
+      this.previousCategory,
+      this.subcategories})
       : _link = _link,
         title = title.trim();
 
-  PessoaCategory(
+  PessoaCategory._internal(String? _link,
       {required String title,
-      required Iterable<PessoaText> texts,
-      Iterable<PessoaCategory>? subcategories})
-      : this._internal(null,
-            title: title, texts: texts, subcategories: subcategories);
+      required Iterable<PessoaTextBuilder> texts,
+      this.previousCategory,
+      Iterable<PessoaCategoryBuilder>? subcategories})
+      : _link = _link,
+        title = title.trim() {
+    this.texts = texts.map((builder) => builder.build(this));
+    this.subcategories = subcategories?.map((builder) => builder.build(this));
+  }
 
   @override
   List<Object?> get props => [_link, title];
 }
 
+class PessoaCategoryBuilder {
+  final String? _link;
+  final String title;
+  Iterable<PessoaTextBuilder> textBuilders;
+  final Iterable<PessoaCategoryBuilder>? subcategories;
+
+  PessoaCategoryBuilder(String? _link,
+      {required String title, required this.textBuilders, this.subcategories})
+      : _link = _link,
+        title = title.trim();
+
+  PessoaCategory build(PessoaCategory? previousCategory) =>
+      PessoaCategory._internal(_link,
+          title: title,
+          texts: textBuilders,
+          previousCategory: previousCategory,
+          subcategories: subcategories);
+}
+
 class PessoaIndex extends PessoaCategory with EquatableMixin {
   PessoaIndex({required Iterable<PessoaCategory> categories})
-      : super._internal(_INDEX_LINK,
+      : super._(_INDEX_LINK,
             title: "Índice", texts: [], subcategories: categories);
 
   @override
@@ -162,33 +192,54 @@ class PessoaIndex extends PessoaCategory with EquatableMixin {
 }
 
 class PessoaText with EquatableMixin {
+  final PessoaCategory category;
   final String? _link;
   final String title;
   final String? content;
   final String? author;
 
-  PessoaText._internal(this._link,
+  PessoaText._internal(this._link, this.category,
       {required String title, String? content, String? author})
       : title = title.trim(),
         content = content?.trim(),
         author = author?.trim();
 
-  PessoaText(
+  PessoaText(PessoaCategory category,
       {required String title,
       required String? content,
       required String? author})
-      : this._internal(null, title: title, content: content, author: author);
+      : this._internal(null, category,
+            title: title, content: content, author: author);
 
   @override
   List<Object?> get props => [_link, title];
 }
 
+class PessoaTextBuilder {
+  final String? _link;
+  final String title;
+  final String? content;
+  final String? author;
+
+  PessoaTextBuilder(this._link,
+      {required String title, String? content, String? author})
+      : title = title.trim(),
+        content = content?.trim(),
+        author = author?.trim();
+
+  PessoaText build(PessoaCategory category) =>
+      PessoaText._internal(this._link, category,
+          title: title, content: content, author: author);
+}
+
 extension StringRegex on String {
-  String _removeRedundantText() {
-    return replaceAll(RegExp(r"^ .*", multiLine: true), "")
-        .replaceAll(" ", " ")
-        .replaceAll(RegExp(r"^ +\n", multiLine: true), "")
-        .replaceAll(RegExp(r"\n{3,}", multiLine: true), "\n")
-        .replaceAll(RegExp(r" {2,}"), " ");
-  }
+  String _removeRedundantText() => replaceAll(' ', ' ')
+      .replaceAll(RegExp(r'^\n*(?=[^\n])'), '')
+      .replaceAll(RegExp(r'^(?: .*\n*)+'), '')
+      .replaceAll(RegExp(r'$\n\n +', multiLine: true), '\n\n')
+      .replaceAll(RegExp(r'$\n {2,}$', multiLine: true), ' ')
+      .replaceAll(RegExp(r'^\n*(?: .*\n\n?)+(?=\w)'), '')
+      .replaceAll(RegExp(r'\n{3,}', multiLine: true), '\n\n')
+      .replaceAll(RegExp(r' {2,}\n +', multiLine: true), ' ')
+      .trim();
 }

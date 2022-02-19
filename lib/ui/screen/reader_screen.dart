@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
@@ -19,6 +21,8 @@ class _ReaderScreenState extends State<ReaderScreen>
     with SingleTickerProviderStateMixin {
   PessoaCategory? currentCategory;
   PessoaText? currentText;
+  final StreamController<PessoaText> _streamController =
+      StreamController.broadcast();
 
   _ReaderScreenState() : super();
 
@@ -31,34 +35,38 @@ class _ReaderScreenState extends State<ReaderScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      drawer: TextSelectionDrawer(
-        service: widget.service,
-        initialCategory: currentCategory,
-        setCurrentCategoryCallback: setCurrentCategory,
-        setCurrentTextCallback: setCurrentText,
-      ),
-      body: Container(
-        child: () {
-          final currentText = this.currentText;
+      drawer: StreamBuilder<PessoaText>(
+          stream: _streamController.stream,
+          builder: (ctx, snapshot) {
+            if (snapshot.connectionState != ConnectionState.waiting)
+              currentCategory = snapshot.data?.category;
 
-          return currentText == null
-              ? NoTextReader()
-              : TextReader(
-                  service: widget.service,
-                  currentCategory: currentCategory,
-                  currentText: currentText,
-                );
-        }(),
+            return TextSelectionDrawer(
+                selectionSink: _streamController.sink,
+                service: widget.service,
+                selectedTextCategory: currentCategory);
+          }),
+      body: StreamBuilder<PessoaText>(
+        stream: _streamController.stream,
+        builder: (ctx, snapshot) {
+          final text = snapshot.data;
+
+          if (text == null) return NoTextReader();
+
+          return TextReader(
+            service: widget.service,
+            currentCategory: text.category,
+            currentText: text,
+          );
+        },
       ),
     );
   }
 
-  void setCurrentText(PessoaText text) => setState(() => currentText = text);
-
-  void setCurrentCategory(PessoaCategory? cat) => currentCategory = cat;
-
   @override
   void dispose() {
     super.dispose();
+
+    _streamController.close();
   }
 }
