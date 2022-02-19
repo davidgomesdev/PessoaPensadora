@@ -40,10 +40,13 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    // prevents possible "race condition" of null
+    final currentCategory = this.currentCategory;
+
     return FutureBuilder<PessoaCategory>(
         future: currentCategory == null
             ? widget.service.getIndex()
-            : widget.service.fetchCategory(currentCategory!),
+            : widget.service.fetchCategory(currentCategory),
         builder: (ctx, snapshot) {
           if (snapshot.hasError) {
             log.e("Error building drawer", snapshot.error, snapshot.stackTrace);
@@ -57,10 +60,10 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             child: SafeArea(
               child: (category == null)
                   ? Center(
-                      child: SpinKitThreeBounce(
-                      color: Colors.white,
-                      size: 24.0,
-                    ))
+                  child: SpinKitThreeBounce(
+                    color: Colors.white,
+                    size: 24.0,
+                  ))
                   : buildListView(category),
             ),
           );
@@ -101,21 +104,21 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
     return Column(
       children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0)
+              .copyWith(top: 16.0, bottom: 12.0),
+          child: Text(
+            category.title,
+            style: bonitoTextTheme.headline3,
+          ),
+        ),
         Expanded(
           child: ListView(
             controller: ScrollController(),
-            padding: EdgeInsets.only(top: 24.0),
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  category.title,
-                  style: bonitoTextTheme.headline3,
-                ),
-              ),
               ...ListTile.divideTiles(
                 color: Colors.white70,
-                tiles: [...texts, ...subcategories],
+                tiles: [...subcategories, ...texts],
               ),
             ],
           ),

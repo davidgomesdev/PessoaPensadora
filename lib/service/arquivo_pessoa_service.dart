@@ -72,9 +72,10 @@ class ArquivoPessoaService {
 
     final title = html.getElementsByClassName("titulo-texto").first.text.trim();
     final author = html.getElementsByClassName("autor").first.text;
-    final content = html.firstWhereOrNull<String>(
-        (e, param) => e.getElementsByClassName(param).firstOrNull?.text,
-        ["texto-poesia", "texto-prosa"]);
+    var content = html.firstWhereOrNull<String>(
+      (e, param) => e.getElementsByClassName(param).firstOrNull?.text,
+      ["texto-poesia", "texto-prosa"],
+    )?._removeRedundantText();
 
     log.i('Parsed text "$title"');
 
@@ -180,4 +181,14 @@ class PessoaText with EquatableMixin {
 
   @override
   List<Object?> get props => [_link, title];
+}
+
+extension StringRegex on String {
+  String _removeRedundantText() {
+    return replaceAll(RegExp(r"^ .*", multiLine: true), "")
+        .replaceAll(" ", " ")
+        .replaceAll(RegExp(r"^ +\n", multiLine: true), "")
+        .replaceAll(RegExp(r"\n{3,}", multiLine: true), "\n")
+        .replaceAll(RegExp(r" {2,}"), " ");
+  }
 }
