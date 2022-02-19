@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pessoa_bonito/collection/Stack.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
@@ -10,6 +11,7 @@ class TextSelectionDrawer extends StatefulWidget {
   final StackCollection<PessoaCategory> previousCategories;
   final PessoaCategory? initialCategory;
 
+  // TODO: change to streams
   final Function(PessoaCategory?) setCurrentCategoryCallback;
   final Function(PessoaText) setCurrentTextCallback;
 
@@ -29,8 +31,6 @@ class TextSelectionDrawer extends StatefulWidget {
 class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   PessoaCategory? currentCategory;
 
-  double _currentScroll = 0.0;
-
   @override
   void initState() {
     super.initState();
@@ -40,14 +40,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final scrollController =
-        ScrollController(initialScrollOffset: _currentScroll);
-
-    scrollController.addListener(() {
-      _currentScroll = scrollController.offset;
-    });
-
-    return FutureBuilder(
+    return FutureBuilder<PessoaCategory>(
         future: currentCategory == null
             ? widget.service.getIndex()
             : widget.service.fetchCategory(currentCategory!),
@@ -58,92 +51,98 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             return Text("Error ${snapshot.error}");
           }
 
-          if (!snapshot.hasData) return CircularProgressIndicator();
-
-          final fetchedCategory = snapshot.data as PessoaCategory;
-
-          final subcategories =
-              fetchedCategory.subcategories?.map((subcategory) => ListTile(
-                        horizontalTitleGap: 8.0,
-                        minLeadingWidth: 0.0,
-                        leading: Icon(Icons.subdirectory_arrow_right_rounded),
-                        title: Text(subcategory.title,
-                            style: bonitoTextTheme.headline4),
-                        onTap: () {
-                          setState(() {
-                            if (currentCategory != null)
-                              widget.previousCategories.push(fetchedCategory);
-
-                            setCurrentCategory(subcategory);
-
-                            log.i('Navigated to "${subcategory.title}"');
-                          });
-                        },
-                      )) ??
-                  [];
-
-          final texts = fetchedCategory.texts.map((text) => ListTile(
-                horizontalTitleGap: 8.0,
-                minLeadingWidth: 0.0,
-                leading: Icon(Icons.text_snippet_rounded),
-                title: Text(text.title, style: bonitoTextTheme.headline4),
-                onTap: () {
-                  setState(() {
-                    widget.setCurrentTextCallback(text);
-                    Navigator.pop(context);
-                  });
-                },
-              ));
+          final category = snapshot.data;
 
           return Drawer(
-              child: SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListView(
-                    controller: scrollController,
-                    padding: EdgeInsets.only(top: 24.0),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          fetchedCategory.title,
-                          style: bonitoTextTheme.headline3,
-                        ),
-                      ),
-                      ...ListTile.divideTiles(
-                        color: Colors.white70,
-                        tiles: [...texts, ...subcategories],
-                      ),
-                    ],
-                  ),
-                ),
-                if (currentCategory != null)
-                  ListTile(
-                      horizontalTitleGap: 8.0,
-                      minLeadingWidth: 0.0,
-                      leading: Icon(Icons.arrow_back_rounded),
-                      title: Text("Back", style: bonitoTextTheme.headline4),
-                      onTap: () {
-                        setState(() {
-                          final previousCategory =
-                              widget.previousCategories.pop();
-
-                          log.d('Setting current category to previous...');
-
-                          setCurrentCategory(previousCategory);
-
-                          if (previousCategory == null)
-                            log.i("Backed to index");
-                          else
-                            log.i('Backed category to previous '
-                                '"${previousCategory.title}"');
-                        });
-                      }),
-              ],
+            child: SafeArea(
+              child: (category == null)
+                  ? Center(
+                      child: SpinKitThreeBounce(
+                      color: Colors.white,
+                      size: 24.0,
+                    ))
+                  : buildListView(category),
             ),
-          ));
+          );
         });
+  }
+
+  Widget buildListView(PessoaCategory category) {
+    final subcategories = category.subcategories?.map((subcategory) => ListTile(
+              horizontalTitleGap: 8.0,
+              minLeadingWidth: 0.0,
+              leading: Icon(Icons.subdirectory_arrow_right_rounded),
+              title: Text(subcategory.title, style: bonitoTextTheme.headline4),
+              onTap: () {
+                setState(() {
+                  if (currentCategory != null)
+                    widget.previousCategories.push(category);
+
+                  setCurrentCategory(subcategory);
+
+                  log.i('Navigated to "${subcategory.title}"');
+                });
+              },
+            )) ??
+        [];
+
+    final texts = category.texts.map((text) => ListTile(
+          horizontalTitleGap: 8.0,
+          minLeadingWidth: 0.0,
+          leading: Icon(Icons.text_snippet_rounded),
+          title: Text(text.title, style: bonitoTextTheme.headline4),
+          onTap: () {
+            setState(() {
+              widget.setCurrentTextCallback(text);
+              Navigator.pop(context);
+            });
+          },
+        ));
+
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+            controller: ScrollController(),
+            padding: EdgeInsets.only(top: 24.0),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  category.title,
+                  style: bonitoTextTheme.headline3,
+                ),
+              ),
+              ...ListTile.divideTiles(
+                color: Colors.white70,
+                tiles: [...texts, ...subcategories],
+              ),
+            ],
+          ),
+        ),
+        if (currentCategory != null)
+          ListTile(
+              horizontalTitleGap: 8.0,
+              minLeadingWidth: 0.0,
+              leading: Icon(Icons.arrow_back_rounded),
+              title: Text("Back", style: bonitoTextTheme.headline4),
+              onTap: () {
+                setState(() {
+                  final previousCategory = widget.previousCategories.pop();
+
+                  log.d('Setting current category to previous...');
+
+                  setCurrentCategory(previousCategory);
+
+                  if (previousCategory == null)
+                    log.i("Backed to index");
+                  else
+                    log.i('Backed category to previous '
+                        '"${previousCategory.title}"');
+                });
+              }),
+      ],
+    );
   }
 
   void setCurrentCategory(PessoaCategory? category) {
