@@ -53,8 +53,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             : widget.service.fetchCategory(currentCategory!),
         builder: (ctx, snapshot) {
           if (snapshot.hasError) {
-            logger.e(
-                "Error building drawer", snapshot.error, snapshot.stackTrace);
+            log.e("Error building drawer", snapshot.error, snapshot.stackTrace);
 
             return Text("Error ${snapshot.error}");
           }
@@ -77,7 +76,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
                             setCurrentCategory(subcategory);
 
-                            logger.i('Navigated to "${subcategory.title}"');
+                            log.i('Navigated to "${subcategory.title}"');
                           });
                         },
                       )) ??
@@ -98,47 +97,49 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
           return Drawer(
               child: SafeArea(
-            child: ListView(
-              controller: scrollController,
-              padding: EdgeInsets.only(top: 24.0),
+            child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    fetchedCategory.title,
-                    style: bonitoTextTheme.headline3,
+                Expanded(
+                  child: ListView(
+                    controller: scrollController,
+                    padding: EdgeInsets.only(top: 24.0),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          fetchedCategory.title,
+                          style: bonitoTextTheme.headline3,
+                        ),
+                      ),
+                      ...ListTile.divideTiles(
+                        color: Colors.white70,
+                        tiles: [...texts, ...subcategories],
+                      ),
+                    ],
                   ),
                 ),
-                ...ListTile.divideTiles(
-                  color: Colors.white70,
-                  tiles: [
-                    ...texts,
-                    ...subcategories,
-                    if (currentCategory != null)
-                      ListTile(
-                          horizontalTitleGap: 8.0,
-                          minLeadingWidth: 0.0,
-                          leading: Icon(Icons.arrow_back_rounded),
-                          title: Text("Back", style: bonitoTextTheme.headline4),
-                          onTap: () {
-                            setState(() {
-                              final previousCategory =
-                                  widget.previousCategories.pop();
+                if (currentCategory != null)
+                  ListTile(
+                      horizontalTitleGap: 8.0,
+                      minLeadingWidth: 0.0,
+                      leading: Icon(Icons.arrow_back_rounded),
+                      title: Text("Back", style: bonitoTextTheme.headline4),
+                      onTap: () {
+                        setState(() {
+                          final previousCategory =
+                              widget.previousCategories.pop();
 
-                              logger
-                                  .d('Setting current category to previous...');
+                          log.d('Setting current category to previous...');
 
-                              setCurrentCategory(previousCategory);
+                          setCurrentCategory(previousCategory);
 
-                              if (previousCategory == null)
-                                logger.i("Backed to index");
-                              else
-                                logger.i('Backed category to previous '
-                                    '"${previousCategory.title}"');
-                            });
-                          }),
-                  ],
-                ),
+                          if (previousCategory == null)
+                            log.i("Backed to index");
+                          else
+                            log.i('Backed category to previous '
+                                '"${previousCategory.title}"');
+                        });
+                      }),
               ],
             ),
           ));

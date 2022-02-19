@@ -1,10 +1,10 @@
 import 'package:logger/logger.dart';
 
-var logger = Logger(
+final log = Logger(
   level: Level.debug,
   filter: ProductionFilter(),
   printer: PrettyPrinter(
-      methodCount: 2,
+      methodCount: 0,
       errorMethodCount: 5,
       lineLength: 120,
       colors: true,

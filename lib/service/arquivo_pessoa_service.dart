@@ -22,7 +22,7 @@ class ArquivoPessoaService {
   Future<PessoaIndex> getIndex() async {
     final indexHtml = await _getHtmlDoc(_INDEX_LINK);
 
-    logger.i("Retrieved index HTML");
+    log.i("Retrieved index HTML");
 
     final categories = indexHtml
         .getElementsByClassName("indice")
@@ -34,7 +34,7 @@ class ArquivoPessoaService {
           title: category.querySelector(".titulo-categoria")!.text, texts: []);
     });
 
-    logger.i("Parsed index HTML");
+    log.i("Parsed index HTML");
 
     return PessoaIndex(categories: categories);
   }
@@ -45,17 +45,17 @@ class ArquivoPessoaService {
     if (link == null)
       return Future.error(Exception("No URL for ${category.title}"));
 
-    logger.d('Fetching "$link"');
+    log.d('Fetching "$link"');
 
     final html = (await _getHtmlDoc(link)).documentElement;
 
-    logger.i('Retrieved category HTML (${category.title})');
+    log.i('Retrieved category HTML (${category.title})');
 
     if (html == null) return Future.error("No html on ${category.title}");
 
     final fetchedCategory = _parseCategory(link, html);
 
-    logger.i('Finished parsing category ("${category.title}")');
+    log.i('Finished parsing category ("${category.title}")');
 
     return fetchedCategory;
   }
@@ -68,7 +68,7 @@ class ArquivoPessoaService {
 
     final html = await _getHtmlDoc(link);
 
-    logger.i("Retrieved text HTML");
+    log.i("Retrieved text HTML");
 
     final title = html.getElementsByClassName("titulo-texto").first.text.trim();
     final author = html.getElementsByClassName("autor").first.text;
@@ -76,7 +76,7 @@ class ArquivoPessoaService {
         (e, param) => e.getElementsByClassName(param).firstOrNull?.text,
         ["texto-poesia", "texto-prosa"]);
 
-    logger.i('Parsed text "$title"');
+    log.i('Parsed text "$title"');
 
     return PessoaText._internal(link,
         title: title, content: content, author: author);
@@ -93,7 +93,7 @@ class ArquivoPessoaService {
     final title = html.querySelector(".titulo-categoria")!.text.trim();
     final subcategoriesHtml = html.getElementsByClassName("categoria");
 
-    logger.d('Parsing "$title"');
+    log.d('Parsing "$title"');
 
     final subCategories = subcategoriesHtml.map((cat) {
       final title =
@@ -103,16 +103,16 @@ class ArquivoPessoaService {
       return PessoaCategory._internal(link, title: title, texts: []);
     });
 
-    logger.i("Parsed subcategories");
+    log.i("Parsed subcategories");
 
     final texts = html
         .querySelectorAll("a.titulo-texto")
         .map((e) => PessoaText._internal(e.attributes["href"]!, title: e.text))
         .toList();
 
-    logger.i("Parsed texts");
+    log.i("Parsed texts");
 
-    logger.i('Finished parsing category ("$title")');
+    log.i('Finished parsing category ("$title")');
 
     return PessoaCategory._internal(link,
         title: title, texts: texts, subcategories: subCategories);
