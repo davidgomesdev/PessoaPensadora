@@ -69,7 +69,7 @@ class TextReader extends StatelessWidget {
   Widget getTextWidget(String content) => Text(
         content,
         textAlign: TextAlign.left,
-        style: bonitoTextTheme.bodyText2?.copyWith(height: 1.4),
+        style: bonitoTextTheme.bodyText2,
       );
 
   Widget getAuthorWidget(String author) => Text(
