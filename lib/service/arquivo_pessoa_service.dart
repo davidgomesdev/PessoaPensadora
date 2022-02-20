@@ -30,8 +30,10 @@ class ArquivoPessoaService {
         .children
         .map((category) {
       final subcategoryLink = _getCategoryLink(category);
+      final title = category.querySelector(".titulo-categoria")!.text;
+
       return PessoaCategory._internal(subcategoryLink,
-          title: category.querySelector(".titulo-categoria")!.text, texts: []);
+          title: title, texts: [], isPreview: true);
     });
 
     log.i("Parsed index HTML");
@@ -136,27 +138,31 @@ class ArquivoPessoaService {
 class PessoaCategory with EquatableMixin {
   final String? _link;
   final String title;
-  late Iterable<PessoaText> texts;
   final PessoaCategory? previousCategory;
+  late Iterable<PessoaText> texts;
   late Iterable<PessoaCategory>? subcategories;
+  final bool isPreview;
 
   PessoaCategory._(String? _link,
       {required String title,
-      required this.texts,
+      required this.isPreview,
       this.previousCategory,
+      required this.texts,
       this.subcategories})
       : _link = _link,
         title = title.trim();
 
   PessoaCategory._internal(String? _link,
       {required String title,
-      required Iterable<PessoaTextBuilder> texts,
+      this.isPreview = false,
       this.previousCategory,
+      required Iterable<PessoaTextBuilder> texts,
       Iterable<PessoaCategoryBuilder>? subcategories})
       : _link = _link,
         title = title.trim() {
     this.texts = texts.map((builder) => builder.build(this));
-    this.subcategories = subcategories?.map((builder) => builder.build(this));
+    this.subcategories =
+        subcategories?.map((builder) => builder.build(this, isPreview: true));
   }
 
   @override
@@ -174,18 +180,23 @@ class PessoaCategoryBuilder {
       : _link = _link,
         title = title.trim();
 
-  PessoaCategory build(PessoaCategory? previousCategory) =>
+  PessoaCategory build(PessoaCategory? previousCategory,
+          {bool isPreview = false}) =>
       PessoaCategory._internal(_link,
           title: title,
           texts: textBuilders,
           previousCategory: previousCategory,
-          subcategories: subcategories);
+          subcategories: subcategories,
+          isPreview: isPreview);
 }
 
 class PessoaIndex extends PessoaCategory with EquatableMixin {
   PessoaIndex({required Iterable<PessoaCategory> categories})
       : super._(_INDEX_LINK,
-            title: "Índice", texts: [], subcategories: categories);
+            title: "Índice",
+            texts: [],
+            subcategories: categories,
+            isPreview: false);
 
   @override
   List<Object?> get props => super.props;

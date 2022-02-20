@@ -50,8 +50,10 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         return FutureBuilder<PessoaCategory>(
             future: category == null
                 ? widget.service.getIndex()
-                : widget.service
-                    .fetchCategory(category, category.previousCategory),
+                : category.isPreview
+                    ? widget.service
+                        .fetchCategory(category, category.previousCategory)
+                    : Future.value(category),
             builder: (ctx, snapshot) {
               if (snapshot.hasError) {
                 log.e("Error building drawer", snapshot.error,
