@@ -67,7 +67,7 @@ class TextReader extends StatelessWidget {
         style: bonitoTextTheme.headline5,
       );
 
-  Widget getTextWidget(String content) => Text(
+  Widget getTextWidget(String content) => SelectableText(
         content,
         textAlign: TextAlign.left,
         style: bonitoTextTheme.bodyText2,
