@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pessoa_bonito/model/pessoa_category.dart';
+import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
@@ -86,20 +88,19 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   }
 
   Widget buildListView(PessoaCategory category, {required bool isIndex}) {
-    final subcategories = category.subcategories?.map((subcategory) => ListTile(
-              horizontalTitleGap: 8.0,
-              minLeadingWidth: 0.0,
-              leading: Icon(Icons.subdirectory_arrow_right_rounded),
-              title: Text(subcategory.title, style: bonitoTextTheme.headline4),
-              onTap: () {
-                setState(() {
-                  categoryStream.add(subcategory);
+    final subcategories = category.subcategories.map((subcategory) => ListTile(
+          horizontalTitleGap: 8.0,
+          minLeadingWidth: 0.0,
+          leading: Icon(Icons.subdirectory_arrow_right_rounded),
+          title: Text(subcategory.title, style: bonitoTextTheme.headline4),
+          onTap: () {
+            setState(() {
+              categoryStream.add(subcategory);
 
-                  log.i('Navigated to "${subcategory.title}"');
-                });
-              },
-            )) ??
-        [];
+              log.i('Navigated to "${subcategory.title}"');
+            });
+          },
+        ));
 
     final texts = category.texts.map((text) => ListTile(
           horizontalTitleGap: 8.0,
@@ -110,6 +111,11 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             setState(() {
               widget.selectionSink.add(text);
               Navigator.pop(context);
+
+              // print(text.toJson());
+              //
+              // SharedPreferences.getInstance().then((prefs) =>
+              //     prefs.setString("openedText", jsonEncode(text.toJson())));
             });
           },
         ));

@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pessoa_bonito/model/pessoa_category.dart';
+import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';

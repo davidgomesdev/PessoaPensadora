@@ -1,8 +1,9 @@
-import 'package:equatable/equatable.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
+import 'package:pessoa_bonito/model/pessoa_category.dart';
+import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
 import '../util/generic_extensions.dart';
@@ -19,7 +20,7 @@ final client = RetryClient(http.Client(),
 class ArquivoPessoaService {
   String? cookie;
 
-  Future<PessoaIndex> getIndex() async {
+  Future<PessoaCategory> getIndex() async {
     final indexHtml = await _getHtmlDoc(_INDEX_LINK);
 
     log.i("Retrieved index HTML");
@@ -29,24 +30,20 @@ class ArquivoPessoaService {
         .first
         .children
         .map((category) {
-      final subcategoryLink = _getCategoryLink(category);
+      final categoryLink = _getCategoryLink(category);
       final title = category.querySelector(".titulo-categoria")!.text;
 
-      return PessoaCategory._internal(subcategoryLink,
-          title: title, texts: [], isPreview: true);
+      return PessoaCategory.preview(categoryLink, title: title);
     });
 
     log.i("Parsed index HTML");
 
-    return PessoaIndex(categories: categories);
+    return PessoaCategory.index(_INDEX_LINK, subcategories: categories);
   }
 
   Future<PessoaCategory> fetchCategory(
       PessoaCategory category, PessoaCategory? previousCategory) async {
-    final link = category._link;
-
-    if (link == null)
-      return Future.error(Exception("No URL for ${category.title}"));
+    final link = category.link;
 
     log.d('Fetching "$link"');
 
@@ -56,15 +53,15 @@ class ArquivoPessoaService {
 
     if (html == null) return Future.error("No html on ${category.title}");
 
-    final fetchedCategory = _parseCategory(link, html);
+    final fetchedCategory = _parseCategory(link, html, previousCategory);
 
     log.i('Finished parsing category ("${category.title}")');
 
-    return fetchedCategory.then((builder) => builder.build(previousCategory));
+    return fetchedCategory;
   }
 
   Future<PessoaText> fetchText(PessoaText text, PessoaCategory category) async {
-    final link = text._link;
+    final link = text.link;
 
     if (link == null)
       return Future.error(Exception("No URL for ${text.title}"));
@@ -83,7 +80,7 @@ class ArquivoPessoaService {
         ?._removeRedundantText()
         .replaceFirst(RegExp('^$title *\n'), '');
 
-    return PessoaText._internal(link, category,
+    return PessoaText(link, category,
         title: title, content: content, author: author);
   }
 
@@ -94,19 +91,19 @@ class ArquivoPessoaService {
     return parse(html);
   }
 
-  Future<PessoaCategoryBuilder> _parseCategory(
-      String link, Element html) async {
+  Future<PessoaCategory> _parseCategory(
+      String link, Element html, PessoaCategory? previousCategory) async {
     final title = html.querySelector(".titulo-categoria")!.text.trim();
     final subcategoriesHtml = html.getElementsByClassName("categoria");
 
     log.d('Parsing "$title"');
 
-    final subCategories = subcategoriesHtml.map((cat) {
+    final subcategories = subcategoriesHtml.map((cat) {
       final title =
           cat.getElementsByClassName("titulo-categoria").first.text.trim();
       final link = _getCategoryLink(cat);
 
-      return PessoaCategoryBuilder(link, title: title, textBuilders: []);
+      return PessoaCategoryBuilder.preview(link, title: title);
     });
 
     log.i("Parsed subcategories");
@@ -120,8 +117,11 @@ class ArquivoPessoaService {
 
     log.i('Finished parsing category ("$title")');
 
-    return PessoaCategoryBuilder(link,
-        title: title, textBuilders: texts, subcategories: subCategories);
+    return PessoaCategory.built(link,
+        title: title,
+        textBuilders: texts,
+        subcategoryBuilders: subcategories,
+        previousCategory: previousCategory);
   }
 
   String _getCategoryLink(Element html) {
@@ -133,114 +133,6 @@ class ArquivoPessoaService {
 
     return categoryLink;
   }
-}
-
-class PessoaCategory with EquatableMixin {
-  final String? _link;
-  final String title;
-  final PessoaCategory? previousCategory;
-  late Iterable<PessoaText> texts;
-  late Iterable<PessoaCategory>? subcategories;
-  final bool isPreview;
-
-  PessoaCategory._(String? _link,
-      {required String title,
-      required this.isPreview,
-      this.previousCategory,
-      required this.texts,
-      this.subcategories})
-      : _link = _link,
-        title = title.trim();
-
-  PessoaCategory._internal(String? _link,
-      {required String title,
-      this.isPreview = false,
-      this.previousCategory,
-      required Iterable<PessoaTextBuilder> texts,
-      Iterable<PessoaCategoryBuilder>? subcategories})
-      : _link = _link,
-        title = title.trim() {
-    this.texts = texts.map((builder) => builder.build(this));
-    this.subcategories =
-        subcategories?.map((builder) => builder.build(this, isPreview: true));
-  }
-
-  @override
-  List<Object?> get props => [_link, title];
-}
-
-class PessoaCategoryBuilder {
-  final String? _link;
-  final String title;
-  Iterable<PessoaTextBuilder> textBuilders;
-  final Iterable<PessoaCategoryBuilder>? subcategories;
-
-  PessoaCategoryBuilder(String? _link,
-      {required String title, required this.textBuilders, this.subcategories})
-      : _link = _link,
-        title = title.trim();
-
-  PessoaCategory build(PessoaCategory? previousCategory,
-          {bool isPreview = false}) =>
-      PessoaCategory._internal(_link,
-          title: title,
-          texts: textBuilders,
-          previousCategory: previousCategory,
-          subcategories: subcategories,
-          isPreview: isPreview);
-}
-
-class PessoaIndex extends PessoaCategory with EquatableMixin {
-  PessoaIndex({required Iterable<PessoaCategory> categories})
-      : super._(_INDEX_LINK,
-            title: "Índice",
-            texts: [],
-            subcategories: categories,
-            isPreview: false);
-
-  @override
-  List<Object?> get props => super.props;
-}
-
-class PessoaText with EquatableMixin {
-  final PessoaCategory category;
-  final String? _link;
-  final String title;
-  final String? content;
-  final String? author;
-
-  PessoaText._internal(this._link, this.category,
-      {required String title, String? content, String? author})
-      : title = title.trim(),
-        content = content?.trim(),
-        author = author?.trim();
-
-  PessoaText(PessoaCategory category,
-      {required String title,
-      required String? content,
-      required String? author})
-      : this._internal(null, category,
-            title: title, content: content, author: author);
-
-  @override
-  List<Object?> get props => [_link, title];
-}
-
-class PessoaTextBuilder {
-  final String? _link;
-  final String title;
-  final String? content;
-  final String? author;
-
-  PessoaTextBuilder(this._link,
-      {required String title, String? content, String? author})
-      : title = title.trim(),
-        content = content?.trim(),
-        author = author?.trim();
-
-  PessoaText build(PessoaCategory category) =>
-      PessoaText._internal(this._link, category,
-          title: title, content: content, author: author);
 }
 
 extension StringRegex on String {
