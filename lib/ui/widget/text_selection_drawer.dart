@@ -11,7 +11,7 @@ import 'package:pessoa_bonito/util/logger_factory.dart';
 class TextSelectionDrawer extends StatefulWidget {
   final ArquivoPessoaService service;
 
-  final PessoaCategory? selectedTextCategory;
+  final PessoaText? selectedText;
 
   final Sink<PessoaText> selectionSink;
 
@@ -19,7 +19,7 @@ class TextSelectionDrawer extends StatefulWidget {
     Key? key,
     required this.selectionSink,
     required this.service,
-    required this.selectedTextCategory,
+    required this.selectedText,
   }) : super(key: key);
 
   @override
@@ -44,7 +44,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<PessoaCategory?>(
-      initialData: widget.selectedTextCategory,
+      initialData: widget.selectedText?.category,
       stream: categoryStream.stream,
       builder: (ctx, snapshot) {
         final category = snapshot.data;
@@ -88,11 +88,19 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   }
 
   Widget buildListView(PessoaCategory category, {required bool isIndex}) {
+    final selectedTextLink = widget.selectedText?.link;
+    final selectedCategoryLink = widget.selectedText?.category.link;
+
     final subcategories = category.subcategories.map((subcategory) => ListTile(
           horizontalTitleGap: 8.0,
           minLeadingWidth: 0.0,
           leading: Icon(Icons.subdirectory_arrow_right_rounded),
           title: Text(subcategory.title, style: bonitoTextTheme.headline4),
+          selected: selectedCategoryLink != null
+              ? subcategory.link == selectedCategoryLink
+              : false,
+          selectedColor: Colors.white,
+          selectedTileColor: Colors.white10,
           onTap: () {
             setState(() {
               categoryStream.add(subcategory);
@@ -103,22 +111,27 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         ));
 
     final texts = category.texts.map((text) => ListTile(
-          horizontalTitleGap: 8.0,
+      horizontalTitleGap: 8.0,
           minLeadingWidth: 0.0,
           leading: Icon(Icons.text_snippet_rounded),
           title: Text(text.title, style: bonitoTextTheme.headline4),
+          selected:
+              selectedTextLink != null ? text.link == selectedTextLink : false,
+          selectedColor: Colors.white,
+          selectedTileColor: Colors.white10,
           onTap: () {
             setState(() {
               widget.selectionSink.add(text);
               Navigator.pop(context);
 
-              // print(text.toJson());
-              //
+              // TODO: impl me
               // SharedPreferences.getInstance().then((prefs) =>
-              //     prefs.setString("openedText", jsonEncode(text.toJson())));
+              //     prefs.setString("openedTextURL", text.link ?? ''));
+              // SharedPreferences.getInstance().then((prefs) =>
+              //     prefs.setString("openedCategoryURL", text.link ?? ''));
             });
-          },
-        ));
+      },
+    ));
 
     return Column(
       children: [

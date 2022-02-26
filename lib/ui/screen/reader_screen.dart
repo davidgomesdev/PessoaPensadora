@@ -41,12 +41,12 @@ class _ReaderScreenState extends State<ReaderScreen>
           stream: _streamController.stream,
           builder: (ctx, snapshot) {
             if (snapshot.connectionState != ConnectionState.waiting)
-              currentCategory = snapshot.data?.category;
+              currentText = snapshot.data;
 
             return TextSelectionDrawer(
                 selectionSink: _streamController.sink,
                 service: widget.service,
-                selectedTextCategory: currentCategory);
+                selectedText: currentText);
           }),
       body: StreamBuilder<PessoaText>(
         stream: _streamController.stream,
