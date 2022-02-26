@@ -72,13 +72,35 @@ class ArquivoPessoaService {
 
     final title = html.getElementsByClassName("titulo-texto").first.text.trim();
     final author = html.getElementsByClassName("autor").first.text;
-    var content = html
-        .firstWhereOrNull<String>(
-          (e, param) => e.getElementsByClassName(param).firstOrNull?.text,
+
+    // Used to remove the title from the text
+    // because in some it's just redundant (although on others it is part
+    // of the text)
+    final titleRegex = title
+        .replaceAll(' ', ' ')
+        .extractLetters()
+        .replaceAll(RegExp(r' {2,}'), ' ')
+        .trim();
+
+    final content = html
+        .firstWhereOrNull(
+          (e, param) => e.getElementsByClassName(param).firstOrNull,
           ["texto-poesia", "texto-prosa"],
         )
-        ?._removeRedundantText()
-        .replaceFirst(RegExp('^$title *\n'), '');
+        ?.children
+        .map((paragraph) {
+          if (paragraph.children.isNotEmpty) {
+            return paragraph.children.map((e) {
+              return e.text.trim();
+            }).reduce((value, element) => "$value $element");
+          }
+          return paragraph.text;
+        })
+        .reduce((value, element) => "$value\n$element")
+        .replaceAll(RegExp(r' {1,}'), ' ')
+        .replaceAll("\n\n\n", "\n\n")
+        .replaceAll(RegExp('^' + titleRegex + r'(?=\n *\n)'), '')
+        .trim();
 
     return PessoaText(link, category,
         title: title, content: content, author: author);
@@ -135,14 +157,7 @@ class ArquivoPessoaService {
   }
 }
 
-extension StringRegex on String {
-  String _removeRedundantText() => replaceAll(' ', ' ')
-      .replaceAll(RegExp(r'^\n*(?=[^\n])'), '')
-      .replaceAll(RegExp(r'^(?: .*\n*)+'), '')
-      .replaceAll(RegExp(r'$\n\n +', multiLine: true), '\n\n')
-      .replaceAll(RegExp(r'$\n {2,}$', multiLine: true), ' ')
-      .replaceAll(RegExp(r'^\n*(?: .*\n\n?)+(?=\w)'), '')
-      .replaceAll(RegExp(r'\n{3,}', multiLine: true), '\n\n')
-      .replaceAll(RegExp(r' {2,}\n +', multiLine: true), ' ')
-      .trim();
+extension RegexExtension on String {
+  String extractLetters() =>
+      replaceAll(RegExp(r'[^A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+'), '');
 }
