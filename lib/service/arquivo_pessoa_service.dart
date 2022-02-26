@@ -132,7 +132,8 @@ class ArquivoPessoaService {
 
     final texts = html
         .querySelectorAll("a.titulo-texto")
-        .map((e) => PessoaTextBuilder(e.attributes["href"]!, title: e.text))
+        .map((e) =>
+            PessoaTextBuilder(e.attributes["href"]!, title: e.text.trim()))
         .toList();
 
     log.i("Parsed texts");
