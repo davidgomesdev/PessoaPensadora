@@ -73,15 +73,6 @@ class ArquivoPessoaService {
     final title = html.getElementsByClassName("titulo-texto").first.text.trim();
     final author = html.getElementsByClassName("autor").first.text;
 
-    // Used to remove the title from the text
-    // because in some it's just redundant (although on others it is part
-    // of the text)
-    final titleRegex = title
-        .replaceAll(' ', ' ')
-        .extractLetters()
-        .replaceAll(RegExp(r' {2,}'), ' ')
-        .trim();
-
     final content = html
         .firstWhereOrNull(
           (e, param) => e.getElementsByClassName(param).firstOrNull,
@@ -94,13 +85,12 @@ class ArquivoPessoaService {
               return e.text.trim();
             }).reduce((value, element) => "$value $element");
           }
-          return paragraph.text;
+          return paragraph.text.trim();
         })
         .reduce((value, element) => "$value\n$element")
-        .replaceAll(RegExp(r' {1,}'), ' ')
-        .replaceAll("\n\n\n", "\n\n")
-        .replaceAll(RegExp('^' + titleRegex + r'(?=\n *\n)'), '')
-        .trim();
+        .removeTitle();
+
+    log.d(content);
 
     return PessoaText(link, category,
         title: title, content: content, author: author);
@@ -161,4 +151,7 @@ class ArquivoPessoaService {
 extension RegexExtension on String {
   String extractLetters() =>
       replaceAll(RegExp(r'[^A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+'), '');
+
+  String removeTitle() => replaceAll(
+      RegExp(r'(?<!.\n)(?:^.+\n\n)+(?=.+\n\n|.+\n)', multiLine: true), '');
 }
