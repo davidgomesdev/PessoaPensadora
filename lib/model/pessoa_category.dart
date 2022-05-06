@@ -17,7 +17,7 @@ class PessoaCategory {
     this.texts = textBuilders.map((builder) => builder.build(this));
   }
 
-  PessoaCategory.built(this.link,
+  PessoaCategory.full(this.link,
       {required this.title,
       this.previousCategory,
       required Iterable<PessoaTextBuilder> textBuilders,

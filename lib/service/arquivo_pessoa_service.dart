@@ -140,7 +140,7 @@ class ArquivoPessoaService {
 
     log.i('Finished parsing category ("$title")');
 
-    return PessoaCategory.built(link,
+    return PessoaCategory.full(link,
         title: title,
         textBuilders: texts,
         subcategoryBuilders: subcategories,
