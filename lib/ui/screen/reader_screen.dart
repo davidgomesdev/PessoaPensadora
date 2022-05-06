@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pessoa_bonito/model/pessoa_category.dart';
+import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';
@@ -39,12 +41,12 @@ class _ReaderScreenState extends State<ReaderScreen>
           stream: _streamController.stream,
           builder: (ctx, snapshot) {
             if (snapshot.connectionState != ConnectionState.waiting)
-              currentCategory = snapshot.data?.category;
+              currentText = snapshot.data;
 
             return TextSelectionDrawer(
                 selectionSink: _streamController.sink,
                 service: widget.service,
-                selectedTextCategory: currentCategory);
+                selectedText: currentText);
           }),
       body: StreamBuilder<PessoaText>(
         stream: _streamController.stream,

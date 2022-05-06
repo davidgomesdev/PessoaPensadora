@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pessoa_bonito/model/pessoa_category.dart';
+import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 
@@ -65,7 +67,7 @@ class TextReader extends StatelessWidget {
         style: bonitoTextTheme.headline5,
       );
 
-  Widget getTextWidget(String content) => Text(
+  Widget getTextWidget(String content) => SelectableText(
         content,
         textAlign: TextAlign.left,
         style: bonitoTextTheme.bodyText2,

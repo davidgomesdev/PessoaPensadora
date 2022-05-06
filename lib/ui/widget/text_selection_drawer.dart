@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pessoa_bonito/model/pessoa_category.dart';
+import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
@@ -9,7 +11,7 @@ import 'package:pessoa_bonito/util/logger_factory.dart';
 class TextSelectionDrawer extends StatefulWidget {
   final ArquivoPessoaService service;
 
-  final PessoaCategory? selectedTextCategory;
+  final PessoaText? selectedText;
 
   final Sink<PessoaText> selectionSink;
 
@@ -17,7 +19,7 @@ class TextSelectionDrawer extends StatefulWidget {
     Key? key,
     required this.selectionSink,
     required this.service,
-    required this.selectedTextCategory,
+    required this.selectedText,
   }) : super(key: key);
 
   @override
@@ -42,7 +44,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<PessoaCategory?>(
-      initialData: widget.selectedTextCategory,
+      initialData: widget.selectedText?.category,
       stream: categoryStream.stream,
       builder: (ctx, snapshot) {
         final category = snapshot.data;
@@ -86,33 +88,50 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   }
 
   Widget buildListView(PessoaCategory category, {required bool isIndex}) {
-    final subcategories = category.subcategories?.map((subcategory) => ListTile(
-              horizontalTitleGap: 8.0,
-              minLeadingWidth: 0.0,
-              leading: Icon(Icons.subdirectory_arrow_right_rounded),
-              title: Text(subcategory.title, style: bonitoTextTheme.headline4),
-              onTap: () {
-                setState(() {
-                  categoryStream.add(subcategory);
+    final selectedTextLink = widget.selectedText?.link;
+    final selectedCategoryLink = widget.selectedText?.category.link;
 
-                  log.i('Navigated to "${subcategory.title}"');
-                });
-              },
-            )) ??
-        [];
+    final subcategories = category.subcategories.map((subcategory) => ListTile(
+          horizontalTitleGap: 8.0,
+          minLeadingWidth: 0.0,
+          leading: Icon(Icons.subdirectory_arrow_right_rounded),
+          title: Text(subcategory.title, style: bonitoTextTheme.headline4),
+          selected: selectedCategoryLink != null
+              ? subcategory.link == selectedCategoryLink
+              : false,
+          selectedColor: Colors.white,
+          selectedTileColor: Colors.white10,
+          onTap: () {
+            setState(() {
+              categoryStream.add(subcategory);
+
+              log.i('Navigated to "${subcategory.title}"');
+            });
+          },
+        ));
 
     final texts = category.texts.map((text) => ListTile(
-          horizontalTitleGap: 8.0,
+      horizontalTitleGap: 8.0,
           minLeadingWidth: 0.0,
           leading: Icon(Icons.text_snippet_rounded),
           title: Text(text.title, style: bonitoTextTheme.headline4),
+          selected:
+              selectedTextLink != null ? text.link == selectedTextLink : false,
+          selectedColor: Colors.white,
+          selectedTileColor: Colors.white10,
           onTap: () {
             setState(() {
               widget.selectionSink.add(text);
               Navigator.pop(context);
+
+              // TODO: impl me
+              // SharedPreferences.getInstance().then((prefs) =>
+              //     prefs.setString("openedTextURL", text.link ?? ''));
+              // SharedPreferences.getInstance().then((prefs) =>
+              //     prefs.setString("openedCategoryURL", text.link ?? ''));
             });
-          },
-        ));
+      },
+    ));
 
     return Column(
       children: [
