@@ -73,27 +73,28 @@ class ArquivoPessoaService {
     final title = html.getElementsByClassName("titulo-texto").first.text.trim();
     final author = html.getElementsByClassName("autor").first.text;
 
-    final content = html
-        .firstWhereOrNull(
+    final contentHtml = html.firstWhereOrNull(
           (e, param) => e.getElementsByClassName(param).firstOrNull,
           ["texto-poesia", "texto-prosa"],
-        )
-        ?.children
-        .map((paragraph) {
-          if (paragraph.children.isNotEmpty) {
-            return paragraph.children.map((e) {
-              return e.text.trim();
-            }).reduce((value, element) => "$value $element");
-          }
-          return paragraph.text.trim();
-        })
-        .reduce((value, element) => "$value\n$element")
-        .removeTitle();
+        )?.children ??
+        List.empty();
+    final content = getNestedContent(contentHtml).removeTitle();
 
-    log.d(content);
+    log.d("Text after processed:\n\n$content");
 
     return PessoaText(link, category,
         title: title, content: content, author: author);
+  }
+
+  String getNestedContent(List<Element> node) {
+    return node.map((paragraph) {
+      if (paragraph.children.isNotEmpty) {
+        return paragraph.children.map((e) {
+          return e.text.trim();
+        }).reduce((value, element) => "$value $element");
+      }
+      return paragraph.text.trim();
+    }).reduce((value, element) => "$value\n$element");
   }
 
   Future<Document> _getHtmlDoc(String link) async {
