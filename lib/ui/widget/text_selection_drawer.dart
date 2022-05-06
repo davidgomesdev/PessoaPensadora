@@ -123,12 +123,6 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             setState(() {
               widget.selectionSink.add(text);
               Navigator.pop(context);
-
-              // TODO: impl me
-              // SharedPreferences.getInstance().then((prefs) =>
-              //     prefs.setString("openedTextURL", text.link ?? ''));
-              // SharedPreferences.getInstance().then((prefs) =>
-              //     prefs.setString("openedCategoryURL", text.link ?? ''));
             });
       },
     ));
