@@ -21,6 +21,7 @@ class ArquivoPessoaService {
   String? cookie;
 
   Future<PessoaCategory> getIndex() async {
+    final index = PessoaCategory.index(_INDEX_LINK);
     final indexHtml = await _getHtmlDoc(_INDEX_LINK);
 
     log.i("Retrieved index HTML");
@@ -29,16 +30,11 @@ class ArquivoPessoaService {
         .getElementsByClassName("indice")
         .first
         .children
-        .map((category) {
-      final categoryLink = _getCategoryLink(category);
-      final title = category.querySelector(".titulo-categoria")!.text;
-
-      return PessoaCategory.preview(categoryLink, title: title);
-    }).toList();
+        .map((cat) => _parsePreviewCategory(index, cat));
 
     log.i("Parsed index HTML");
 
-    return PessoaCategory.index(_INDEX_LINK, subcategories: categories);
+    return index..setSubcategories(categories.toList());
   }
 
   Future<PessoaCategory> fetchCategory(
@@ -53,7 +49,7 @@ class ArquivoPessoaService {
 
     if (html == null) return Future.error("No html on ${category.title}");
 
-    final fetchedCategory = _parseCategory(link, html, previousCategory);
+    final fetchedCategory = _parseFullCategory(link, html, previousCategory);
 
     log.i('Finished parsing category ("${category.title}")');
 
@@ -62,10 +58,6 @@ class ArquivoPessoaService {
 
   Future<PessoaText> fetchText(PessoaText text, PessoaCategory category) async {
     final link = text.link;
-
-    if (link == null)
-      return Future.error(Exception("No URL for ${text.title}"));
-
     final html = await _getHtmlDoc(link);
 
     log.i("Retrieved text HTML");
@@ -104,40 +96,6 @@ class ArquivoPessoaService {
     return parse(html);
   }
 
-  Future<PessoaCategory> _parseCategory(
-      String link, Element html, PessoaCategory? previousCategory) async {
-    final title = html.querySelector(".titulo-categoria")!.text.trim();
-    final subcategoriesHtml = html.getElementsByClassName("categoria");
-
-    log.d('Parsing "$title"');
-
-    final subcategories = subcategoriesHtml.map((cat) {
-      final title =
-          cat.getElementsByClassName("titulo-categoria").first.text.trim();
-      final link = _getCategoryLink(cat);
-
-      return PessoaCategoryBuilder.preview(link, title: title);
-    }).toList();
-
-    log.i("Parsed subcategories");
-
-    final texts = html
-        .querySelectorAll("a.titulo-texto")
-        .map((e) =>
-            PessoaTextBuilder(e.attributes["href"]!, title: e.text.trim()))
-        .toList();
-
-    log.i("Parsed texts");
-
-    log.i('Finished parsing category ("$title")');
-
-    return PessoaCategory.full(link,
-        title: title,
-        textBuilders: texts,
-        subcategoryBuilders: subcategories,
-        previousCategory: previousCategory);
-  }
-
   String _getCategoryLink(Element html) {
     final categoryLink = _getCategoryLinkRegex
         .firstMatch(html.querySelector(".ctrl-opener")!.attributes["onclick"]!)
@@ -146,6 +104,43 @@ class ArquivoPessoaService {
     if (categoryLink == null) throw Exception("No category link in HTML!");
 
     return categoryLink;
+  }
+
+  Future<PessoaCategory> _parseFullCategory(
+      String link, Element html, PessoaCategory? previousCategory) async {
+    final title = html.querySelector(".titulo-categoria")!.text.trim();
+    final subcategoriesHtml = html.getElementsByClassName("categoria");
+
+    final category = PessoaCategory.full(link,
+        title: title, parentCategory: previousCategory);
+
+    log.d('Parsing "$title"');
+
+    final subcategories = subcategoriesHtml
+        .map((html) => _parsePreviewCategory(category, html))
+        .toList();
+    log.i("Parsed subcategories");
+
+    final texts = html
+        .querySelectorAll("a.titulo-texto")
+        .map((e) =>
+            PessoaText(e.attributes["href"]!, category, title: e.text.trim()))
+        .toList();
+    log.i("Parsed texts");
+
+    log.i('Finished parsing category ("$title")');
+
+    return category
+      ..setSubcategories(subcategories)
+      ..setTexts(texts);
+  }
+
+  PessoaCategory _parsePreviewCategory(PessoaCategory parent, Element html) {
+    final categoryLink = _getCategoryLink(html);
+    final title = html.querySelector(".titulo-categoria")!.text;
+
+    return PessoaCategory.preview(categoryLink,
+        title: title, parentCategory: parent);
   }
 }
 

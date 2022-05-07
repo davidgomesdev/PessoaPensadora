@@ -54,7 +54,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                 ? widget.service.getIndex()
                 : category.isPreview
                     ? widget.service
-                        .fetchCategory(category, category.previousCategory)
+                        .fetchCategory(category, category.parentCategory)
                     : Future.value(category),
             builder: (ctx, snapshot) {
               if (snapshot.hasError) {
@@ -156,7 +156,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               title: Text("Back", style: bonitoTextTheme.headline4),
               onTap: () {
                 setState(() {
-                  final previousCategory = category.previousCategory;
+                  final previousCategory = category.parentCategory;
                   categoryStream.add(previousCategory);
 
                   if (previousCategory == null)
