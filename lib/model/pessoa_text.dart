@@ -3,25 +3,17 @@ import 'package:pessoa_bonito/model/pessoa_category.dart';
 class PessoaText {
   final PessoaCategory category;
   final String link;
-
-  int get id => link._getId();
+  final int id;
 
   final String title;
   final String? content;
   final String? author;
 
-  PessoaText(this.link, this.category,
-      {required this.title, this.content, String? author})
-      : author = author?.trim();
-}
+  PessoaText.preview(this.link, this.category, this.id, {required this.title})
+      : content = null,
+        author = null;
 
-extension RegexParse on String {
-  int _getId() {
-    final regexResult = RegExp(r'\/.+\/(.+)').firstMatch(this);
-    String? id = regexResult?.group(1);
-
-    if (id == null) return -1;
-
-    return int.parse(id);
-  }
+  PessoaText.full(this.link, this.category, this.id,
+      {required this.title, required this.content, required String author})
+      : this.author = author.trim();
 }

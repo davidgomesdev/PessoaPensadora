@@ -74,7 +74,7 @@ class ArquivoPessoaService {
 
     log.d("Text after processed:\n\n$content");
 
-    return PessoaText(link, category,
+    return PessoaText.full(link, category, text.id,
         title: title, content: content, author: author);
   }
 
@@ -121,10 +121,11 @@ class ArquivoPessoaService {
         .toList();
     log.i("Parsed subcategories");
 
+    int id = 0;
     final texts = html
         .querySelectorAll("a.titulo-texto")
-        .map((e) =>
-            PessoaText(e.attributes["href"]!, category, title: e.text.trim()))
+        .map((e) => PessoaText.preview(e.attributes["href"]!, category, id++,
+            title: e.text.trim()))
         .toList();
     log.i("Parsed texts");
 
