@@ -4,28 +4,28 @@ class PessoaCategory {
   String link;
   String title;
   PessoaCategory? previousCategory;
-  late Iterable<PessoaCategory> subcategories;
-  late Iterable<PessoaText> texts;
+  late List<PessoaCategory> subcategories;
+  late List<PessoaText> texts;
   bool isPreview;
 
   PessoaCategory(this.link,
       {required this.title,
       this.previousCategory,
-      required Iterable<PessoaTextBuilder> textBuilders,
+      required List<PessoaTextBuilder> textBuilders,
       required this.subcategories,
       required this.isPreview}) {
-    this.texts = textBuilders.map((builder) => builder.build(this));
+    this.texts = textBuilders.map((builder) => builder.build(this)).toList();
   }
 
   PessoaCategory.full(this.link,
       {required this.title,
       this.previousCategory,
-      required Iterable<PessoaTextBuilder> textBuilders,
-      required Iterable<PessoaCategoryBuilder> subcategoryBuilders})
+      required List<PessoaTextBuilder> textBuilders,
+      required List<PessoaCategoryBuilder> subcategoryBuilders})
       : isPreview = false {
-    this.texts = textBuilders.map((builder) => builder.build(this));
+    this.texts = textBuilders.map((builder) => builder.build(this)).toList();
     this.subcategories =
-        subcategoryBuilders.map((builder) => builder.build(this));
+        subcategoryBuilders.map((builder) => builder.build(this)).toList();
   }
 
   PessoaCategory.preview(this.link, {required this.title})
@@ -44,17 +44,12 @@ class PessoaCategoryBuilder {
   String link;
   String title;
   late PessoaCategory previousCategory;
-  Iterable<PessoaCategory> subcategories;
-  late Iterable<PessoaTextBuilder> textBuilders;
+  List<PessoaCategory> subcategories;
+  late List<PessoaTextBuilder> textBuilders;
   bool isPreview;
 
-  PessoaCategoryBuilder(
-      this.link,
-      this.title,
-      this.previousCategory,
-      Iterable<PessoaTextBuilder> textBuilders,
-      this.subcategories,
-      this.isPreview);
+  PessoaCategoryBuilder(this.link, this.title, this.previousCategory,
+      List<PessoaTextBuilder> textBuilders, this.subcategories, this.isPreview);
 
   PessoaCategoryBuilder.preview(this.link, {required this.title})
       : isPreview = true,

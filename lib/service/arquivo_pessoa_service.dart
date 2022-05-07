@@ -34,7 +34,7 @@ class ArquivoPessoaService {
       final title = category.querySelector(".titulo-categoria")!.text;
 
       return PessoaCategory.preview(categoryLink, title: title);
-    });
+    }).toList();
 
     log.i("Parsed index HTML");
 
@@ -73,7 +73,7 @@ class ArquivoPessoaService {
     final title = html.getElementsByClassName("titulo-texto").first.text.trim();
     final author = html.getElementsByClassName("autor").first.text;
 
-    final contentHtml = html.firstWhereOrNull(
+    final contentHtml = html.firstMultiWhere(
           (e, param) => e.getElementsByClassName(param).firstOrNull,
           ["texto-poesia", "texto-prosa"],
         )?.children ??
@@ -117,7 +117,7 @@ class ArquivoPessoaService {
       final link = _getCategoryLink(cat);
 
       return PessoaCategoryBuilder.preview(link, title: title);
-    });
+    }).toList();
 
     log.i("Parsed subcategories");
 
