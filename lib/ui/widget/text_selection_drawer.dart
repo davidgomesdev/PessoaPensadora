@@ -50,12 +50,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         final category = snapshot.data;
 
         return FutureBuilder<PessoaCategory>(
-            future: category == null
-                ? widget.service.getIndex()
-                : category.isPreview
-                    ? widget.service
-                        .fetchCategory(category, category.parentCategory)
-                    : Future.value(category),
+            future: _getCategory(category),
             builder: (ctx, snapshot) {
               if (snapshot.hasError) {
                 log.e("Error building drawer", snapshot.error,
@@ -68,6 +63,11 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               final isLoading =
                   snapshot.connectionState == ConnectionState.waiting;
 
+              if (!isLoading && fetchedCategory == null) {
+                log.w("Fetched category is null after loading!");
+                return Container();
+              }
+
               return Drawer(
                 child: SafeArea(
                   child: (isLoading)
@@ -76,10 +76,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                           color: Colors.white,
                           size: 24.0,
                         ))
-                      : buildListView(
-                          fetchedCategory!,
-                          isIndex: category == null,
-                        ),
+                      : buildListView(fetchedCategory!),
                 ),
               );
             });
@@ -87,31 +84,43 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     );
   }
 
-  Widget buildListView(PessoaCategory category, {required bool isIndex}) {
+  Future<PessoaCategory> _getCategory(PessoaCategory? category) {
+    if (category == null) return widget.service.getIndex();
+
+    if (category.type == CategoryType.Preview)
+      return widget.service.fetchCategory(category, category.parentCategory);
+
+    return Future.value(category);
+  }
+
+  Widget buildListView(PessoaCategory category) {
     final selectedTextLink = widget.selectedText?.link;
     final selectedCategoryLink = widget.selectedText?.category.link;
 
-    final subcategories = category.subcategories.map((subcategory) => ListTile(
-          horizontalTitleGap: 8.0,
-          minLeadingWidth: 0.0,
-          leading: Icon(Icons.subdirectory_arrow_right_rounded),
-          title: Text(subcategory.title, style: bonitoTextTheme.headline4),
-          selected: selectedCategoryLink != null
-              ? subcategory.link == selectedCategoryLink
-              : false,
-          selectedColor: Colors.white,
-          selectedTileColor: Colors.white10,
-          onTap: () {
-            setState(() {
-              categoryStream.add(subcategory);
+    final subcategories = category.subcategories.map((subcategory) {
+      var isSelected = selectedCategoryLink != null &&
+          subcategory.link == selectedCategoryLink;
 
-              log.i('Navigated to "${subcategory.title}"');
-            });
-          },
-        ));
+      return ListTile(
+        horizontalTitleGap: 8.0,
+        minLeadingWidth: 0.0,
+        leading: Icon(Icons.subdirectory_arrow_right_rounded),
+        title: Text(subcategory.title, style: bonitoTextTheme.headline4),
+        selected: isSelected,
+        selectedColor: Colors.white,
+        selectedTileColor: Colors.white10,
+        onTap: () {
+          setState(() {
+            categoryStream.add(subcategory);
+
+            log.i('Navigated to "${subcategory.title}"');
+          });
+        },
+      );
+    });
 
     final texts = category.texts.map((text) => ListTile(
-      horizontalTitleGap: 8.0,
+          horizontalTitleGap: 8.0,
           minLeadingWidth: 0.0,
           leading: Icon(Icons.text_snippet_rounded),
           title: Text(text.title, style: bonitoTextTheme.headline4),
@@ -124,8 +133,8 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               widget.selectionSink.add(text);
               Navigator.pop(context);
             });
-      },
-    ));
+          },
+        ));
 
     return Column(
       children: [
@@ -148,7 +157,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             ],
           ),
         ),
-        if (!isIndex)
+        if (category.type != CategoryType.Index)
           ListTile(
               horizontalTitleGap: 8.0,
               minLeadingWidth: 0.0,

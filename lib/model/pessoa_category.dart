@@ -6,22 +6,22 @@ class PessoaCategory {
   PessoaCategory? parentCategory;
   List<PessoaCategory> subcategories;
   List<PessoaText> texts;
-  bool isPreview;
+  CategoryType type;
 
   PessoaCategory.full(this.link, {required this.title, this.parentCategory})
-      : isPreview = false,
+      : type = CategoryType.Full,
         texts = List.empty(),
         subcategories = List.empty();
 
   PessoaCategory.preview(this.link,
       {required this.title, required this.parentCategory})
-      : isPreview = true,
+      : type = CategoryType.Preview,
         subcategories = [],
         texts = [];
 
   PessoaCategory.index(this.link)
       : title = "Índice",
-        isPreview = false,
+        type = CategoryType.Index,
         texts = [],
         subcategories = List.empty();
 
@@ -30,3 +30,5 @@ class PessoaCategory {
 
   void setTexts(List<PessoaText> texts) => this.texts = texts;
 }
+
+enum CategoryType { Index, Preview, Full }
