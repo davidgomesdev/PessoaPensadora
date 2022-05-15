@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
+import 'package:pessoa_bonito/util/generic_extensions.dart';
+import 'package:pessoa_bonito/util/logger_factory.dart';
 
 class ReaderScreen extends StatefulWidget {
   final ArquivoPessoaService service;
@@ -21,7 +22,6 @@ class ReaderScreen extends StatefulWidget {
 
 class _ReaderScreenState extends State<ReaderScreen>
     with SingleTickerProviderStateMixin {
-  PessoaCategory? currentCategory;
   PessoaText? currentText;
   final StreamController<PessoaText> _streamController =
       StreamController.broadcast();
@@ -40,9 +40,6 @@ class _ReaderScreenState extends State<ReaderScreen>
       drawer: StreamBuilder<PessoaText>(
           stream: _streamController.stream,
           builder: (ctx, snapshot) {
-            if (snapshot.connectionState != ConnectionState.waiting)
-              currentText = snapshot.data;
-
             return TextSelectionDrawer(
                 selectionSink: _streamController.sink,
                 service: widget.service,
@@ -51,14 +48,47 @@ class _ReaderScreenState extends State<ReaderScreen>
       body: StreamBuilder<PessoaText>(
         stream: _streamController.stream,
         builder: (ctx, snapshot) {
-          final text = snapshot.data;
+          final text = currentText = snapshot.data;
 
           if (text == null) return NoTextReader();
 
-          return TextReader(
-            service: widget.service,
-            currentCategory: text.category,
-            currentText: text,
+          return GestureDetector(
+            onHorizontalDragEnd: (details) {
+              final vel = details.primaryVelocity;
+
+              if (vel == null) return;
+
+              final currentText = this.currentText;
+
+              if (currentText == null) return;
+
+              final currentCategory = currentText.category;
+              PessoaText? newText;
+
+              if (vel.isNegative) {
+                newText = currentCategory.texts
+                    .firstWhereOrNull((text) => text.id > currentText.id);
+
+                log.i("Swiping to next text");
+              } else {
+                newText = currentCategory.texts.reversed
+                    .firstWhereOrNull((text) => text.id < currentText.id);
+
+                log.i("Swiping to previous text");
+              }
+
+              if (newText != null) {
+                log.i("Swipe to ${newText.title}");
+                _streamController.add(newText);
+              } else {
+                log.i("Swipe no-op");
+              }
+            },
+            child: TextReader(
+              service: widget.service,
+              currentCategory: text.category,
+              currentText: text,
+            ),
           );
         },
       ),
