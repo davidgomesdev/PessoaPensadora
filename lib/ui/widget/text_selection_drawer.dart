@@ -153,7 +153,8 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               horizontalTitleGap: 8.0,
               minLeadingWidth: 0.0,
               leading: Icon(Icons.arrow_back_rounded),
-              title: Text("Back", style: bonitoTextTheme.headline4),
+              title: Text("Voltar", style: bonitoTextTheme.headline4),
+              tileColor: Colors.black26,
               onTap: () {
                 setState(() {
                   final previousCategory = category.parentCategory;

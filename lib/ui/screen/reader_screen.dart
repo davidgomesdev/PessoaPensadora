@@ -40,8 +40,7 @@ class _ReaderScreenState extends State<ReaderScreen>
       drawer: StreamBuilder<PessoaText>(
           stream: _streamController.stream,
           builder: (ctx, snapshot) {
-            if (snapshot.connectionState != ConnectionState.waiting)
-              currentText = snapshot.data;
+            if (snapshot.hasComputed()) currentText = snapshot.data;
 
             return TextSelectionDrawer(
                 selectionSink: _streamController.sink,
@@ -51,15 +50,15 @@ class _ReaderScreenState extends State<ReaderScreen>
       body: StreamBuilder<PessoaText>(
         stream: _streamController.stream,
         builder: (ctx, snapshot) {
-          final text = snapshot.data;
+          final text = currentText = snapshot.data;
 
           if (text == null) return NoTextReader();
 
           return GestureDetector(
             onHorizontalDragEnd: (details) {
-              final vel = details.primaryVelocity ?? 0.0;
+              final vel = details.primaryVelocity;
 
-              if (vel == 0.0) return;
+              if (vel == null) return;
 
               final currentText = this.currentText;
 
