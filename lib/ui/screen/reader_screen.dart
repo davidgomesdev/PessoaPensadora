@@ -65,12 +65,15 @@ class _ReaderScreenState extends State<ReaderScreen>
               final currentCategory = currentText.category;
               PessoaText? newText;
 
-              if (vel.isNegative) {
+              // Avoids accidental swipe when scrolling
+              var swipeSensitivity = 16;
+
+              if (vel <= -swipeSensitivity) {
                 newText = currentCategory.texts
                     .firstWhereOrNull((text) => text.id > currentText.id);
 
                 log.i("Swiping to next text");
-              } else {
+              } else if (vel >= swipeSensitivity) {
                 newText = currentCategory.texts.reversed
                     .firstWhereOrNull((text) => text.id < currentText.id);
 

@@ -97,35 +97,29 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     final selectedTextLink = widget.selectedText?.link;
     final selectedCategoryLink = widget.selectedText?.category.link;
 
-    final subcategories = category.subcategories.map((subcategory) {
-      var isSelected = selectedCategoryLink != null &&
-          subcategory.link == selectedCategoryLink;
+    final subcategories = category.subcategories.map((subcategory) => ListTile(
+          horizontalTitleGap: 8.0,
+          minLeadingWidth: 0.0,
+          leading: Icon(Icons.subdirectory_arrow_right_rounded),
+          title: Text(subcategory.title, style: bonitoTextTheme.headline4),
+          selected: subcategory.link == selectedCategoryLink,
+          selectedColor: Colors.white,
+          selectedTileColor: Colors.white10,
+          onTap: () {
+            setState(() {
+              categoryStream.add(subcategory);
 
-      return ListTile(
-        horizontalTitleGap: 8.0,
-        minLeadingWidth: 0.0,
-        leading: Icon(Icons.subdirectory_arrow_right_rounded),
-        title: Text(subcategory.title, style: bonitoTextTheme.headline4),
-        selected: isSelected,
-        selectedColor: Colors.white,
-        selectedTileColor: Colors.white10,
-        onTap: () {
-          setState(() {
-            categoryStream.add(subcategory);
-
-            log.i('Navigated to "${subcategory.title}"');
-          });
-        },
-      );
-    });
+              log.i('Navigated to "${subcategory.title}"');
+            });
+          },
+        ));
 
     final texts = category.texts.map((text) => ListTile(
           horizontalTitleGap: 8.0,
           minLeadingWidth: 0.0,
           leading: Icon(Icons.text_snippet_rounded),
           title: Text(text.title, style: bonitoTextTheme.headline4),
-          selected:
-              selectedTextLink != null ? text.link == selectedTextLink : false,
+          selected: text.link == selectedTextLink,
           selectedColor: Colors.white,
           selectedTileColor: Colors.white10,
           onTap: () {
@@ -136,47 +130,50 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           },
         ));
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0)
-              .copyWith(top: 16.0, bottom: 12.0),
-          child: Text(
-            category.title,
-            style: bonitoTextTheme.headline3,
+    return ScrollConfiguration(
+      behavior: const ScrollBehavior().copyWith(overscroll: false),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0)
+                .copyWith(top: 16.0, bottom: 12.0),
+            child: Text(
+              category.title,
+              style: bonitoTextTheme.headline3,
+            ),
           ),
-        ),
-        Expanded(
-          child: ListView(
-            controller: ScrollController(),
-            children: [
-              ...ListTile.divideTiles(
-                color: Colors.white70,
-                tiles: [...subcategories, ...texts],
-              ),
-            ],
+          Expanded(
+            child: ListView(
+              controller: ScrollController(),
+              children: [
+                ...ListTile.divideTiles(
+                  color: Colors.white70,
+                  tiles: [...subcategories, ...texts],
+                ),
+              ],
+            ),
           ),
-        ),
-        if (category.type != CategoryType.Index)
-          ListTile(
-              horizontalTitleGap: 8.0,
-              minLeadingWidth: 0.0,
-              leading: Icon(Icons.arrow_back_rounded),
-              title: Text("Voltar", style: bonitoTextTheme.headline4),
-              tileColor: Colors.black26,
-              onTap: () {
-                setState(() {
-                  final previousCategory = category.parentCategory;
-                  categoryStream.add(previousCategory);
+          if (category.type != CategoryType.Index)
+            ListTile(
+                horizontalTitleGap: 8.0,
+                minLeadingWidth: 0.0,
+                leading: Icon(Icons.arrow_back_rounded),
+                title: Text("Voltar", style: bonitoTextTheme.headline4),
+                tileColor: Colors.black26,
+                onTap: () {
+                  setState(() {
+                    final previousCategory = category.parentCategory;
+                    categoryStream.add(previousCategory);
 
-                  if (previousCategory == null)
-                    log.i("Backing to index");
-                  else
-                    log.i('Backing to previous category '
-                        '"${previousCategory.title}"');
-                });
-              }),
-      ],
+                    if (previousCategory == null)
+                      log.i("Backing to index");
+                    else
+                      log.i('Backing to previous category '
+                          '"${previousCategory.title}"');
+                  });
+                }),
+        ],
+      ),
     );
   }
 }
