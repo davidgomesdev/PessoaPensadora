@@ -146,9 +146,6 @@ class ArquivoPessoaService {
 }
 
 extension RegexExtension on String {
-  String extractLetters() =>
-      replaceAll(RegExp(r'[^A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+'), '');
-
   String removeTitle() => replaceAll(
       RegExp(r'(?<!.\n)(?:^.+\n\n)+(?=.+\n\n|.+\n)', multiLine: true), '');
 }
