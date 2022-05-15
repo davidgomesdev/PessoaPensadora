@@ -17,7 +17,7 @@ jobs:
     - run: flutter pub get
     - run: flutter test
     - run: flutter build apk
-    - run: mv build\app\outputs\flutter-apk\app-release.apk PessoaBonito.apk
+    - run: mv build/app/outputs/flutter-apk/app-release.apk PessoaBonito.apk
     - name: Upload archive
       uses: ncipollo/release-action@v1.8.10
       with:
