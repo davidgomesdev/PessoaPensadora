@@ -8,8 +8,9 @@ class TextReader extends StatelessWidget {
   final ArquivoPessoaService service;
   final PessoaCategory currentCategory;
   final PessoaText currentText;
+  final ScrollController _scrollController = ScrollController();
 
-  const TextReader(
+  TextReader(
       {Key? key,
       required this.service,
       required this.currentCategory,
@@ -18,40 +19,51 @@ class TextReader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<PessoaText>(
         future: service.fetchText(currentText, currentCategory),
         builder: (ctx, snapshot) {
           if (snapshot.hasError) return Text("Error ${snapshot.error}");
 
           if (!snapshot.hasData) return CircularProgressIndicator();
 
-          final fetchedText = snapshot.data as PessoaText;
+          if (_scrollController.hasClients)
+            _scrollController.animateTo(
+              0.0,
+              duration: Duration(milliseconds: 400),
+              curve: Curves.fastOutSlowIn,
+            );
 
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 24.0),
-                  child:
-                      Center(child: getCategoryWidget(currentCategory.title)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 16.0),
-                  child: getTitleWidget(fetchedText.title),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: getTextWidget(fetchedText.content ?? 'NO TEXT'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: getAuthorWidget(fetchedText.author ?? 'NO AUTHOR'),
+          final fetchedText = snapshot.data!;
+
+          return ScrollConfiguration(
+            behavior: const ScrollBehavior().copyWith(overscroll: false),
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 24.0),
+                    child:
+                        Center(child: getCategoryWidget(currentCategory.title)),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 16.0),
+                    child: getTitleWidget(fetchedText.title),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: getTextWidget(fetchedText.content ?? 'NO TEXT'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: getAuthorWidget(fetchedText.author ?? 'NO AUTHOR'),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         });
