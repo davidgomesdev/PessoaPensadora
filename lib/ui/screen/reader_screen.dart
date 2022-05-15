@@ -40,8 +40,6 @@ class _ReaderScreenState extends State<ReaderScreen>
       drawer: StreamBuilder<PessoaText>(
           stream: _streamController.stream,
           builder: (ctx, snapshot) {
-            if (snapshot.hasComputed()) currentText = snapshot.data;
-
             return TextSelectionDrawer(
                 selectionSink: _streamController.sink,
                 service: widget.service,

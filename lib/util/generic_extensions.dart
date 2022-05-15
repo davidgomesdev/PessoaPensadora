@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-
 extension HandyFetching<T> on T {
   R? firstMultiWhere<R>(R? getFn(T self, String param), List<String> params) {
     for (final param in params) {
@@ -24,9 +22,4 @@ extension NullableImprovement<E> on Iterable<E> {
 
     return null;
   }
-}
-
-extension StreamImprovement on AsyncSnapshot {
-  bool hasComputed() =>
-      [ConnectionState.active, ConnectionState.done].contains(connectionState);
 }
