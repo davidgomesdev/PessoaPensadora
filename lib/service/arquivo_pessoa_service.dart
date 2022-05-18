@@ -8,10 +8,10 @@ import 'package:pessoa_bonito/util/logger_factory.dart';
 
 import '../util/generic_extensions.dart';
 
-const _BASE_URL = "http://arquivopessoa.net";
-const _INDEX_LINK = "/sidebar";
+const _baseUrl = "http://arquivopessoa.net";
+const _indexLink = "/sidebar";
 
-final _getCategoryLinkRegex = new RegExp("'(/categorias/toggle/.*?)'");
+final _getCategoryLinkRegex = RegExp("'(/categorias/toggle/.*?)'");
 
 final client = RetryClient(http.Client(),
     retries: 5,
@@ -21,8 +21,8 @@ class ArquivoPessoaService {
   String? cookie;
 
   Future<PessoaCategory> getIndex() async {
-    final index = PessoaCategory.index(_INDEX_LINK);
-    final indexHtml = await _getHtmlDoc(_INDEX_LINK);
+    final index = PessoaCategory.index(_indexLink);
+    final indexHtml = await _getHtmlDoc(_indexLink);
 
     log.i("Retrieved index HTML");
 
@@ -90,7 +90,7 @@ class ArquivoPessoaService {
   }
 
   Future<Document> _getHtmlDoc(String link) async {
-    final response = await client.get(Uri.parse("$_BASE_URL$link"));
+    final response = await client.get(Uri.parse("$_baseUrl$link"));
     final html = response.bodyBytes;
 
     return parse(html);

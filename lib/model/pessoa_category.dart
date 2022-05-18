@@ -31,4 +31,6 @@ class PessoaCategory {
   void setTexts(List<PessoaText> texts) => this.texts = texts;
 }
 
+// Needed because `index` is a reversed word of enum
+// ignore: constant_identifier_names
 enum CategoryType { Index, Preview, Full }

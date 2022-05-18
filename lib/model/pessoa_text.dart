@@ -15,5 +15,5 @@ class PessoaText {
 
   PessoaText.full(this.link, this.category, this.id,
       {required this.title, required this.content, required String author})
-      : this.author = author.trim();
+      : author = author.trim();
 }

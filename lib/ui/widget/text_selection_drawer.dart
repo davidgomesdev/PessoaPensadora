@@ -10,12 +10,10 @@ import 'package:pessoa_bonito/util/logger_factory.dart';
 
 class TextSelectionDrawer extends StatefulWidget {
   final ArquivoPessoaService service;
-
   final PessoaText? selectedText;
-
   final Sink<PessoaText> selectionSink;
 
-  TextSelectionDrawer({
+  const TextSelectionDrawer({
     Key? key,
     required this.selectionSink,
     required this.service,
@@ -71,7 +69,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               return Drawer(
                 child: SafeArea(
                   child: (isLoading)
-                      ? Center(
+                      ? const Center(
                           child: SpinKitThreeBounce(
                           color: Colors.white,
                           size: 24.0,
@@ -87,8 +85,9 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   Future<PessoaCategory> _getCategory(PessoaCategory? category) {
     if (category == null) return widget.service.getIndex();
 
-    if (category.type == CategoryType.Preview)
+    if (category.type == CategoryType.Preview) {
       return widget.service.fetchCategory(category, category.parentCategory);
+    }
 
     return Future.value(category);
   }
@@ -98,9 +97,9 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     final selectedCategoryLink = widget.selectedText?.category.link;
 
     final subcategories = category.subcategories.map((subcategory) => ListTile(
-          horizontalTitleGap: 8.0,
+      horizontalTitleGap: 8.0,
           minLeadingWidth: 0.0,
-          leading: Icon(Icons.subdirectory_arrow_right_rounded),
+          leading: const Icon(Icons.subdirectory_arrow_right_rounded),
           title: Text(subcategory.title, style: bonitoTextTheme.headline4),
           selected: subcategory.link == selectedCategoryLink,
           selectedColor: Colors.white,
@@ -115,9 +114,9 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         ));
 
     final texts = category.texts.map((text) => ListTile(
-          horizontalTitleGap: 8.0,
+      horizontalTitleGap: 8.0,
           minLeadingWidth: 0.0,
-          leading: Icon(Icons.text_snippet_rounded),
+          leading: const Icon(Icons.text_snippet_rounded),
           title: Text(text.title, style: bonitoTextTheme.headline4),
           selected: text.link == selectedTextLink,
           selectedColor: Colors.white,
@@ -157,7 +156,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             ListTile(
                 horizontalTitleGap: 8.0,
                 minLeadingWidth: 0.0,
-                leading: Icon(Icons.arrow_back_rounded),
+                leading: const Icon(Icons.arrow_back_rounded),
                 title: Text("Voltar", style: bonitoTextTheme.headline4),
                 tileColor: Colors.black26,
                 onTap: () {
@@ -165,11 +164,12 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                     final previousCategory = category.parentCategory;
                     categoryStream.add(previousCategory);
 
-                    if (previousCategory == null)
+                    if (previousCategory == null) {
                       log.i("Backing to index");
-                    else
+                    } else {
                       log.i('Backing to previous category '
                           '"${previousCategory.title}"');
+                    }
                   });
                 }),
         ],

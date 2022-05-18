@@ -24,14 +24,15 @@ class TextReader extends StatelessWidget {
         builder: (ctx, snapshot) {
           if (snapshot.hasError) return Text("Error ${snapshot.error}");
 
-          if (!snapshot.hasData) return CircularProgressIndicator();
+          if (!snapshot.hasData) return const CircularProgressIndicator();
 
-          if (_scrollController.hasClients)
+          if (_scrollController.hasClients) {
             _scrollController.animateTo(
               0.0,
-              duration: Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: 400),
               curve: Curves.fastOutSlowIn,
             );
+          }
 
           final fetchedText = snapshot.data!;
 

@@ -50,7 +50,7 @@ class _ReaderScreenState extends State<ReaderScreen>
         builder: (ctx, snapshot) {
           final text = currentText = snapshot.data;
 
-          if (text == null) return NoTextReader();
+          if (text == null) return const NoTextReader();
 
           return GestureDetector(
             onHorizontalDragEnd: (details) {

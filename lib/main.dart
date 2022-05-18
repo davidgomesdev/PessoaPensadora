@@ -6,7 +6,7 @@ import 'package:pessoa_bonito/ui/screen/reader_screen.dart';
 void main() {
   EquatableConfig.stringify = true;
 
-  runApp(HomeScreen());
+  runApp(const HomeScreen());
 }
 
 class HomeScreen extends StatelessWidget {
