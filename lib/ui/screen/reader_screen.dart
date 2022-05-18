@@ -87,10 +87,13 @@ class _ReaderScreenState extends State<ReaderScreen>
                 log.i("Swipe no-op");
               }
             },
-            child: TextReader(
-              service: widget.service,
-              currentCategory: text.category,
-              currentText: text,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints.expand(),
+              child: TextReader(
+                service: widget.service,
+                currentCategory: text.category,
+                currentText: text,
+              ),
             ),
           );
         },
