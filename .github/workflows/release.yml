@@ -1,0 +1,31 @@
+name: Release APK
+
+on:
+  push:
+    branches: [ main ]
+  
+jobs:
+  release:
+    runs-on: ubuntu-latest
+  
+    steps:
+    - uses: actions/checkout@v3
+    - uses: subosito/flutter-action@v2.4.0
+      with:
+        flutter-version: '2.x'
+        channel: 'stable'
+    - run: flutter pub get
+    - run: flutter test
+    - run: flutter build apk
+    - run: mv build/app/outputs/flutter-apk/app-release.apk PessoaBonito.apk
+    - name: Upload archive
+      uses: ncipollo/release-action@v1.8.10
+      with:
+        artifacts: "PessoaBonito.apk"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        allowUpdates: true
+        removeArtifacts: true
+        artifactErrorsFailBuild: true
+        prerelease: true
+        name: latest
+        tag: latest
