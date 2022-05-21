@@ -6,6 +6,7 @@ import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
+import 'package:pessoa_bonito/ui/widget/service_error_widget.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
 class TextSelectionDrawer extends StatefulWidget {
@@ -51,10 +52,13 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             future: _getCategory(category),
             builder: (ctx, snapshot) {
               if (snapshot.hasError) {
-                log.e("Error building drawer", snapshot.error,
-                    snapshot.stackTrace);
+                final error = snapshot.error!;
 
-                return Text("Error ${snapshot.error}");
+                return Drawer(
+                  child: Center(
+                    child: ServiceErrorWidget(error),
+                  ),
+                );
               }
 
               final fetchedCategory = snapshot.data;
@@ -82,7 +86,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     );
   }
 
-  Future<PessoaCategory> _getCategory(PessoaCategory? category) {
+  Future<PessoaCategory> _getCategory(PessoaCategory? category) async {
     if (category == null) return widget.service.getIndex();
 
     if (category.type == CategoryType.Preview) {

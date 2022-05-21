@@ -1,10 +1,12 @@
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:http/retry.dart';
 import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
+import 'package:pessoa_bonito/util/network_utils.dart';
 
 import '../util/generic_extensions.dart';
 
@@ -90,7 +92,17 @@ class ArquivoPessoaService {
   }
 
   Future<Document> _getHtmlDoc(String link) async {
-    final response = await client.get(Uri.parse("$_baseUrl$link"));
+    if (!await hasInternet()) {
+      return Future.error(NoInternetException());
+    }
+
+    Response response;
+
+    try {
+      response = await client.get(Uri.parse("$_baseUrl$link"));
+    } catch (_) {
+      return Future.error(SourceNotAccessibleException());
+    }
     final html = response.bodyBytes;
 
     return parse(html);

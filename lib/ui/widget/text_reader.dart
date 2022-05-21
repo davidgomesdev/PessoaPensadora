@@ -3,6 +3,7 @@ import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
+import 'package:pessoa_bonito/ui/widget/service_error_widget.dart';
 
 class TextReader extends StatelessWidget {
   final ArquivoPessoaService service;
@@ -22,7 +23,9 @@ class TextReader extends StatelessWidget {
     return FutureBuilder<PessoaText>(
         future: service.fetchText(currentText, currentCategory),
         builder: (ctx, snapshot) {
-          if (snapshot.hasError) return Text("Error ${snapshot.error}");
+          if (snapshot.hasError) {
+            return Center(child: ServiceErrorWidget(snapshot.error!));
+          }
 
           if (!snapshot.hasData) return const CircularProgressIndicator();
 

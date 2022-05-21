@@ -22,7 +22,6 @@ class ReaderScreen extends StatefulWidget {
 
 class _ReaderScreenState extends State<ReaderScreen>
     with SingleTickerProviderStateMixin {
-  PessoaText? currentText;
   final StreamController<PessoaText> _streamController =
       StreamController.broadcast();
 
@@ -35,68 +34,63 @@ class _ReaderScreenState extends State<ReaderScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      drawer: StreamBuilder<PessoaText>(
-          stream: _streamController.stream,
-          builder: (ctx, snapshot) {
-            return TextSelectionDrawer(
-                selectionSink: _streamController.sink,
-                service: widget.service,
-                selectedText: currentText);
-          }),
-      body: StreamBuilder<PessoaText>(
+    return StreamBuilder<PessoaText>(
         stream: _streamController.stream,
         builder: (ctx, snapshot) {
-          final text = currentText = snapshot.data;
+          final text = snapshot.data;
 
-          if (text == null) return const NoTextReader();
-
-          return GestureDetector(
-            onHorizontalDragEnd: (details) {
-              final vel = details.primaryVelocity;
-
-              if (vel == null) return;
-
-              final currentText = this.currentText;
-
-              if (currentText == null) return;
-
-              final currentCategory = currentText.category;
-              PessoaText? newText;
-
-              // Avoids accidental swipe when scrolling
-              var swipeSensitivity = 16;
-
-              if (vel <= -swipeSensitivity) {
-                newText = currentCategory.texts
-                    .firstWhereOrNull((text) => text.id > currentText.id);
-
-                log.i("Swiping to next text");
-              } else if (vel >= swipeSensitivity) {
-                newText = currentCategory.texts.reversed
-                    .firstWhereOrNull((text) => text.id < currentText.id);
-
-                log.i("Swiping to previous text");
-              }
-
-              if (newText != null) {
-                log.i("Swipe to ${newText.title}");
-                _streamController.add(newText);
-              } else {
-                log.i("Swipe no-op");
-              }
-            },
-            child: ConstrainedBox(
-              constraints: const BoxConstraints.expand(),
-              child: TextReader(
+          return Scaffold(
+            appBar: AppBar(),
+            drawer: TextSelectionDrawer(
+                selectionSink: _streamController.sink,
                 service: widget.service,
-                currentCategory: text.category,
-                currentText: text,
-              ),
-            ),
+                selectedText: text),
+            body: _buildTextReader(text),
           );
-        },
+        });
+  }
+
+  Widget _buildTextReader(PessoaText? text) {
+    if (text == null) return const NoTextReader();
+
+    return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        final vel = details.primaryVelocity;
+
+        if (vel == null) return;
+
+        final category = text.category;
+        PessoaText? newText;
+
+        // Avoids accidental swipe when scrolling
+        var swipeSensitivity = 16;
+
+        if (vel <= -swipeSensitivity) {
+          newText =
+              category.texts.firstWhereOrNull((text) => text.id > text.id);
+
+          log.i("Swiping to next text");
+        } else if (vel >= swipeSensitivity) {
+          newText = category.texts.reversed
+              .firstWhereOrNull((text) => text.id < text.id);
+
+          log.i("Swiping to previous text");
+        }
+
+        if (newText != null) {
+          log.i("Swipe to ${newText.title}");
+          _streamController.add(newText);
+        } else {
+          log.i("Swipe no-op");
+        }
+      },
+      child: ConstrainedBox(
+        constraints: const BoxConstraints.expand(),
+        child: TextReader(
+          service: widget.service,
+          currentCategory: text.category,
+          currentText: text,
+        ),
       ),
     );
   }
