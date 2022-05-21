@@ -50,8 +50,8 @@ class _ReaderScreenState extends State<ReaderScreen>
         });
   }
 
-  Widget _buildTextReader(PessoaText? text) {
-    if (text == null) return const NoTextReader();
+  Widget _buildTextReader(PessoaText? currText) {
+    if (currText == null) return const NoTextReader();
 
     return GestureDetector(
       onHorizontalDragEnd: (details) {
@@ -59,7 +59,7 @@ class _ReaderScreenState extends State<ReaderScreen>
 
         if (vel == null) return;
 
-        final category = text.category;
+        final category = currText.category;
         PessoaText? newText;
 
         // Avoids accidental swipe when scrolling
@@ -67,12 +67,12 @@ class _ReaderScreenState extends State<ReaderScreen>
 
         if (vel <= -swipeSensitivity) {
           newText =
-              category.texts.firstWhereOrNull((text) => text.id > text.id);
+              category.texts.firstWhereOrNull((text) => text.id > currText.id);
 
           log.i("Swiping to next text");
         } else if (vel >= swipeSensitivity) {
           newText = category.texts.reversed
-              .firstWhereOrNull((text) => text.id < text.id);
+              .firstWhereOrNull((text) => text.id < currText.id);
 
           log.i("Swiping to previous text");
         }
@@ -88,8 +88,8 @@ class _ReaderScreenState extends State<ReaderScreen>
         constraints: const BoxConstraints.expand(),
         child: TextReader(
           service: widget.service,
-          currentCategory: text.category,
-          currentText: text,
+          currentCategory: currText.category,
+          currentText: currText,
         ),
       ),
     );
