@@ -134,8 +134,7 @@ class ArquivoPessoaService {
     log.i("Parsed subcategories");
 
     int id = 0;
-    final texts = html
-        .querySelectorAll("a.titulo-texto")
+    final texts = sortById(html.querySelectorAll("a.titulo-texto"))
         .map((e) => PessoaText.preview(e.attributes["href"]!, category, id++,
             title: e.text.trim()))
         .toList();
@@ -155,9 +154,23 @@ class ArquivoPessoaService {
     return PessoaCategory.preview(categoryLink,
         title: title, parentCategory: parent);
   }
+
+  List<Element> sortById(List<Element> list) {
+    list.sort(sortByIdComparator);
+    return list;
+  }
+
+  int sortByIdComparator(Element prev, Element next) {
+    final prevId = prev.attributes["href"]!.getId();
+    final nextId = next.attributes["href"]!.getId();
+
+    return prevId.compareTo(nextId);
+  }
 }
 
 extension RegexExtension on String {
   String removeTitle() => replaceAll(
       RegExp(r'(?<!.\n)(?:^.+\n\n)+(?=.+\n\n|.+\n)', multiLine: true), '');
+
+  int getId() => int.parse(replaceAll(RegExp('/.+/'), ''));
 }
