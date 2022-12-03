@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
+import 'package:pessoa_bonito/service/action_service.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';
@@ -10,10 +12,12 @@ import 'package:pessoa_bonito/util/generic_extensions.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
 class ReaderScreen extends StatefulWidget {
-  final ArquivoPessoaService service;
+  final ArquivoPessoaService arquivoService;
+  final ActionService actionService;
 
   ReaderScreen({Key? key})
-      : service = ArquivoPessoaService(),
+      : arquivoService = Get.find(),
+        actionService = Get.find(),
         super(key: key);
 
   @override
@@ -34,16 +38,36 @@ class _ReaderScreenState extends State<ReaderScreen>
 
   @override
   Widget build(BuildContext context) {
+    final service = widget.actionService;
+
     return StreamBuilder<PessoaText>(
         stream: _streamController.stream,
         builder: (ctx, snapshot) {
           final text = snapshot.data;
 
           return Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(
+              actions: (text == null)
+                  ? []
+                  : [
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (service.isTextSaved(text.id)) {
+                                service.deleteText(text.id);
+                              } else {
+                                service.saveText(text);
+                              }
+                            });
+                          },
+                          icon: Icon(service.isTextSaved(text.id)
+                              ? Icons.download_done
+                              : Icons.download))
+                    ],
+            ),
             drawer: TextSelectionDrawer(
                 selectionSink: _streamController.sink,
-                service: widget.service,
+                service: widget.arquivoService,
                 selectedText: text),
             body: _buildTextReader(text),
           );
@@ -59,7 +83,7 @@ class _ReaderScreenState extends State<ReaderScreen>
 
         if (vel == null) return;
 
-        final category = currText.category;
+        final category = currText.category!;
         PessoaText? newText;
 
         // Avoids accidental swipe when scrolling
@@ -87,8 +111,8 @@ class _ReaderScreenState extends State<ReaderScreen>
       child: ConstrainedBox(
         constraints: const BoxConstraints.expand(),
         child: TextReader(
-          service: widget.service,
-          currentCategory: currText.category,
+          service: widget.arquivoService,
+          currentCategory: currText.category!,
           currentText: currText,
         ),
       ),

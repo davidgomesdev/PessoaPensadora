@@ -20,8 +20,6 @@ final client = RetryClient(http.Client(),
     when: (response) => [500, 502, 503].contains(response.statusCode));
 
 class ArquivoPessoaService {
-  String? cookie;
-
   Future<PessoaCategory> getIndex() async {
     final index = PessoaCategory.index(_indexLink);
     final indexHtml = await _getHtmlDoc(_indexLink);
