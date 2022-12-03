@@ -72,7 +72,8 @@ class ArquivoPessoaService {
           ["texto-poesia", "texto-prosa"],
         )?.children ??
         List.empty();
-    final content = getNestedContent(contentHtml).removeTitle();
+    final content =
+        getNestedContent(contentHtml).removeTitle().removeExtraSpaces();
 
     log.d("Text after processed:\n\n$content");
 
@@ -171,6 +172,8 @@ class ArquivoPessoaService {
 extension RegexExtension on String {
   String removeTitle() => replaceAll(
       RegExp(r'(?<!.\n)(?:^.+\n\n)+(?=.+\n\n|.+\n)', multiLine: true), '');
+
+  String removeExtraSpaces() => replaceAll(RegExp(r'(?<=\w) {2,}'), ' ');
 
   int getId() => int.parse(replaceAll(RegExp('/.+/'), ''));
 }
