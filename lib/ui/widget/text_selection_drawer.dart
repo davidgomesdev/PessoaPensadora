@@ -98,10 +98,10 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
   Widget buildListView(PessoaCategory category) {
     final selectedTextLink = widget.selectedText?.link;
-    final selectedCategoryLink = widget.selectedText?.category.link;
+    final selectedCategoryLink = widget.selectedText?.category!.link;
 
     final subcategories = category.subcategories.map((subcategory) => ListTile(
-      horizontalTitleGap: 8.0,
+          horizontalTitleGap: 8.0,
           minLeadingWidth: 0.0,
           leading: const Icon(Icons.subdirectory_arrow_right_rounded),
           title: Text(subcategory.title, style: bonitoTextTheme.headline4),
