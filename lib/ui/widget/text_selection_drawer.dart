@@ -94,7 +94,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           horizontalTitleGap: 8.0,
           minLeadingWidth: 0.0,
           leading: const Icon(Icons.subdirectory_arrow_right_rounded),
-          title: Text(subcategory.title, style: bonitoTextTheme.headline4),
+          title: Text(subcategory.title, style: bonitoTextTheme.headlineMedium),
           selected: subcategory.link == selectedCategoryLink,
           selectedColor: Colors.white,
           selectedTileColor: Colors.white10,
@@ -111,7 +111,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
       horizontalTitleGap: 8.0,
           minLeadingWidth: 0.0,
           leading: const Icon(Icons.text_snippet_rounded),
-          title: Text(text.title, style: bonitoTextTheme.headline4),
+          title: Text(text.title, style: bonitoTextTheme.headlineMedium),
           selected: text.link == selectedTextLink,
           selectedColor: Colors.white,
           selectedTileColor: Colors.white10,
@@ -132,7 +132,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                 .copyWith(top: 16.0, bottom: 12.0),
             child: Text(
               category.title,
-              style: bonitoTextTheme.headline3,
+              style: bonitoTextTheme.displaySmall,
             ),
           ),
           Expanded(
@@ -151,7 +151,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                 horizontalTitleGap: 8.0,
                 minLeadingWidth: 0.0,
                 leading: const Icon(Icons.arrow_back_rounded),
-                title: Text("Voltar", style: bonitoTextTheme.headline4),
+                title: Text("Voltar", style: bonitoTextTheme.headlineMedium),
                 tileColor: Colors.black26,
                 onTap: () {
                   setState(() {

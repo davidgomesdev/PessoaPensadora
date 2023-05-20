@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:pessoa_bonito/service/action_service.dart';
 import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';

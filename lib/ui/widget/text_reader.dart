@@ -75,22 +75,22 @@ class TextReader extends StatelessWidget {
 
   Widget getCategoryWidget(String title) => Text(
         title,
-        style: bonitoTextTheme.subtitle1,
+        style: bonitoTextTheme.titleMedium,
       );
 
   Widget getTitleWidget(String title) => Text(
-        title,
-        style: bonitoTextTheme.headline5,
+    title,
+        style: bonitoTextTheme.headlineSmall,
       );
 
   Widget getTextWidget(String content) => SelectableText(
-        content,
+    content,
         textAlign: TextAlign.left,
-        style: bonitoTextTheme.bodyText2,
+        style: bonitoTextTheme.bodyMedium,
       );
 
   Widget getAuthorWidget(String author) => Text(
-        author,
-        style: bonitoTextTheme.subtitle2,
+    author,
+        style: bonitoTextTheme.titleSmall,
       );
 }

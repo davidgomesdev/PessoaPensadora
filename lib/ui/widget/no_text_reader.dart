@@ -9,7 +9,7 @@ class NoTextReader extends StatelessWidget {
     return Center(
         child: Text(
       "Arquivo Pessoa (Bonito)",
-      style: bonitoTextTheme.headline2,
+      style: bonitoTextTheme.displayMedium,
     ));
   }
 }
