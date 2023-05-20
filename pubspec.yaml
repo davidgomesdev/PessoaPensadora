@@ -6,14 +6,14 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.14.0 <3.0.0"
+  sdk: ">=3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  google_fonts: ^2.1.1
+  google_fonts: ^4.0.4
   html: ^0.15.0
   http: ^0.13.3
   equatable: ^2.0.3
