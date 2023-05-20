@@ -196,8 +196,12 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     );
   }
 
-  bool filterByTitle(PessoaText text, String textFilter) =>
-      text.title.toLowerCase().contains(textFilter.toLowerCase());
+  bool filterByTitle(PessoaText text, String textFilter) {
+    final filterWords = textFilter.toLowerCase().split(' ');
+    final titleInLowercase = text.title.toLowerCase();
+
+    return filterWords.every((keyword) => titleInLowercase.contains(keyword));
+  }
 
   ListTile buildTextTile(PessoaText text, String? selectedTextLink) {
     return ListTile(
