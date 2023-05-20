@@ -20,8 +20,8 @@ class PessoaTextAdapter extends TypeAdapter<PessoaText> {
       fields[0] as String,
       fields[1] as int,
       fields[2] as String,
-      fields[4] as String?,
-      fields[3] as String?,
+      fields[4] as String,
+      fields[3] as String,
     );
   }
 

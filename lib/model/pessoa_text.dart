@@ -15,16 +15,16 @@ class PessoaText {
   @HiveField(2)
   final String title;
   @HiveField(3)
-  final String? content;
+  final String content;
   @HiveField(4)
-  final String? author;
+  final String author;
 
   PessoaText(this.link, this.id, this.title, this.author, this.content)
       : category = null;
 
   PessoaText.preview(this.link, this.category, this.id, {required this.title})
-      : content = null,
-        author = null;
+      : content = "",
+        author = "";
 
   PessoaText.full(this.link, this.category, this.id,
       {required this.title, required this.content, required String author})

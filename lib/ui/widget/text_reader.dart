@@ -58,12 +58,12 @@ class TextReader extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: getTextWidget(fetchedText.content ?? 'NO TEXT'),
+                    child: getTextWidget(fetchedText.content),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
-                      child: getAuthorWidget(fetchedText.author ?? 'NO AUTHOR'),
+                      child: getAuthorWidget(fetchedText.author),
                     ),
                   ),
                 ],

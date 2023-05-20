@@ -28,6 +28,8 @@ class TextSelectionDrawer extends StatefulWidget {
 class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   StreamController<PessoaCategory?> categoryStream =
       StreamController.broadcast();
+  String searchTextFilter = '';
+  StreamController<String> searchFilterStream = StreamController.broadcast();
 
   @override
   void initState() {
@@ -42,6 +44,8 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    searchTextFilter = '';
+
     return StreamBuilder<PessoaCategory?>(
       initialData: widget.selectedText?.category,
       stream: categoryStream.stream,
@@ -78,7 +82,14 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                           color: Colors.white,
                           size: 24.0,
                         ))
-                      : buildListView(fetchedCategory!),
+                      : StreamBuilder<String>(
+                          initialData: searchTextFilter,
+                          stream: searchFilterStream.stream,
+                          builder: (context, snapshot) {
+                            searchTextFilter = snapshot.data ?? '';
+                            return buildListView(
+                                fetchedCategory!, searchTextFilter);
+                          }),
                 ),
               );
             });
@@ -86,89 +97,146 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     );
   }
 
-  Widget buildListView(PessoaCategory category) {
-    final selectedTextLink = widget.selectedText?.link;
+  Widget buildListView(PessoaCategory category, String textFilter) {
     final selectedCategoryLink = widget.selectedText?.category!.link;
+    final selectedTextLink = widget.selectedText?.link;
 
-    final subcategories = category.subcategories.map((subcategory) => ListTile(
-          horizontalTitleGap: 8.0,
-          minLeadingWidth: 0.0,
-          leading: const Icon(Icons.subdirectory_arrow_right_rounded),
-          title: Text(subcategory.title, style: bonitoTextTheme.headlineMedium),
-          selected: subcategory.link == selectedCategoryLink,
-          selectedColor: Colors.white,
-          selectedTileColor: Colors.white10,
-          onTap: () {
-            setState(() {
-              categoryStream.add(subcategory);
+    final subcategories = category.subcategories.map((subcategory) =>
+        buildSubcategoryTile(subcategory, selectedCategoryLink));
 
-              log.i('Navigated to "${subcategory.title}"');
-            });
-          },
-        ));
-
-    final texts = category.texts.map((text) => ListTile(
-      horizontalTitleGap: 8.0,
-          minLeadingWidth: 0.0,
-          leading: const Icon(Icons.text_snippet_rounded),
-          title: Text(text.title, style: bonitoTextTheme.headlineMedium),
-          selected: text.link == selectedTextLink,
-          selectedColor: Colors.white,
-          selectedTileColor: Colors.white10,
-          onTap: () {
-            setState(() {
-              widget.selectionSink.add(text);
-              Navigator.pop(context);
-            });
-          },
-        ));
+    final texts = category.texts;
+    final filteredTexts =
+        texts.where((text) => filterByTitle(text, textFilter)).toList();
 
     return ScrollConfiguration(
       behavior: const ScrollBehavior().copyWith(overscroll: false),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0)
-                .copyWith(top: 16.0, bottom: 12.0),
-            child: Text(
-              category.title,
-              style: bonitoTextTheme.displaySmall,
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              controller: ScrollController(),
-              children: [
-                ...ListTile.divideTiles(
-                  color: Colors.white70,
-                  tiles: [...subcategories, ...texts],
-                ),
-              ],
-            ),
-          ),
-          if (category.type != CategoryType.Index)
-            ListTile(
-                horizontalTitleGap: 8.0,
-                minLeadingWidth: 0.0,
-                leading: const Icon(Icons.arrow_back_rounded),
-                title: Text("Voltar", style: bonitoTextTheme.headlineMedium),
-                tileColor: Colors.black26,
-                onTap: () {
-                  setState(() {
-                    final previousCategory = category.parentCategory;
-                    categoryStream.add(previousCategory);
-
-                    if (previousCategory == null) {
-                      log.i("Backing to index");
-                    } else {
-                      log.i('Backing to previous category '
-                          '"${previousCategory.title}"');
-                    }
-                  });
-                }),
+          buildTitle(category),
+          if (texts.isNotEmpty) buildSearch(filteredTexts.isNotEmpty),
+          buildTilesList(subcategories, filteredTexts, selectedTextLink),
+          if (category.type != CategoryType.Index) buildBackTile(category),
         ],
       ),
     );
+  }
+
+  Padding buildTitle(PessoaCategory category) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0)
+          .copyWith(top: 16.0, bottom: 12.0),
+      child: Text(
+        category.title,
+        style: bonitoTextTheme.displaySmall,
+      ),
+    );
+  }
+
+  Padding buildSearch(bool hasTexts) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4.0, right: 16.0),
+      child: Row(
+        children: [
+          Expanded(
+              child: TextField(
+            autocorrect: false,
+            textAlignVertical: TextAlignVertical.center,
+            textInputAction: TextInputAction.search,
+            keyboardType: TextInputType.text,
+            cursorColor: Colors.white,
+            decoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(8.0),
+                prefixIcon: const Icon(Icons.search_rounded),
+                errorText: hasTexts ? null : ''),
+            cursorOpacityAnimates: true,
+            onChanged: (searchField) {
+              searchFilterStream.add(searchField);
+            },
+          ))
+        ],
+      ),
+    );
+  }
+
+  Expanded buildTilesList(Iterable<ListTile> subcategories,
+      List<PessoaText> texts, String? selectedTextLink) {
+    return Expanded(
+      child: ListView(
+        controller: ScrollController(),
+        children: [
+          ...ListTile.divideTiles(
+            color: Colors.white70,
+            tiles: [
+              ...subcategories,
+              ...texts.map((text) => buildTextTile(text, selectedTextLink))
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  ListTile buildSubcategoryTile(
+      PessoaCategory subcategory, String? selectedCategoryLink) {
+    return ListTile(
+      horizontalTitleGap: 8.0,
+      minLeadingWidth: 0.0,
+      leading: const Icon(Icons.subdirectory_arrow_right_rounded),
+      title: Text(subcategory.title, style: bonitoTextTheme.headlineMedium),
+      selected: subcategory.link == selectedCategoryLink,
+      selectedColor: Colors.white,
+      selectedTileColor: Colors.white10,
+      onTap: () {
+        setState(() {
+          categoryStream.add(subcategory);
+
+          log.i('Navigated to "${subcategory.title}"');
+        });
+      },
+    );
+  }
+
+  bool filterByTitle(PessoaText text, String textFilter) =>
+      text.title.toLowerCase().contains(textFilter.toLowerCase());
+
+  ListTile buildTextTile(PessoaText text, String? selectedTextLink) {
+    return ListTile(
+      horizontalTitleGap: 8.0,
+      minLeadingWidth: 0.0,
+      leading: const Icon(Icons.text_snippet_rounded),
+      title: Text(text.title, style: bonitoTextTheme.headlineMedium),
+      selected: text.link == selectedTextLink,
+      selectedColor: Colors.white,
+      selectedTileColor: Colors.white10,
+      onTap: () {
+        setState(() {
+          widget.selectionSink.add(text);
+          Navigator.pop(context);
+        });
+      },
+    );
+  }
+
+  ListTile buildBackTile(PessoaCategory category) {
+    return ListTile(
+        horizontalTitleGap: 8.0,
+        minLeadingWidth: 0.0,
+        leading: const Icon(Icons.arrow_back_rounded),
+        title: Text("Voltar", style: bonitoTextTheme.headlineMedium),
+        tileColor: Colors.black26,
+        onTap: () {
+          setState(() {
+            final previousCategory = category.parentCategory;
+            categoryStream.add(previousCategory);
+
+            if (previousCategory == null) {
+              log.i("Backing to index");
+            } else {
+              log.i('Backing to previous category '
+                  '"${previousCategory.title}"');
+            }
+          });
+        });
   }
 
   Future<PessoaCategory> _getCategory(PessoaCategory? category) async {
