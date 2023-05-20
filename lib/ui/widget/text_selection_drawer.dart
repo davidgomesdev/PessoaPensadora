@@ -86,16 +86,6 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     );
   }
 
-  Future<PessoaCategory> _getCategory(PessoaCategory? category) async {
-    if (category == null) return widget.service.getIndex();
-
-    if (category.type == CategoryType.Preview) {
-      return widget.service.fetchCategory(category, category.parentCategory);
-    }
-
-    return Future.value(category);
-  }
-
   Widget buildListView(PessoaCategory category) {
     final selectedTextLink = widget.selectedText?.link;
     final selectedCategoryLink = widget.selectedText?.category!.link;
@@ -179,5 +169,15 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         ],
       ),
     );
+  }
+
+  Future<PessoaCategory> _getCategory(PessoaCategory? category) async {
+    if (category == null) return widget.service.getIndex();
+
+    if (category.type == CategoryType.Preview) {
+      return widget.service.fetchCategory(category, category.parentCategory);
+    }
+
+    return Future.value(category);
   }
 }

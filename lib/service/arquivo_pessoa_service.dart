@@ -130,20 +130,33 @@ class ArquivoPessoaService {
     final subcategories = subcategoriesHtml
         .map((html) => _parsePreviewCategory(category, html))
         .toList();
+
     log.i("Parsed subcategories");
 
     int id = 0;
-    final texts = sortById(html.querySelectorAll("a.titulo-texto"))
+
+    final texts = _sortTexts(html.querySelectorAll("a.titulo-texto"))
         .map((e) => PessoaText.preview(e.attributes["href"]!, category, id++,
             title: e.text.trim()))
         .toList();
-    log.i("Parsed texts");
 
-    log.i('Finished parsing category ("$title")');
+    log.i("Parsed texts");
 
     return category
       ..setSubcategories(subcategories)
       ..setTexts(texts);
+  }
+
+  List<Element> _sortTexts(List<Element> list) {
+    list.sort(_sortAlphaticallyComparator);
+    return list;
+  }
+
+  int _sortAlphaticallyComparator(Element prev, Element next) {
+    final prevTitle = _getElementTitle(prev).toLowerCase();
+    final nextTitle = _getElementTitle(next).toLowerCase();
+
+    return prevTitle.compareTo(nextTitle);
   }
 
   PessoaCategory _parsePreviewCategory(PessoaCategory parent, Element html) {
@@ -154,17 +167,7 @@ class ArquivoPessoaService {
         title: title, parentCategory: parent);
   }
 
-  List<Element> sortById(List<Element> list) {
-    list.sort(sortByIdComparator);
-    return list;
-  }
-
-  int sortByIdComparator(Element prev, Element next) {
-    final prevId = prev.attributes["href"]!.getId();
-    final nextId = next.attributes["href"]!.getId();
-
-    return prevId.compareTo(nextId);
-  }
+  String _getElementTitle(Element element) => element.text;
 }
 
 extension RegexExtension on String {
