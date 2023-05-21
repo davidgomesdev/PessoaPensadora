@@ -20,4 +20,23 @@ final bonitoTextTheme = GoogleFonts.robotoTextTheme(
 );
 final bonitoTheme = ThemeData.dark().copyWith(
   textTheme: bonitoTextTheme,
+  focusColor: Colors.amberAccent,
+  colorScheme:
+      ThemeData.dark().colorScheme.copyWith(primary: Colors.amberAccent),
+  dividerColor: Colors.white70,
+  listTileTheme: const ListTileThemeData(
+    selectedColor: Colors.white,
+    selectedTileColor: Colors.white10,
+  ),
+  inputDecorationTheme: const InputDecorationTheme(
+    hintStyle: TextStyle(
+      color: Colors.amber,
+    ),
+    labelStyle: TextStyle(
+      color: Colors.amberAccent,
+    ),
+    focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(style: BorderStyle.solid, color: Colors.amber),
+    ),
+  ),
 );

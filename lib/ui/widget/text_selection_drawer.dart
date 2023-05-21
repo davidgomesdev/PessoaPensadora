@@ -134,7 +134,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
   Padding buildSearch(bool hasTexts) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4.0, right: 16.0),
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Row(
         children: [
           Expanded(
@@ -145,9 +145,16 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             keyboardType: TextInputType.text,
             cursorColor: Colors.white,
             decoration: InputDecoration(
-                contentPadding: const EdgeInsets.all(8.0),
-                prefixIcon: const Icon(Icons.search_rounded),
-                errorText: hasTexts ? null : ''),
+              contentPadding: const EdgeInsets.all(8.0),
+              prefixIcon: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Icon(Icons.search_rounded, size: 24.0),
+              ),
+              isDense: true,
+              prefixIconConstraints: const BoxConstraints(minWidth: 36.0),
+              errorText: hasTexts ? null : '',
+              errorStyle: const TextStyle(height: 0),
+            ),
             cursorOpacityAnimates: true,
             onChanged: (searchField) {
               searchFilterStream.add(searchField);
@@ -165,7 +172,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         controller: ScrollController(),
         children: [
           ...ListTile.divideTiles(
-            color: Colors.white70,
+            color: Colors.white,
             tiles: [
               ...subcategories,
               ...texts.map((text) => buildTextTile(text, selectedTextLink))
@@ -184,8 +191,6 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
       leading: const Icon(Icons.subdirectory_arrow_right_rounded),
       title: Text(subcategory.title, style: bonitoTextTheme.headlineMedium),
       selected: subcategory.link == selectedCategoryLink,
-      selectedColor: Colors.white,
-      selectedTileColor: Colors.white10,
       onTap: () {
         setState(() {
           categoryStream.add(subcategory);
