@@ -1,23 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
-import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
-import 'package:pessoa_bonito/ui/widget/service_error_widget.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
 class TextSelectionDrawer extends StatefulWidget {
-  final ArquivoPessoaService service;
+  final PessoaCategory index;
   final PessoaText? selectedText;
   final Sink<PessoaText> selectionSink;
 
   const TextSelectionDrawer({
     Key? key,
+    required this.index,
     required this.selectionSink,
-    required this.service,
     required this.selectedText,
   }) : super(key: key);
 
@@ -47,59 +44,27 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     searchTextFilter = '';
 
     return StreamBuilder<PessoaCategory?>(
-      initialData: widget.selectedText?.category,
-      stream: categoryStream.stream,
-      builder: (ctx, snapshot) {
-        final category = snapshot.data;
+        initialData: widget.selectedText?.category,
+        stream: categoryStream.stream,
+        builder: (ctx, snapshot) {
+          final category = snapshot.data ?? widget.index;
 
-        return FutureBuilder<PessoaCategory>(
-            future: _getCategory(category),
-            builder: (ctx, snapshot) {
-              if (snapshot.hasError) {
-                final error = snapshot.error!;
-
-                return Drawer(
-                  child: Center(
-                    child: ServiceErrorWidget(error),
-                  ),
-                );
-              }
-
-              final fetchedCategory = snapshot.data;
-              final isLoading =
-                  snapshot.connectionState == ConnectionState.waiting;
-
-              if (!isLoading && fetchedCategory == null) {
-                log.w("Fetched category is null after loading!");
-                return Container();
-              }
-
-              return Drawer(
-                child: SafeArea(
-                  child: (isLoading)
-                      ? const Center(
-                          child: SpinKitThreeBounce(
-                          color: Colors.white,
-                          size: 24.0,
-                        ))
-                      : StreamBuilder<String>(
-                          initialData: searchTextFilter,
-                          stream: searchFilterStream.stream,
-                          builder: (context, snapshot) {
-                            searchTextFilter = snapshot.data ?? '';
-                            return buildListView(
-                                fetchedCategory!, searchTextFilter);
-                          }),
-                ),
-              );
-            });
-      },
-    );
+          return Drawer(
+              child: SafeArea(
+            child: StreamBuilder<String>(
+                initialData: searchTextFilter,
+                stream: searchFilterStream.stream,
+                builder: (context, snapshot) {
+                  searchTextFilter = snapshot.data ?? '';
+                  return buildListView(category, searchTextFilter);
+                }),
+          ));
+        });
   }
 
   Widget buildListView(PessoaCategory category, String textFilter) {
     final selectedCategoryLink = widget.selectedText?.category!.link;
-    final selectedTextLink = widget.selectedText?.link;
+    final selectedTextId = widget.selectedText?.id;
 
     final subcategories = category.subcategories.map((subcategory) =>
         buildSubcategoryTile(subcategory, selectedCategoryLink));
@@ -114,8 +79,8 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         children: [
           buildTitle(category),
           if (texts.isNotEmpty) buildSearch(filteredTexts.isNotEmpty),
-          buildTilesList(subcategories, filteredTexts, selectedTextLink),
-          if (category.type != CategoryType.Index) buildBackTile(category),
+          buildTilesList(subcategories, filteredTexts, selectedTextId),
+          if (!category.isIndex) buildBackTile(category),
         ],
       ),
     );
@@ -166,7 +131,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   }
 
   Expanded buildTilesList(Iterable<ListTile> subcategories,
-      List<PessoaText> texts, String? selectedTextLink) {
+      List<PessoaText> texts, int? selectedTextId) {
     return Expanded(
       child: ListView(
         controller: ScrollController(),
@@ -175,7 +140,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             color: Colors.white,
             tiles: [
               ...subcategories,
-              ...texts.map((text) => buildTextTile(text, selectedTextLink))
+              ...texts.map((text) => buildTextTile(text, selectedTextId))
             ],
           ),
         ],
@@ -208,13 +173,13 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     return filterWords.every((keyword) => titleInLowercase.contains(keyword));
   }
 
-  ListTile buildTextTile(PessoaText text, String? selectedTextLink) {
+  ListTile buildTextTile(PessoaText text, int? selectedTextId) {
     return ListTile(
       horizontalTitleGap: 8.0,
       minLeadingWidth: 0.0,
       leading: const Icon(Icons.text_snippet_rounded),
       title: Text(text.title, style: bonitoTextTheme.headlineMedium),
-      selected: text.link == selectedTextLink,
+      selected: text.id == selectedTextId,
       selectedColor: Colors.white,
       selectedTileColor: Colors.white10,
       onTap: () {
@@ -246,15 +211,5 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             }
           });
         });
-  }
-
-  Future<PessoaCategory> _getCategory(PessoaCategory? category) async {
-    if (category == null) return widget.service.getIndex();
-
-    if (category.type == CategoryType.Preview) {
-      return widget.service.fetchCategory(category, category.parentCategory);
-    }
-
-    return Future.value(category);
   }
 }

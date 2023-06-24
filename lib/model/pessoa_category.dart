@@ -1,36 +1,35 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 
+part 'pessoa_category.g.dart';
+
+@JsonSerializable()
 class PessoaCategory {
+  @JsonKey(defaultValue: "")
   String link;
   String title;
   PessoaCategory? parentCategory;
   List<PessoaCategory> subcategories;
   List<PessoaText> texts;
-  CategoryType type;
+  @JsonKey(defaultValue: false)
+  bool isIndex;
 
-  PessoaCategory.full(this.link, {required this.title, this.parentCategory})
-      : type = CategoryType.Full,
+  @Deprecated("Only for the Json Serializer.")
+  PessoaCategory({required this.title, this.parentCategory})
+      : isIndex = false,
         texts = List.empty(),
-        subcategories = List.empty();
+        subcategories = List.empty(),
+        link = "";
 
-  PessoaCategory.preview(this.link,
-      {required this.title, required this.parentCategory})
-      : type = CategoryType.Preview,
-        subcategories = [],
-        texts = [];
-
-  PessoaCategory.index(this.link)
+  PessoaCategory.index()
       : title = "Índice",
-        type = CategoryType.Index,
+        isIndex = true,
         texts = [],
+        link = "",
         subcategories = List.empty();
 
-  void setSubcategories(List<PessoaCategory> subcategories) =>
-      this.subcategories = subcategories;
+  factory PessoaCategory.fromJson(Map<String, dynamic> json) =>
+      _$PessoaCategoryFromJson(json);
 
-  void setTexts(List<PessoaText> texts) => this.texts = texts;
+  Map<String, dynamic> toJson() => _$PessoaCategoryToJson(this);
 }
-
-// Needed because `index` is a reversed word of enum
-// ignore: constant_identifier_names
-enum CategoryType { Index, Preview, Full }

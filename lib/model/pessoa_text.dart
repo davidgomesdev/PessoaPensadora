@@ -1,17 +1,17 @@
 import 'package:hive/hive.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:pessoa_bonito/model/pessoa_category.dart';
 
 part 'pessoa_text.g.dart';
 
+@JsonSerializable()
 @HiveType(typeId: 1)
 class PessoaText {
   /// Nullable only when persisted. In other cases, should never be null.
-  final PessoaCategory? category;
-  @HiveField(0)
-  final String link;
+  PessoaCategory? category;
   @HiveField(1)
+  @JsonKey(defaultValue: 0)
   final int id;
-
   @HiveField(2)
   final String title;
   @HiveField(3)
@@ -19,14 +19,10 @@ class PessoaText {
   @HiveField(4)
   final String author;
 
-  PessoaText(this.link, this.id, this.title, this.author, this.content)
-      : category = null;
+  PessoaText(this.id, this.title, this.author, this.content) : category = null;
 
-  PessoaText.preview(this.link, this.category, this.id, {required this.title})
-      : content = "",
-        author = "";
+  factory PessoaText.fromJson(Map<String, dynamic> json) =>
+      _$PessoaTextFromJson(json);
 
-  PessoaText.full(this.link, this.category, this.id,
-      {required this.title, required this.content, required String author})
-      : author = author.trim();
+  Map<String, dynamic> toJson() => _$PessoaTextToJson(this);
 }

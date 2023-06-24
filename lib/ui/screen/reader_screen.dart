@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/service/action_service.dart';
-import 'package:pessoa_bonito/service/arquivo_pessoa_service.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
@@ -12,12 +12,11 @@ import 'package:pessoa_bonito/util/generic_extensions.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
 class ReaderScreen extends StatefulWidget {
-  final ArquivoPessoaService arquivoService;
+  final PessoaCategory index;
   final ActionService actionService;
 
-  ReaderScreen({Key? key})
-      : arquivoService = Get.find(),
-        actionService = Get.find(),
+  ReaderScreen(this.index, {Key? key})
+      : actionService = Get.find(),
         super(key: key);
 
   @override
@@ -66,8 +65,8 @@ class _ReaderScreenState extends State<ReaderScreen>
                     ],
             ),
             drawer: TextSelectionDrawer(
+                index: widget.index,
                 selectionSink: _streamController.sink,
-                service: widget.arquivoService,
                 selectedText: text),
             body: _buildTextReader(text),
           );
@@ -111,7 +110,6 @@ class _ReaderScreenState extends State<ReaderScreen>
       child: ConstrainedBox(
         constraints: const BoxConstraints.expand(),
         child: TextReader(
-          service: widget.arquivoService,
           currentCategory: currText.category!,
           currentText: currText,
         ),
