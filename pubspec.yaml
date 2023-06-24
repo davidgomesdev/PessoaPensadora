@@ -37,6 +37,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/json_files/texts.json
 
 flutter_icons:
   image_path: "assets/icon/icon.png"
