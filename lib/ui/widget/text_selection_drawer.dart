@@ -63,11 +63,11 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   }
 
   Widget buildListView(PessoaCategory category, String textFilter) {
-    final selectedCategoryLink = widget.selectedText?.category!.link;
+    final selectedCategoryId = widget.selectedText?.category!.id;
     final selectedTextId = widget.selectedText?.id;
 
-    final subcategories = category.subcategories.map((subcategory) =>
-        buildSubcategoryTile(subcategory, selectedCategoryLink));
+    final subcategories = category.subcategories.map(
+        (subcategory) => buildSubcategoryTile(subcategory, selectedCategoryId));
 
     final texts = category.texts;
     final filteredTexts =
@@ -149,13 +149,13 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   }
 
   ListTile buildSubcategoryTile(
-      PessoaCategory subcategory, String? selectedCategoryLink) {
+      PessoaCategory subcategory, int? selectedCategoryId) {
     return ListTile(
       horizontalTitleGap: 8.0,
       minLeadingWidth: 0.0,
       leading: const Icon(Icons.subdirectory_arrow_right_rounded),
       title: Text(subcategory.title, style: bonitoTextTheme.headlineMedium),
-      selected: subcategory.link == selectedCategoryLink,
+      selected: subcategory.id == selectedCategoryId,
       onTap: () {
         setState(() {
           categoryStream.add(subcategory);

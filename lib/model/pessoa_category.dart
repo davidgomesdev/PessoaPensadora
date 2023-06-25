@@ -5,8 +5,7 @@ part 'pessoa_category.g.dart';
 
 @JsonSerializable()
 class PessoaCategory {
-  @JsonKey(defaultValue: "")
-  String link;
+  int id;
   String title;
   PessoaCategory? parentCategory;
   List<PessoaCategory> subcategories;
@@ -19,13 +18,13 @@ class PessoaCategory {
       : isIndex = false,
         texts = List.empty(),
         subcategories = List.empty(),
-        link = "";
+        id = -1;
 
   PessoaCategory.index()
       : title = "Índice",
         isIndex = true,
         texts = [],
-        link = "",
+        id = 0,
         subcategories = List.empty();
 
   factory PessoaCategory.fromJson(Map<String, dynamic> json) =>

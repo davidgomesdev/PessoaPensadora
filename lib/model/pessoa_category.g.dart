@@ -14,7 +14,7 @@ PessoaCategory _$PessoaCategoryFromJson(Map<String, dynamic> json) =>
           : PessoaCategory.fromJson(
               json['parentCategory'] as Map<String, dynamic>),
     )
-      ..link = json['link'] as String? ?? ''
+      ..id = json['id'] as int
       ..subcategories = (json['subcategories'] as List<dynamic>)
           .map((e) => PessoaCategory.fromJson(e as Map<String, dynamic>))
           .toList()
@@ -25,7 +25,7 @@ PessoaCategory _$PessoaCategoryFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$PessoaCategoryToJson(PessoaCategory instance) =>
     <String, dynamic>{
-      'link': instance.link,
+      'id': instance.id,
       'title': instance.title,
       'parentCategory': instance.parentCategory,
       'subcategories': instance.subcategories,
