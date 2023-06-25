@@ -48,6 +48,7 @@ class HomeScreen extends StatelessWidget {
     log.i('Saved texts box initialized successfully');
 
     Get.put(ActionService(box));
+
     return await parseTexts(context);
   }
 
