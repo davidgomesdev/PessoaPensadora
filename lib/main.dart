@@ -99,9 +99,5 @@ class HomeScreen extends StatelessWidget {
     }
 
     category.texts.sort((prev, next) => prev.id.compareTo(next.id));
-
-    for (var element in category.texts) {
-      element.format();
-    }
   }
 }
