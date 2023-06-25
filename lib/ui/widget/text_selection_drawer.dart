@@ -99,7 +99,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
   Padding buildSearch(bool hasTexts) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
       child: Row(
         children: [
           Expanded(
