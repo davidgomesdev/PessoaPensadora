@@ -50,15 +50,16 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           final category = snapshot.data ?? widget.index;
 
           return Drawer(
-              child: SafeArea(
-            child: StreamBuilder<String>(
-                initialData: searchTextFilter,
-                stream: searchFilterStream.stream,
-                builder: (context, snapshot) {
-                  searchTextFilter = snapshot.data ?? '';
-                  return buildListView(category, searchTextFilter);
-                }),
-          ));
+            child: SafeArea(
+              child: StreamBuilder<String>(
+                  initialData: searchTextFilter,
+                  stream: searchFilterStream.stream,
+                  builder: (context, snapshot) {
+                    searchTextFilter = snapshot.data ?? '';
+                    return buildListView(category, searchTextFilter);
+                  }),
+            ),
+          );
         });
   }
 
@@ -90,9 +91,22 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0)
           .copyWith(top: 16.0, bottom: 12.0),
-      child: Text(
-        category.title,
-        style: bonitoTextTheme.displaySmall,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: Text(
+              category.title,
+              style: bonitoTextTheme.displaySmall,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.bookmarks),
+            onPressed: () {},
+            iconSize: 24.0,
+            splashRadius: 24.0,
+          ),
+        ],
       ),
     );
   }

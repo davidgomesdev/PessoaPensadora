@@ -10,6 +10,7 @@ class PessoaCategory {
   PessoaCategory? parentCategory;
   List<PessoaCategory> subcategories;
   List<PessoaText> texts;
+
   @JsonKey(defaultValue: false)
   bool isIndex;
 

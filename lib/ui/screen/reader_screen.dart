@@ -15,8 +15,9 @@ class ReaderScreen extends StatefulWidget {
   final PessoaCategory index;
   final ActionService actionService;
 
-  ReaderScreen(this.index, {Key? key})
+  ReaderScreen({Key? key})
       : actionService = Get.find(),
+        index = Get.find(),
         super(key: key);
 
   @override
