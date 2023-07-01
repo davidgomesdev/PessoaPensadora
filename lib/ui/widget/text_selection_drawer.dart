@@ -147,17 +147,19 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   Expanded buildTilesList(Iterable<ListTile> subcategories,
       List<PessoaText> texts, int? selectedTextId) {
     return Expanded(
-      child: ListView(
-        controller: ScrollController(),
-        children: [
-          ...ListTile.divideTiles(
-            color: Colors.white,
-            tiles: [
-              ...subcategories,
-              ...texts.map((text) => buildTextTile(text, selectedTextId))
-            ],
-          ),
-        ],
+      child: Material(
+        child: ListView(
+          controller: ScrollController(),
+          children: [
+            ...ListTile.divideTiles(
+              color: Colors.white,
+              tiles: [
+                ...subcategories,
+                ...texts.map((text) => buildTextTile(text, selectedTextId))
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
