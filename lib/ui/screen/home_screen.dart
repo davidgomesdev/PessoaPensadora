@@ -11,6 +11,9 @@ import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
 import 'package:pessoa_bonito/util/generic_extensions.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
+// Avoids accidental swipe when scrolling
+const swipeSensitivity = 16;
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -32,8 +35,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final PessoaCategory index = Get.find();
     final ActionService service = Get.find();
+    final PessoaCategory index = Get.find();
 
     return StreamBuilder<PessoaText>(
         stream: _streamController.stream,
@@ -45,20 +48,20 @@ class _HomeScreenState extends State<HomeScreen>
               actions: (text == null)
                   ? []
                   : [
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              if (service.isTextSaved(text.id)) {
-                                service.deleteText(text.id);
-                              } else {
-                                service.saveText(text);
-                              }
-                            });
-                          },
-                          icon: Icon(service.isTextSaved(text.id)
-                              ? Icons.download_done
-                              : Icons.download))
-                    ],
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        if (service.isTextSaved(text.id)) {
+                          service.deleteText(text.id);
+                        } else {
+                          service.saveText(text);
+                        }
+                      });
+                    },
+                    icon: Icon(service.isTextSaved(text.id)
+                        ? Icons.download_done
+                        : Icons.download))
+              ],
             ),
             drawer: TextSelectionDrawer(
                 index: index,
@@ -80,9 +83,6 @@ class _HomeScreenState extends State<HomeScreen>
 
         final category = currText.category!;
         PessoaText? newText;
-
-        // Avoids accidental swipe when scrolling
-        var swipeSensitivity = 16;
 
         if (vel <= -swipeSensitivity) {
           newText =
@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen>
       child: ConstrainedBox(
         constraints: const BoxConstraints.expand(),
         child: TextReader(
-          currentCategory: currText.category!,
+          categoryTitle: currText.category!.title,
           currentText: currText,
         ),
       ),

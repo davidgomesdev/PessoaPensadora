@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 
 class TextReader extends StatelessWidget {
-  final PessoaCategory currentCategory;
+  final String categoryTitle;
   final PessoaText currentText;
   final ScrollController _scrollController = ScrollController();
 
-  TextReader(
-      {Key? key, required this.currentCategory, required this.currentText})
+  TextReader({Key? key, required this.categoryTitle, required this.currentText})
       : super(key: key);
 
   @override
@@ -23,7 +21,7 @@ class TextReader extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 24.0),
-              child: Center(child: getCategoryWidget(currentCategory.title)),
+              child: Center(child: getCategoryWidget(categoryTitle)),
             ),
             Padding(
               padding:
