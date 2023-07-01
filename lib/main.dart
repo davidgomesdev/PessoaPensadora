@@ -5,14 +5,15 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:pessoa_bonito/ui/screen/base_screen.dart';
 import 'package:pessoa_bonito/ui/service/boot_service.dart';
 
-import 'model/pessoa_text.dart';
+import 'model/saved_text.dart';
 
 Future<void> main() async {
   EquatableConfig.stringify = true;
 
   await Hive.initFlutter();
 
-  Hive.registerAdapter(PessoaTextAdapter());
+  Hive.registerAdapter(SavedTextAdapter());
+  Hive.registerAdapter(SavedCategoryAdapter());
 
   runApp(const BootScreen());
 }
