@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
+
+import '../routes.dart';
 
 class TextSelectionDrawer extends StatefulWidget {
   final PessoaCategory index;
@@ -89,8 +92,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
   Padding buildTitle(PessoaCategory category) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0)
-          .copyWith(top: 16.0, bottom: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(top: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -102,7 +104,9 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           ),
           IconButton(
             icon: const Icon(Icons.bookmarks),
-            onPressed: () {},
+            onPressed: () {
+              Get.toNamed(Routes.savedScreen);
+            },
             iconSize: 24.0,
             splashRadius: 24.0,
           ),

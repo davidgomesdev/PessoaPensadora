@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:pessoa_bonito/ui/screen/home_screen.dart';
+import 'package:pessoa_bonito/ui/screen/base_screen.dart';
 import 'package:pessoa_bonito/ui/service/boot_service.dart';
 
 import 'model/pessoa_text.dart';
