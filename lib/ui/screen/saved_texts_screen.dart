@@ -19,7 +19,7 @@ class SavedTextsScreen extends StatelessWidget {
         slivers: [
           SliverAppBar(
             title: Text("Saved texts", style: bonitoTextTheme.displaySmall),
-          ),
+            pinned: true),
           SliverPadding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               sliver: SliverList.list(
@@ -44,9 +44,8 @@ class SavedTextTile extends StatelessWidget {
       title: Text(text.title, style: bonitoTextTheme.displaySmall),
       minVerticalPadding: 8.0,
       subtitle: Text(
-        text.content,
-        overflow: TextOverflow.ellipsis,
-      ),
+          text.content.replaceAll("\n\n", "\n").trim(),
+          overflow: TextOverflow.ellipsis, maxLines: 2),
       trailing: Text(text.author),
       onTap: () {
         Get.toNamed(Routes.readSavedScreen, arguments: {
