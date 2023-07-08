@@ -57,17 +57,17 @@ class _HomeScreenState extends State<HomeScreen>
                           service.saveText(text);
                         }
                       });
-                    },
-                    icon: Icon(service.isTextSaved(text.id)
-                        ? Icons.download_done
-                        : Icons.download))
-              ],
+                          },
+                          icon: Icon(service.isTextSaved(text.id)
+                              ? Icons.download_done
+                              : Icons.download))
+                    ],
             ),
             drawer: TextSelectionDrawer(
                 index: index,
                 selectionSink: _streamController.sink,
                 selectedText: text),
-            body: _buildTextReader(text),
+            body: SafeArea(child: _buildTextReader(text)),
           );
         });
   }

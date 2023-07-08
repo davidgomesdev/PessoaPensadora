@@ -19,7 +19,8 @@ class SavedTextsScreen extends StatelessWidget {
         slivers: [
           SliverAppBar(
             title: Text("Saved texts", style: bonitoTextTheme.displaySmall),
-            pinned: true),
+            pinned: true,
+          ),
           SliverPadding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               sliver: SliverList.list(
@@ -40,13 +41,39 @@ class SavedTextTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var textCondensed = text.content.replaceAll("\n\n", "\n").trim();
+
     return ListTile(
-      title: Text(text.title, style: bonitoTextTheme.displaySmall),
-      minVerticalPadding: 8.0,
-      subtitle: Text(
-          text.content.replaceAll("\n\n", "\n").trim(),
-          overflow: TextOverflow.ellipsis, maxLines: 2),
-      trailing: Text(text.author),
+      title: Text(
+        text.title,
+        style:
+            bonitoTextTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+      ),
+      subtitle: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              textCondensed,
+              style: bonitoTextTheme.bodySmall,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  text.author,
+                  textAlign: TextAlign.right,
+                  style: bonitoTextTheme.labelSmall,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
       onTap: () {
         Get.toNamed(Routes.readSavedScreen, arguments: {
           "categoryTitle": text.category.title,
