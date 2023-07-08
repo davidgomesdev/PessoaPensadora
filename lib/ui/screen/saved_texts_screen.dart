@@ -16,15 +16,17 @@ class SavedTextsScreen extends StatelessWidget {
 
     return Scaffold(
       body: CustomScrollView(
+        scrollBehavior: const ScrollBehavior().copyWith(overscroll: false),
         slivers: [
           SliverAppBar(
             title: Text("Saved texts", style: bonitoTextTheme.displaySmall),
             pinned: true,
           ),
           SliverPadding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              sliver: SliverList.list(
-                  children: [...texts.map((text) => SavedTextTile(text))]))
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            sliver: SliverList.list(
+                children: [...texts.map((text) => SavedTextTile(text))]),
+          )
         ],
       ),
     );
@@ -44,6 +46,7 @@ class SavedTextTile extends StatelessWidget {
     var textCondensed = text.content.replaceAll("\n\n", "\n").trim();
 
     return ListTile(
+      enableFeedback: true,
       title: Text(
         text.title,
         style:
