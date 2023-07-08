@@ -48,15 +48,15 @@ class _HomeScreenState extends State<HomeScreen>
               actions: (text == null)
                   ? []
                   : [
-                IconButton(
-                    onPressed: () {
-                      setState(() {
-                        if (service.isTextSaved(text.id)) {
-                          service.deleteText(text.id);
-                        } else {
-                          service.saveText(text);
-                        }
-                      });
+                      IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (service.isTextSaved(text.id)) {
+                                service.deleteText(text.id);
+                              } else {
+                                service.saveText(text);
+                              }
+                            });
                           },
                           icon: Icon(service.isTextSaved(text.id)
                               ? Icons.download_done
@@ -67,50 +67,10 @@ class _HomeScreenState extends State<HomeScreen>
                 index: index,
                 selectionSink: _streamController.sink,
                 selectedText: text),
-            body: SafeArea(child: _buildTextReader(text)),
+            body:
+                HomeScreenBody(text: text, streamController: _streamController),
           );
         });
-  }
-
-  Widget _buildTextReader(PessoaText? currText) {
-    if (currText == null) return const NoTextReader();
-
-    return GestureDetector(
-      onHorizontalDragEnd: (details) {
-        final vel = details.primaryVelocity;
-
-        if (vel == null) return;
-
-        final category = currText.category!;
-        PessoaText? newText;
-
-        if (vel <= -swipeSensitivity) {
-          newText =
-              category.texts.firstWhereOrNull((text) => text.id > currText.id);
-
-          log.i("Swiping to next text");
-        } else if (vel >= swipeSensitivity) {
-          newText = category.texts.reversed
-              .firstWhereOrNull((text) => text.id < currText.id);
-
-          log.i("Swiping to previous text");
-        }
-
-        if (newText != null) {
-          log.i("Swipe to ${newText.title}");
-          _streamController.add(newText);
-        } else {
-          log.i("Swipe no-op");
-        }
-      },
-      child: ConstrainedBox(
-        constraints: const BoxConstraints.expand(),
-        child: TextReader(
-          categoryTitle: currText.category!.title,
-          currentText: currText,
-        ),
-      ),
-    );
   }
 
   @override
@@ -118,5 +78,81 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
 
     _streamController.close();
+  }
+}
+
+class HomeScreenBody extends StatelessWidget {
+  final PessoaText? text;
+  final StreamController<PessoaText> streamController;
+
+  const HomeScreenBody({
+    super.key,
+    required this.text,
+    required this.streamController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final currentText = text;
+
+    return SafeArea(
+      child: (currentText == null)
+          ? const NoTextReader()
+          : TextReaderArea(
+              streamController: streamController,
+              currentText: currentText,
+            ),
+    );
+  }
+}
+
+class TextReaderArea extends StatelessWidget {
+  final StreamController<PessoaText> streamController;
+  final PessoaText currentText;
+
+  const TextReaderArea({
+    super.key,
+    required this.streamController,
+    required this.currentText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        final vel = details.primaryVelocity;
+
+        if (vel == null) return;
+
+        final category = currentText.category!;
+        PessoaText? newText;
+
+        if (vel <= -swipeSensitivity) {
+          newText = category.texts
+              .firstWhereOrNull((text) => text.id > currentText.id);
+
+          log.i("Swiping to next text");
+        } else if (vel >= swipeSensitivity) {
+          newText = category.texts.reversed
+              .firstWhereOrNull((text) => text.id < currentText.id);
+
+          log.i("Swiping to previous text");
+        }
+
+        if (newText != null) {
+          log.i("Swipe to ${newText.title}");
+          streamController.add(newText);
+        } else {
+          log.i("Swipe no-op");
+        }
+      },
+      child: ConstrainedBox(
+        constraints: const BoxConstraints.expand(),
+        child: TextReader(
+          categoryTitle: currentText.category!.title,
+          currentText: currentText,
+        ),
+      ),
+    );
   }
 }

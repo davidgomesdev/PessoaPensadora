@@ -2,16 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 
+final ScrollController _scrollController =
+    ScrollController(keepScrollOffset: false);
+
 class TextReader extends StatelessWidget {
   final String categoryTitle;
   final PessoaText currentText;
-  final ScrollController _scrollController = ScrollController();
 
-  TextReader({Key? key, required this.categoryTitle, required this.currentText})
+  const TextReader(
+      {Key? key, required this.categoryTitle, required this.currentText})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.easeOutQuart,
+      );
+    }
+
     return ScrollConfiguration(
       behavior: const ScrollBehavior().copyWith(overscroll: false),
       child: SingleChildScrollView(
@@ -21,21 +32,21 @@ class TextReader extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 24.0),
-              child: Center(child: getCategoryWidget(categoryTitle)),
+              child: Center(child: ReaderCategoryText(categoryTitle)),
             ),
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-              child: getTitleWidget(currentText.title),
+              child: ReaderTitleText(currentText.title),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: getTextWidget(currentText.content),
+              child: ReaderContentText(currentText.content),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
-                child: getAuthorWidget(currentText.author),
+                child: ReaderAuthorText(currentText.author),
               ),
             ),
           ],
@@ -43,25 +54,67 @@ class TextReader extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget getCategoryWidget(String title) => Text(
-        title,
-        style: bonitoTextTheme.titleSmall,
-      );
+class ReaderCategoryText extends StatelessWidget {
+  final String category;
 
-  Widget getTitleWidget(String title) => Text(
-    title,
-        style: bonitoTextTheme.headlineSmall,
-      );
+  const ReaderCategoryText(this.category, {super.key});
 
-  Widget getTextWidget(String content) => SelectableText(
-    content,
-        textAlign: TextAlign.left,
-        style: bonitoTextTheme.bodyMedium,
-      );
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      category,
+      style: bonitoTextTheme.titleSmall,
+    );
+  }
+}
 
-  Widget getAuthorWidget(String author) => Text(
-    author,
-        style: bonitoTextTheme.labelMedium,
-      );
+class ReaderTitleText extends StatelessWidget {
+  final String title;
+
+  const ReaderTitleText(
+    this.title, {
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: bonitoTextTheme.headlineSmall,
+    );
+  }
+}
+
+class ReaderContentText extends StatelessWidget {
+  final String content;
+
+  const ReaderContentText(
+    this.content, {
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SelectableText(
+      content,
+      textAlign: TextAlign.left,
+      style: bonitoTextTheme.bodyMedium,
+    );
+  }
+}
+
+class ReaderAuthorText extends StatelessWidget {
+  final String author;
+
+  const ReaderAuthorText(this.author, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      author,
+      style: bonitoTextTheme.labelMedium,
+    );
+  }
 }
