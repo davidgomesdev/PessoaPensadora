@@ -46,7 +46,7 @@ class TextReader extends StatelessWidget {
 
   Widget getCategoryWidget(String title) => Text(
         title,
-        style: bonitoTextTheme.titleMedium,
+        style: bonitoTextTheme.titleSmall,
       );
 
   Widget getTitleWidget(String title) => Text(
@@ -62,6 +62,6 @@ class TextReader extends StatelessWidget {
 
   Widget getAuthorWidget(String author) => Text(
     author,
-        style: bonitoTextTheme.titleSmall,
+        style: bonitoTextTheme.labelMedium,
       );
 }

@@ -11,11 +11,13 @@ class SavedTextReaderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: ConstrainedBox(
-        constraints: const BoxConstraints.expand(),
-        child: TextReader(
-            categoryTitle: Get.arguments['categoryTitle'],
-            currentText: Get.arguments['text']),
+      body: SafeArea(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints.expand(),
+          child: TextReader(
+              categoryTitle: Get.arguments['categoryTitle'],
+              currentText: Get.arguments['text']),
+        ),
       ),
     );
   }
