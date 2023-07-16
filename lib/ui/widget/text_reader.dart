@@ -36,15 +36,15 @@ class TextReader extends StatelessWidget {
             ),
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
               child: ReaderTitleText(currentText.title),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ReaderContentText(currentText.content),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 8.0, bottom: 12.0),
               child: Center(
                 child: ReaderAuthorText(currentText.author),
               ),
