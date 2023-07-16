@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/saved_text.dart';
-import 'package:pessoa_bonito/service/action_service.dart';
+import 'package:pessoa_bonito/service/bookmark_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 
 import '../routes.dart';
@@ -11,7 +11,7 @@ class SavedTextsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ActionService service = Get.find();
+    final BookmarkService service = Get.find();
     final texts = service.getTexts();
 
     return Scaffold(

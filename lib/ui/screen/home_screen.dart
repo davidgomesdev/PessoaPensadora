@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
-import 'package:pessoa_bonito/service/action_service.dart';
+import 'package:pessoa_bonito/service/bookmark_service.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
@@ -23,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
+  final ScrollController scrollController =
+      ScrollController(keepScrollOffset: false);
   final StreamController<PessoaText> _streamController =
       StreamController.broadcast();
 
@@ -35,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final ActionService service = Get.find();
+    final BookmarkService service = Get.find();
     final PessoaCategory index = Get.find();
 
     return StreamBuilder<PessoaText>(
@@ -48,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen>
               actions: (text == null)
                   ? []
                   : [
-                      IconButton(
+                IconButton(
                           onPressed: () {
                             setState(() {
                               if (service.isTextSaved(text.id)) {
@@ -59,16 +61,18 @@ class _HomeScreenState extends State<HomeScreen>
                             });
                           },
                           icon: Icon(service.isTextSaved(text.id)
-                              ? Icons.download_done
-                              : Icons.download))
+                              ? Icons.bookmark_outlined
+                              : Icons.bookmark_outline_outlined))
                     ],
             ),
             drawer: TextSelectionDrawer(
                 index: index,
                 selectionSink: _streamController.sink,
                 selectedText: text),
-            body:
-                HomeScreenBody(text: text, streamController: _streamController),
+            body: HomeScreenBody(
+                text: text,
+                streamController: _streamController,
+                scrollController: scrollController),
           );
         });
   }
@@ -84,12 +88,13 @@ class _HomeScreenState extends State<HomeScreen>
 class HomeScreenBody extends StatelessWidget {
   final PessoaText? text;
   final StreamController<PessoaText> streamController;
+  final ScrollController scrollController;
 
-  const HomeScreenBody({
-    super.key,
-    required this.text,
-    required this.streamController,
-  });
+  const HomeScreenBody(
+      {super.key,
+      required this.text,
+      required this.streamController,
+      required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -99,21 +104,24 @@ class HomeScreenBody extends StatelessWidget {
       child: (currentText == null)
           ? const NoTextReader()
           : TextReaderArea(
-              streamController: streamController,
               currentText: currentText,
+              scrollController: scrollController,
+              streamController: streamController,
             ),
     );
   }
 }
 
 class TextReaderArea extends StatelessWidget {
-  final StreamController<PessoaText> streamController;
   final PessoaText currentText;
+  final StreamController<PessoaText> streamController;
+  final ScrollController scrollController;
 
   const TextReaderArea({
     super.key,
-    required this.streamController,
     required this.currentText,
+    required this.scrollController,
+    required this.streamController,
   });
 
   @override
@@ -142,6 +150,14 @@ class TextReaderArea extends StatelessWidget {
         if (newText != null) {
           log.i("Swipe to ${newText.title}");
           streamController.add(newText);
+
+          if (scrollController.hasClients) {
+            scrollController.animateTo(
+              0.0,
+              duration: const Duration(milliseconds: 1000),
+              curve: Curves.easeOutQuart,
+            );
+          }
         } else {
           log.i("Swipe no-op");
         }
@@ -151,6 +167,7 @@ class TextReaderArea extends StatelessWidget {
         child: TextReader(
           categoryTitle: currentText.category!.title,
           currentText: currentText,
+          scrollController: scrollController,
         ),
       ),
     );
