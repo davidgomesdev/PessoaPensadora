@@ -2,10 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:pessoa_bonito/service/text_store_service.dart';
 import 'package:pessoa_bonito/ui/screen/base_screen.dart';
-import 'package:pessoa_bonito/ui/service/boot_service.dart';
 
 import 'model/saved_text.dart';
+import 'service/bookmark_service.dart';
 
 Future<void> main() async {
   EquatableConfig.stringify = true;
@@ -23,10 +24,8 @@ class BootScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BootService bootService = BootService();
-
     return FutureBuilder(
-        future: bootService.initializeDependencies(context),
+        future: initializeDependencies(context),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             snapshot.printError();
@@ -39,5 +38,14 @@ class BootScreen extends StatelessWidget {
 
           return const CircularProgressIndicator();
         });
+  }
+
+  Future initializeDependencies(BuildContext context) async {
+    Get.put(await BookmarkService.initialize());
+
+    final assetBundle = DefaultAssetBundle.of(context);
+    Get.put(await TextStoreService.initialize(assetBundle));
+
+    return Future.value();
   }
 }

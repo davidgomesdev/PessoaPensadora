@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "title": "empty category",
+    "texts": [],
+    "subcategories": []
+  },
+  {
+    "id": 2,
+    "title": "category with subcategories",
+    "texts": [],
+    "subcategories": [
+      {
+        "id": 10,
+        "title": "> empty repeated subcategory",
+        "texts": [],
+        "subcategories": []
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "category with texts",
+    "texts": [
+      {
+        "id": 1,
+        "title": "Text with same ID as a category",
+        "author": "Person",
+        "content": "God wills, man dreams, the work is born."
+      },
+      {
+        "id": 9,
+        "title": "Repeated text",
+        "author": "Bernades",
+        "content": "Very much empty."
+      }
+    ],
+    "subcategories": []
+  },
+  {
+    "id": 4,
+    "title": "category with subcategories and texts",
+    "texts": [
+      {
+        "id": 1234,
+        "title": "Random text",
+        "author": "Someone",
+        "content": "Special."
+      },
+      {
+        "id": 9,
+        "title": "Repeated text",
+        "author": "Bernades",
+        "content": "Very much empty."
+      }
+    ],
+    "subcategories": [
+      {
+        "id": 10,
+        "title": "> empty repeated subcategory",
+        "texts": [],
+        "subcategories": []
+      }
+    ]
+  }
+]

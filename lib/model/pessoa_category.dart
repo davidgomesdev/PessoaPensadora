@@ -14,7 +14,6 @@ class PessoaCategory {
   @JsonKey(defaultValue: false)
   bool isIndex;
 
-  @Deprecated("Only for the Json Serializer.")
   PessoaCategory({required this.title, this.parentCategory})
       : isIndex = false,
         texts = List.empty(),
