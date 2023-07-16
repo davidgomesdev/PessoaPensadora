@@ -4,27 +4,22 @@ import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/widget_extensions.dart';
 import 'package:share_plus/share_plus.dart';
 
-final ScrollController _scrollController =
-    ScrollController(keepScrollOffset: false);
-
 class TextReader extends StatelessWidget {
+  final ScrollController _scrollController;
   final String categoryTitle;
   final PessoaText currentText;
 
-  const TextReader(
-      {Key? key, required this.categoryTitle, required this.currentText})
-      : super(key: key);
+  TextReader(
+      {Key? key,
+      ScrollController? scrollController,
+      required this.categoryTitle,
+      required this.currentText})
+      : _scrollController =
+            scrollController ?? ScrollController(keepScrollOffset: false),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        0.0,
-        duration: const Duration(milliseconds: 1000),
-        curve: Curves.easeOutQuart,
-      );
-    }
-
     return ScrollConfiguration(
       behavior: const ScrollBehavior().copyWith(overscroll: false),
       child: SingleChildScrollView(
@@ -38,7 +33,7 @@ class TextReader extends StatelessWidget {
             ),
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
               child: ReaderTitleText(currentText.title),
             ),
             Padding(

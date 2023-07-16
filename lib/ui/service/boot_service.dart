@@ -2,34 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:pessoa_bonito/model/pessoa_category.dart';
-import 'package:pessoa_bonito/model/saved_text.dart';
-import 'package:pessoa_bonito/service/action_service.dart';
-import 'package:pessoa_bonito/util/logger_factory.dart';
-
-const _savedTextsBoxName = 'savedTexts';
+import 'package:pessoa_bonito/service/bookmark_service.dart';
 
 class BootService {
   Future initializeDependencies(BuildContext context) async {
-    Box<SavedText> box = await getSavedTextsBox();
-
-    log.i('Saved texts box initialized successfully');
-
-    Get.put(ActionService(box));
-
+    Get.put(await BookmarkService.initialize());
     Get.put(await parseTexts(context));
-    return Future.value();
-  }
 
-  Future<Box<SavedText>> getSavedTextsBox() async {
-    try {
-      return await Hive.openBox(_savedTextsBoxName);
-    } catch (ex) {
-      log.w('Error opening saved texts box, re-creating it', ex);
-      await Hive.deleteBoxFromDisk(_savedTextsBoxName);
-      return await Hive.openBox(_savedTextsBoxName);
-    }
+    return Future.value();
   }
 
   Future<PessoaCategory> parseTexts(BuildContext context) async {
