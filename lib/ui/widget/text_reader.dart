@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
+import 'package:pessoa_bonito/util/widget_extensions.dart';
+import 'package:share_plus/share_plus.dart';
 
 final ScrollController _scrollController =
     ScrollController(keepScrollOffset: false);
@@ -41,7 +43,7 @@ class TextReader extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ReaderContentText(currentText.content),
+              child: ReaderContentText(currentText),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0, bottom: 12.0),
@@ -88,19 +90,37 @@ class ReaderTitleText extends StatelessWidget {
 }
 
 class ReaderContentText extends StatelessWidget {
-  final String content;
+  final PessoaText text;
 
   const ReaderContentText(
-    this.content, {
+    this.text, {
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return SelectableText(
-      content,
+      text.content,
       textAlign: TextAlign.left,
       style: bonitoTextTheme.bodyMedium,
+      contextMenuBuilder: (ctx, state) {
+        final String selectedText = state.getSelectedText();
+        final List<ContextMenuButtonItem> buttonItems =
+            state.contextMenuButtonItems;
+
+        buttonItems.add(ContextMenuButtonItem(
+          label: 'Share',
+          onPressed: () {
+            ContextMenuController.removeAny();
+            Share.share('"$selectedText" - ${text.author}');
+          },
+        ));
+
+        return AdaptiveTextSelectionToolbar.buttonItems(
+          anchors: state.contextMenuAnchors,
+          buttonItems: buttonItems,
+        );
+      },
     );
   }
 }
