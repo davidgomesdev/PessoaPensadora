@@ -2,10 +2,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:pessoa_bonito/dto/box/box_person_text.dart';
 import 'package:pessoa_bonito/service/text_store_service.dart';
 import 'package:pessoa_bonito/ui/screen/base_screen.dart';
 
-import 'model/saved_text.dart';
+import 'dto/box/box_person_category.dart';
+import 'model/bookmarked_text.dart';
 import 'service/bookmark_service.dart';
 
 Future<void> main() async {
@@ -13,7 +15,9 @@ Future<void> main() async {
 
   await Hive.initFlutter();
 
-  Hive.registerAdapter(SavedTextAdapter());
+  Hive.registerAdapter(BoxPersonTextAdapter());
+  Hive.registerAdapter(BoxPersonCategoryAdapter());
+  Hive.registerAdapter(BookmarkedTextAdapter());
   Hive.registerAdapter(SavedCategoryAdapter());
 
   runApp(const BootScreen());

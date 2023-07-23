@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'saved_text.dart';
+part of 'bookmarked_text.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SavedTextAdapter extends TypeAdapter<SavedText> {
+class BookmarkedTextAdapter extends TypeAdapter<BookmarkedText> {
   @override
   final int typeId = 1;
 
   @override
-  SavedText read(BinaryReader reader) {
+  BookmarkedText read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SavedText(
+    return BookmarkedText(
       fields[10] as int,
       fields[20] as SavedCategory,
       fields[30] as String,
@@ -26,7 +26,7 @@ class SavedTextAdapter extends TypeAdapter<SavedText> {
   }
 
   @override
-  void write(BinaryWriter writer, SavedText obj) {
+  void write(BinaryWriter writer, BookmarkedText obj) {
     writer
       ..writeByte(5)
       ..writeByte(10)
@@ -47,7 +47,7 @@ class SavedTextAdapter extends TypeAdapter<SavedText> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SavedTextAdapter &&
+      other is BookmarkedTextAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
