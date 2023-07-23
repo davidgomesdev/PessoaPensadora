@@ -2,10 +2,10 @@ import 'package:hive/hive.dart';
 import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 
-part 'saved_text.g.dart';
+part 'bookmarked_text.g.dart';
 
 @HiveType(typeId: 1)
-class SavedText {
+class BookmarkedText {
   @HiveField(10)
   final int id;
   @HiveField(20)
@@ -17,9 +17,9 @@ class SavedText {
   @HiveField(50)
   final String author;
 
-  SavedText(this.id, this.category, this.title, this.author, this.content);
+  BookmarkedText(this.id, this.category, this.title, this.author, this.content);
 
-  factory SavedText.from(PessoaText text) => SavedText(
+  factory BookmarkedText.from(PessoaText text) => BookmarkedText(
       text.id,
       SavedCategory.from(text.category!),
       text.title,

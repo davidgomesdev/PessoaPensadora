@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/model/saved_text.dart';
+import 'package:pessoa_bonito/model/bookmarked_text.dart';
 import 'package:pessoa_bonito/service/bookmark_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 
@@ -34,7 +34,7 @@ class SavedTextsScreen extends StatelessWidget {
 }
 
 class SavedTextTile extends StatelessWidget {
-  final SavedText text;
+  final BookmarkedText text;
 
   const SavedTextTile(
     this.text, {

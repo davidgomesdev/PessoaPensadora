@@ -1,13 +1,13 @@
 import 'package:hive/hive.dart';
+import 'package:pessoa_bonito/model/bookmarked_text.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
-import 'package:pessoa_bonito/model/saved_text.dart';
 
 import '../util/logger_factory.dart';
 
 const _savedTextsBoxName = 'savedTexts';
 
 class BookmarkService {
-  final Box<SavedText> _box;
+  final Box<BookmarkedText> _box;
 
   BookmarkService._(this._box);
 
@@ -19,7 +19,7 @@ class BookmarkService {
     return BookmarkService._(box);
   }
 
-  static Future<Box<SavedText>> _getSavedTextsBox() async {
+  static Future<Box<BookmarkedText>> _getSavedTextsBox() async {
     try {
       return await Hive.openBox(_savedTextsBoxName);
     } catch (ex) {
@@ -30,7 +30,7 @@ class BookmarkService {
   }
 
   Future<void> saveText(PessoaText text) async {
-    await _box.put(text.id, SavedText.from(text));
+    await _box.put(text.id, BookmarkedText.from(text));
     log.i('Saved text ${text.id}');
   }
 
@@ -41,5 +41,5 @@ class BookmarkService {
 
   bool isTextSaved(int id) => _box.containsKey(id);
 
-  List<SavedText> getTexts() => _box.values.toList(growable: false);
+  List<BookmarkedText> getTexts() => _box.values.toList(growable: false);
 }
