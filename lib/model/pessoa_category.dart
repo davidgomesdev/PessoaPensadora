@@ -14,9 +14,10 @@ class PessoaCategory {
   @JsonKey(defaultValue: false)
   bool isIndex;
 
-  PessoaCategory(
-      this.id, this.title, this.parentCategory, this.subcategories, this.texts)
-      : isIndex = false;
+  PessoaCategory(this.id, String title, this.parentCategory, this.subcategories,
+      this.texts)
+      : isIndex = false,
+        title = title.replaceAll(RegExp('(\\d+\\.)+ '), '');
 
   PessoaCategory.index(this.subcategories)
       : title = "Índice",
