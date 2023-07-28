@@ -15,8 +15,11 @@ class SavedTextReaderScreen extends StatelessWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints.expand(),
           child: TextReader(
-              categoryTitle: Get.arguments['categoryTitle'],
-              currentText: Get.arguments['text']),
+            categoryTitle: Get.arguments['categoryTitle'],
+            title: Get.arguments['title'],
+            text: Get.arguments['text'],
+            author: Get.arguments['author'],
+          ),
         ),
       ),
     );
