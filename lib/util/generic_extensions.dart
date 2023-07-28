@@ -9,3 +9,21 @@ extension NullableImprovement<E> on Iterable<E> {
     return null;
   }
 }
+
+extension ListUtils<E> on List<E> {
+  E? getNext(E element) {
+    final nextIndex = indexOf(element) + 1;
+
+    if (nextIndex > length) return null;
+
+    return elementAt(nextIndex);
+  }
+
+  E? getPrevious(E element) {
+    final previousIndex = indexOf(element) - 1;
+
+    if (previousIndex < 0) return null;
+
+    return elementAt(previousIndex);
+  }
+}

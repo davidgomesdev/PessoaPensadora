@@ -86,5 +86,9 @@ void _fillTexts(Map<int, BoxPessoaText> texts, PessoaCategory category) {
     text.category = category;
   }
 
-  category.texts.sort((prev, next) => prev.id.compareTo(next.id));
+  _sortByTitleAlphabetically(category);
+}
+
+void _sortByTitleAlphabetically(PessoaCategory category) {
+  category.texts.sort((prev, next) => prev.title.compareTo(next.title));
 }

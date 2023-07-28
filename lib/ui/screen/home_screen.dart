@@ -48,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen>
               actions: (text == null)
                   ? []
                   : [
-                IconButton(
+                      IconButton(
                           onPressed: () {
                             setState(() {
                               if (service.isTextSaved(text.id)) {
@@ -125,7 +125,6 @@ class TextReaderArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final category = currentText.category!;
-    PessoaText? newText;
 
     return ConstrainedBox(
       constraints: const BoxConstraints.expand(),
@@ -138,14 +137,12 @@ class TextReaderArea extends StatelessWidget {
           scrollController: scrollController,
         ),
         onNext: () {
-          newText = category.texts
-              .firstWhereOrNull((text) => text.id > currentText.id);
+          final newText = category.texts.getNext(currentText);
 
           _handleNavigation(newText);
         },
         onPrevious: () {
-          newText = category.texts.reversed
-              .firstWhereOrNull((text) => text.id < currentText.id);
+          final newText = category.texts.getPrevious(currentText);
 
           _handleNavigation(newText);
         },
@@ -154,19 +151,20 @@ class TextReaderArea extends StatelessWidget {
   }
 
   void _handleNavigation(PessoaText? newText) {
-    if (newText != null) {
-      log.i("Swipe to ${newText.title}");
-      streamController.add(newText);
-
-      if (scrollController.hasClients) {
-        scrollController.animateTo(
-          0.0,
-          duration: const Duration(milliseconds: 1000),
-          curve: Curves.easeOutQuart,
-        );
-      }
-    } else {
+    if (newText == null) {
       log.i("Swipe no-op");
+      return;
+    }
+
+    log.i("Swipe to ${newText.title}");
+    streamController.add(newText);
+
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.easeOutQuart,
+      );
     }
   }
 }

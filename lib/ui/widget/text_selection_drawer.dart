@@ -78,8 +78,6 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     final filteredTexts =
         texts.where((text) => filterByContent(text, textFilter)).toList();
 
-    _sortTextsAlphabetically(filteredTexts);
-
     return ScrollConfiguration(
       behavior: const ScrollBehavior().copyWith(overscroll: false),
       child: Column(
@@ -92,11 +90,6 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         ],
       ),
     );
-  }
-
-  void _sortTextsAlphabetically(List<PessoaText> texts) {
-    texts
-        .sort((a, b) => a.title.toLowerCase().compareTo(b.title.toLowerCase()));
   }
 
   Padding buildTitle(PessoaCategory category) {
