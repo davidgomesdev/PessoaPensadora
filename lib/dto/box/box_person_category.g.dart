@@ -6,17 +6,17 @@ part of 'box_person_category.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class BoxPersonCategoryAdapter extends TypeAdapter<BoxPersonCategory> {
+class BoxPessoaCategoryAdapter extends TypeAdapter<BoxPessoaCategory> {
   @override
   final int typeId = 11;
 
   @override
-  BoxPersonCategory read(BinaryReader reader) {
+  BoxPessoaCategory read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return BoxPersonCategory(
+    return BoxPessoaCategory(
       fields[10] as int,
       fields[20] as String,
       fields[30] as int,
@@ -25,7 +25,7 @@ class BoxPersonCategoryAdapter extends TypeAdapter<BoxPersonCategory> {
   }
 
   @override
-  void write(BinaryWriter writer, BoxPersonCategory obj) {
+  void write(BinaryWriter writer, BoxPessoaCategory obj) {
     writer
       ..writeByte(4)
       ..writeByte(10)
@@ -33,9 +33,9 @@ class BoxPersonCategoryAdapter extends TypeAdapter<BoxPersonCategory> {
       ..writeByte(20)
       ..write(obj.title)
       ..writeByte(30)
-      ..write(obj.parentCategory)
+      ..write(obj.parentCategoryId)
       ..writeByte(40)
-      ..write(obj.subcategories);
+      ..write(obj.subcategoryIds);
   }
 
   @override
@@ -44,7 +44,7 @@ class BoxPersonCategoryAdapter extends TypeAdapter<BoxPersonCategory> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BoxPersonCategoryAdapter &&
+      other is BoxPessoaCategoryAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -14,18 +14,15 @@ class PessoaCategory {
   @JsonKey(defaultValue: false)
   bool isIndex;
 
-  PessoaCategory({required this.title, this.parentCategory})
-      : isIndex = false,
-        texts = List.empty(),
-        subcategories = List.empty(),
-        id = -1;
+  PessoaCategory(
+      this.id, this.title, this.parentCategory, this.subcategories, this.texts)
+      : isIndex = false;
 
-  PessoaCategory.index()
+  PessoaCategory.index(this.subcategories)
       : title = "Índice",
         isIndex = true,
         texts = [],
-        id = 0,
-        subcategories = List.empty();
+        id = 0;
 
   factory PessoaCategory.fromJson(Map<String, dynamic> json) =>
       _$PessoaCategoryFromJson(json);

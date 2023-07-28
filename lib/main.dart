@@ -7,18 +7,17 @@ import 'package:pessoa_bonito/service/text_store_service.dart';
 import 'package:pessoa_bonito/ui/screen/base_screen.dart';
 
 import 'dto/box/box_person_category.dart';
-import 'model/bookmarked_text.dart';
-import 'service/bookmark_service.dart';
+import 'model/saved_text.dart';
+import 'service/save_service.dart';
 
 Future<void> main() async {
   EquatableConfig.stringify = true;
 
   await Hive.initFlutter();
 
-  Hive.registerAdapter(BoxPersonTextAdapter());
-  Hive.registerAdapter(BoxPersonCategoryAdapter());
-  Hive.registerAdapter(BookmarkedTextAdapter());
-  Hive.registerAdapter(SavedCategoryAdapter());
+  Hive.registerAdapter(BoxPessoaCategoryAdapter());
+  Hive.registerAdapter(BoxPessoaTextAdapter());
+  Hive.registerAdapter(SavedTextAdapter());
 
   runApp(const BootScreen());
 }
@@ -45,7 +44,7 @@ class BootScreen extends StatelessWidget {
   }
 
   Future initializeDependencies(BuildContext context) async {
-    Get.put(await BookmarkService.initialize());
+    Get.put(await SaveService.initialize());
 
     final assetBundle = DefaultAssetBundle.of(context);
     Get.put(await TextStoreService.initialize(assetBundle));

@@ -1,44 +1,32 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'box_person_text.dart';
+part of 'saved_text.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class BoxPessoaTextAdapter extends TypeAdapter<BoxPessoaText> {
+class SavedTextAdapter extends TypeAdapter<SavedText> {
   @override
-  final int typeId = 10;
+  final int typeId = 1;
 
   @override
-  BoxPessoaText read(BinaryReader reader) {
+  SavedText read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return BoxPessoaText(
+    return SavedText(
       fields[10] as int,
-      fields[20] as int,
-      fields[30] as String,
-      fields[40] as String,
-      fields[50] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, BoxPessoaText obj) {
+  void write(BinaryWriter writer, SavedText obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(1)
       ..writeByte(10)
-      ..write(obj.id)
-      ..writeByte(20)
-      ..write(obj.categoryId)
-      ..writeByte(30)
-      ..write(obj.title)
-      ..writeByte(40)
-      ..write(obj.content)
-      ..writeByte(50)
-      ..write(obj.author);
+      ..write(obj.id);
   }
 
   @override
@@ -47,7 +35,7 @@ class BoxPessoaTextAdapter extends TypeAdapter<BoxPessoaText> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BoxPessoaTextAdapter &&
+      other is SavedTextAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

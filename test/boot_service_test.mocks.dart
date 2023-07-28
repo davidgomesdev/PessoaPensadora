@@ -57,7 +57,6 @@ class MockAssetBundle extends _i1.Mock implements _i4.AssetBundle {
         returnValueForMissingStub:
             _i3.Future<_i5.ByteData>.value(_i5.ByteData(0)),
       ) as _i3.Future<_i5.ByteData>);
-
   @override
   _i3.Future<_i2.ImmutableBuffer> loadBuffer(String? key) =>
       (super.noSuchMethod(
@@ -82,7 +81,6 @@ class MockAssetBundle extends _i1.Mock implements _i4.AssetBundle {
           ),
         )),
       ) as _i3.Future<_i2.ImmutableBuffer>);
-
   @override
   _i3.Future<String> loadString(
     String? key, {
@@ -97,7 +95,6 @@ class MockAssetBundle extends _i1.Mock implements _i4.AssetBundle {
         returnValue: _i3.Future<String>.value(''),
         returnValueForMissingStub: _i3.Future<String>.value(''),
       ) as _i3.Future<String>);
-
   @override
   _i3.Future<T> loadStructuredData<T>(
     String? key,
@@ -158,7 +155,6 @@ class MockAssetBundle extends _i1.Mock implements _i4.AssetBundle {
               ),
             ),
       ) as _i3.Future<T>);
-
   @override
   _i3.Future<T> loadStructuredBinaryData<T>(
     String? key,
@@ -219,7 +215,6 @@ class MockAssetBundle extends _i1.Mock implements _i4.AssetBundle {
               ),
             ),
       ) as _i3.Future<T>);
-
   @override
   void evict(String? key) => super.noSuchMethod(
         Invocation.method(
@@ -228,7 +223,6 @@ class MockAssetBundle extends _i1.Mock implements _i4.AssetBundle {
         ),
         returnValueForMissingStub: null,
       );
-
   @override
   void clear() => super.noSuchMethod(
         Invocation.method(

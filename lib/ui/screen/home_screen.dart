@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
-import 'package:pessoa_bonito/service/bookmark_service.dart';
+import 'package:pessoa_bonito/service/save_service.dart';
+import 'package:pessoa_bonito/service/text_store_service.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
@@ -37,8 +37,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final BookmarkService service = Get.find();
-    final PessoaCategory index = Get.find();
+    final SaveService service = Get.find();
+    final TextStoreService storeService = Get.find();
 
     return StreamBuilder<PessoaText>(
         stream: _streamController.stream,
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen>
                     ],
             ),
             drawer: TextSelectionDrawer(
-                index: index,
+                index: storeService.index,
                 selectionSink: _streamController.sink,
                 selectedText: text),
             body: HomeScreenBody(
@@ -166,7 +166,9 @@ class TextReaderArea extends StatelessWidget {
         constraints: const BoxConstraints.expand(),
         child: TextReader(
           categoryTitle: currentText.category!.title,
-          currentText: currentText,
+          title: currentText.title,
+          text: currentText.content,
+          author: currentText.author,
           scrollController: scrollController,
         ),
       ),

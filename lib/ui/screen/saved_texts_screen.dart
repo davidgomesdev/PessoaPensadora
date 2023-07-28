@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/model/bookmarked_text.dart';
-import 'package:pessoa_bonito/service/bookmark_service.dart';
+import 'package:pessoa_bonito/dto/box/box_person_text.dart';
+import 'package:pessoa_bonito/service/save_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 
 import '../routes.dart';
@@ -11,8 +11,8 @@ class SavedTextsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BookmarkService service = Get.find();
-    final texts = service.getTexts();
+    final SaveService service = Get.find();
+    final bookmarkedTexts = service.getTexts();
 
     return Scaffold(
       body: CustomScrollView(
@@ -24,8 +24,10 @@ class SavedTextsScreen extends StatelessWidget {
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            sliver: SliverList.list(
-                children: [...texts.map((text) => SavedTextTile(text))]),
+            sliver: SliverList.list(children: [
+              ...bookmarkedTexts.map(
+                  (bookmarkedText) => SavedTextTile(bookmarkedText.toModel()))
+            ]),
           )
         ],
       ),
@@ -34,7 +36,7 @@ class SavedTextsScreen extends StatelessWidget {
 }
 
 class SavedTextTile extends StatelessWidget {
-  final BookmarkedText text;
+  final BoxPessoaText text;
 
   const SavedTextTile(
     this.text, {
@@ -80,7 +82,9 @@ class SavedTextTile extends StatelessWidget {
       onTap: () {
         Get.toNamed(Routes.readSavedScreen, arguments: {
           "categoryTitle": text.category.title,
-          "text": text.toModel()
+          "title": text.title,
+          "text": text.content,
+          "author": text.author,
         });
       },
     );

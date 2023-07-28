@@ -8,20 +8,19 @@ part of 'pessoa_category.dart';
 
 PessoaCategory _$PessoaCategoryFromJson(Map<String, dynamic> json) =>
     PessoaCategory(
-      title: json['title'] as String,
-      parentCategory: json['parentCategory'] == null
+      json['id'] as int,
+      json['title'] as String,
+      json['parentCategory'] == null
           ? null
           : PessoaCategory.fromJson(
               json['parentCategory'] as Map<String, dynamic>),
-    )
-      ..id = json['id'] as int
-      ..subcategories = (json['subcategories'] as List<dynamic>)
+      (json['subcategories'] as List<dynamic>)
           .map((e) => PessoaCategory.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..texts = (json['texts'] as List<dynamic>)
+          .toList(),
+      (json['texts'] as List<dynamic>)
           .map((e) => PessoaText.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..isIndex = json['isIndex'] as bool? ?? false;
+          .toList(),
+    )..isIndex = json['isIndex'] as bool? ?? false;
 
 Map<String, dynamic> _$PessoaCategoryToJson(PessoaCategory instance) =>
     <String, dynamic>{

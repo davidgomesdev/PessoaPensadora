@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/widget_extensions.dart';
 import 'package:share_plus/share_plus.dart';
@@ -7,14 +6,18 @@ import 'package:share_plus/share_plus.dart';
 class TextReader extends StatelessWidget {
   final ScrollController _scrollController;
   final String categoryTitle;
-  final PessoaText currentText;
+  final String title;
+  final String text;
+  final String author;
 
-  TextReader(
-      {Key? key,
-      ScrollController? scrollController,
-      required this.categoryTitle,
-      required this.currentText})
-      : _scrollController =
+  TextReader({
+    Key? key,
+    ScrollController? scrollController,
+    required this.categoryTitle,
+    required this.title,
+    required this.text,
+    required this.author,
+  })  : _scrollController =
             scrollController ?? ScrollController(keepScrollOffset: false),
         super(key: key);
 
@@ -33,17 +36,17 @@ class TextReader extends StatelessWidget {
             ),
             Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-              child: ReaderTitleText(currentText.title),
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              child: ReaderTitleText(title),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ReaderContentText(currentText),
+              child: ReaderContentText(author, text),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0, bottom: 12.0),
               child: Center(
-                child: ReaderAuthorText(currentText.author),
+                child: ReaderAuthorText(author),
               ),
             ),
           ],
@@ -85,9 +88,11 @@ class ReaderTitleText extends StatelessWidget {
 }
 
 class ReaderContentText extends StatelessWidget {
-  final PessoaText text;
+  final String author;
+  final String text;
 
   const ReaderContentText(
+    this.author,
     this.text, {
     super.key,
   });
@@ -95,7 +100,7 @@ class ReaderContentText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SelectableText(
-      text.content,
+      text,
       textAlign: TextAlign.left,
       style: bonitoTextTheme.bodyMedium,
       contextMenuBuilder: (ctx, state) {
@@ -107,7 +112,7 @@ class ReaderContentText extends StatelessWidget {
           label: 'Share',
           onPressed: () {
             ContextMenuController.removeAny();
-            Share.share('"$selectedText" - ${text.author}');
+            Share.share('"$selectedText" - $author');
           },
         ));
 
