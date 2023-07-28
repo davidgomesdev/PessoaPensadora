@@ -28,7 +28,6 @@ class TextSelectionDrawer extends StatefulWidget {
 class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   StreamController<PessoaCategory?> categoryStream =
       StreamController.broadcast();
-  String searchTextFilter = '';
   StreamController<String> searchFilterStream = StreamController.broadcast();
 
   @override
@@ -44,21 +43,23 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    searchTextFilter = '';
-
     return StreamBuilder<PessoaCategory?>(
         initialData: widget.selectedText?.category,
         stream: categoryStream.stream,
         builder: (ctx, snapshot) {
           final category = snapshot.data ?? widget.index;
+          searchFilterStream.add('');
 
           return Drawer(
             child: SafeArea(
               child: StreamBuilder<String>(
-                  initialData: searchTextFilter,
+                  initialData: '',
                   stream: searchFilterStream.stream,
                   builder: (context, snapshot) {
-                    searchTextFilter = snapshot.data ?? '';
+                    final searchTextFilter = snapshot.data ?? '';
+
+                    log.i('Current filter: $searchTextFilter');
+
                     return buildListView(category, searchTextFilter);
                   }),
             ),
@@ -82,7 +83,8 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
       child: Column(
         children: [
           buildTitle(category),
-          if (texts.isNotEmpty) buildSearch(filteredTexts.isNotEmpty),
+          if (texts.isNotEmpty)
+            buildSearch(filteredTexts.isNotEmpty, textFilter),
           buildTilesList(subcategories, filteredTexts, selectedTextId),
           if (!category.isIndex) buildBackTile(category),
         ],
@@ -115,7 +117,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     );
   }
 
-  Padding buildSearch(bool hasTexts) {
+  Padding buildSearch(bool hasTexts, String currentFilter) {
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
       child: Row(
@@ -139,9 +141,10 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               errorStyle: const TextStyle(height: 0),
             ),
             cursorOpacityAnimates: true,
-            onChanged: (searchField) {
-              searchFilterStream.add(searchField);
+            onChanged: (searchFilter) {
+              searchFilterStream.add(searchFilter);
             },
+            controller: TextEditingController(text: currentFilter),
           ))
         ],
       ),
