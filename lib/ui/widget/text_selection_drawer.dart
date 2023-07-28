@@ -75,7 +75,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
     final texts = category.texts;
     final filteredTexts =
-        texts.where((text) => filterByTitle(text, textFilter)).toList();
+        texts.where((text) => filterByContent(text, textFilter)).toList();
 
     return ScrollConfiguration(
       behavior: const ScrollBehavior().copyWith(overscroll: false),
@@ -186,11 +186,11 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     );
   }
 
-  bool filterByTitle(PessoaText text, String textFilter) {
+  bool filterByContent(PessoaText text, String textFilter) {
     final filterWords = textFilter.toLowerCase().split(' ');
-    final titleInLowercase = text.title.toLowerCase();
+    final contentInLowercase = text.content.toLowerCase();
 
-    return filterWords.every((keyword) => titleInLowercase.contains(keyword));
+    return filterWords.every((keyword) => contentInLowercase.contains(keyword));
   }
 
   ListTile buildTextTile(PessoaText text, int? selectedTextId) {
