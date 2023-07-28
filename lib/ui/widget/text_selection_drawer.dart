@@ -29,6 +29,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   StreamController<PessoaCategory?> categoryStream =
       StreamController.broadcast();
   StreamController<String> searchFilterStream = StreamController.broadcast();
+  final textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -49,6 +50,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         builder: (ctx, snapshot) {
           final category = snapshot.data ?? widget.index;
           searchFilterStream.add('');
+          textEditingController.text = '';
 
           return Drawer(
             child: SafeArea(
@@ -144,7 +146,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             onChanged: (searchFilter) {
               searchFilterStream.add(searchFilter);
             },
-            controller: TextEditingController(text: currentFilter),
+            controller: textEditingController,
           ))
         ],
       ),
