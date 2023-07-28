@@ -5,14 +5,12 @@ import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/service/save_service.dart';
 import 'package:pessoa_bonito/service/text_store_service.dart';
+import 'package:pessoa_bonito/ui/widget/NavigationWidget.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
 import 'package:pessoa_bonito/util/generic_extensions.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
-
-// Avoids accidental swipe when scrolling
-const swipeSensitivity = 16;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -126,44 +124,12 @@ class TextReaderArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onHorizontalDragEnd: (details) {
-        final vel = details.primaryVelocity;
+    final category = currentText.category!;
+    PessoaText? newText;
 
-        if (vel == null) return;
-
-        final category = currentText.category!;
-        PessoaText? newText;
-
-        if (vel <= -swipeSensitivity) {
-          newText = category.texts
-              .firstWhereOrNull((text) => text.id > currentText.id);
-
-          log.i("Swiping to next text");
-        } else if (vel >= swipeSensitivity) {
-          newText = category.texts.reversed
-              .firstWhereOrNull((text) => text.id < currentText.id);
-
-          log.i("Swiping to previous text");
-        }
-
-        if (newText != null) {
-          log.i("Swipe to ${newText.title}");
-          streamController.add(newText);
-
-          if (scrollController.hasClients) {
-            scrollController.animateTo(
-              0.0,
-              duration: const Duration(milliseconds: 1000),
-              curve: Curves.easeOutQuart,
-            );
-          }
-        } else {
-          log.i("Swipe no-op");
-        }
-      },
-      child: ConstrainedBox(
-        constraints: const BoxConstraints.expand(),
+    return ConstrainedBox(
+      constraints: const BoxConstraints.expand(),
+      child: NavigationWidget(
         child: TextReader(
           categoryTitle: currentText.category!.title,
           title: currentText.title,
@@ -171,7 +137,36 @@ class TextReaderArea extends StatelessWidget {
           author: currentText.author,
           scrollController: scrollController,
         ),
+        onNext: () {
+          newText = category.texts
+              .firstWhereOrNull((text) => text.id > currentText.id);
+
+          _handleNavigation(newText);
+        },
+        onPrevious: () {
+          newText = category.texts.reversed
+              .firstWhereOrNull((text) => text.id < currentText.id);
+
+          _handleNavigation(newText);
+        },
       ),
     );
+  }
+
+  void _handleNavigation(PessoaText? newText) {
+    if (newText != null) {
+      log.i("Swipe to ${newText.title}");
+      streamController.add(newText);
+
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 1000),
+          curve: Curves.easeOutQuart,
+        );
+      }
+    } else {
+      log.i("Swipe no-op");
+    }
   }
 }
