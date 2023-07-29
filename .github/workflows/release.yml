@@ -7,25 +7,37 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-  
+
     steps:
-    - uses: actions/checkout@v3
-    - uses: subosito/flutter-action@v2.10.0
-      with:
-        flutter-version: '3.x'
-        channel: 'stable'
-    - run: flutter pub get
-    - run: flutter test
-    - run: flutter build apk
-    - run: mv build/app/outputs/flutter-apk/app-release.apk PessoaBonito.apk
-    - name: Upload archive
-      uses: ncipollo/release-action@v1.8.10
-      with:
-        artifacts: "PessoaBonito.apk"
-        token: ${{ secrets.GITHUB_TOKEN }}
-        allowUpdates: true
-        removeArtifacts: true
-        artifactErrorsFailBuild: true
-        prerelease: true
-        name: latest
-        tag: latest
+      - uses: actions/checkout@v3
+      - name: Retrieve the build signature secrets
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEY_PROPERTIES: ${{ secrets.KEY_PROPERTIES }}
+        run: |
+          echo -ne "$KEYSTORE" | base64 --decode > android/pessoa-bonito.jks && \
+          echo "$KEY_PROPERTIES" > android/key.properties
+
+      - uses: subosito/flutter-action@v2.10.0
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build apk --release
+
+      - run: rm android/pessoa-bonito.jks android/key.properties
+      - run: mv build/app/outputs/flutter-apk/app-release.apk PessoaBonito.apk
+
+      - name: Upload archive
+        uses: ncipollo/release-action@v1.8.10
+        with:
+          artifacts: "PessoaBonito.apk"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+          removeArtifacts: true
+          artifactErrorsFailBuild: true
+          prerelease: true
+          name: latest
+          tag: latest
