@@ -6,6 +6,8 @@ import 'package:pessoa_bonito/ui/screen/home_screen.dart';
 import 'package:pessoa_bonito/ui/screen/saved_text_reader_screen.dart';
 import 'package:pessoa_bonito/ui/screen/saved_texts_screen.dart';
 
+import 'boot_screen.dart';
+
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
@@ -13,8 +15,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
         theme: bonitoTheme,
-        initialRoute: Routes.homeScreen,
+        initialRoute: Routes.bootScreen,
         getPages: [
+          GetPage(name: Routes.bootScreen, page: () => const BootScreen()),
           GetPage(name: Routes.homeScreen, page: () => const HomeScreen()),
           GetPage(
               name: Routes.savedScreen, page: () => const SavedTextsScreen()),

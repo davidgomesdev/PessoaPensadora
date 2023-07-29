@@ -47,6 +47,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/json_files/texts.json
+    - assets/json_files/splash_texts.json
+    - assets/images/splash_art.jpg
 
 flutter_icons:
   image_path: "assets/icon/icon.png"
