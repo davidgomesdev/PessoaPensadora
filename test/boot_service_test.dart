@@ -41,8 +41,8 @@ void main() {
 
     expect(categoryWithTexts.subcategories, isEmpty);
     expect(categoryWithTexts.texts, hasLength(2));
-    expect(categoryWithTexts.texts.first.id, equals(1));
-    expect(categoryWithTexts.texts[1].id, equals(9));
+    expect(categoryWithTexts.texts.first.id, equals(9));
+    expect(categoryWithTexts.texts[1].id, equals(1));
 
     expect(
       categoryWithSubcategoriesAndTexts.subcategories,
@@ -52,7 +52,7 @@ void main() {
         categoryWithSubcategoriesAndTexts.subcategories.first.id, equals(10));
 
     expect(categoryWithSubcategoriesAndTexts.texts, hasLength(2));
-    expect(categoryWithSubcategoriesAndTexts.texts.first.id, equals(9));
-    expect(categoryWithSubcategoriesAndTexts.texts[1].id, equals(1234));
+    expect(categoryWithSubcategoriesAndTexts.texts.first.id, equals(1234));
+    expect(categoryWithSubcategoriesAndTexts.texts[1].id, equals(9));
   });
 }

@@ -24,13 +24,13 @@
     "texts": [
       {
         "id": 1,
-        "title": "Text with same ID as a category",
+        "title": "B - Text with same ID as a category",
         "author": "Person",
         "content": "God wills, man dreams, the work is born."
       },
       {
         "id": 9,
-        "title": "Repeated text",
+        "title": "A - Repeated text",
         "author": "Bernades",
         "content": "Very much empty."
       }
@@ -43,13 +43,13 @@
     "texts": [
       {
         "id": 1234,
-        "title": "Random text",
+        "title": "C - Random text",
         "author": "Someone",
         "content": "Special."
       },
       {
         "id": 9,
-        "title": "Repeated text",
+        "title": "D - Repeated text",
         "author": "Bernades",
         "content": "Very much empty."
       }
