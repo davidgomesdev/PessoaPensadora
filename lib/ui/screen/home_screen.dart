@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/service/save_service.dart';
 import 'package:pessoa_bonito/service/text_store_service.dart';
-import 'package:pessoa_bonito/ui/widget/NavigationWidget.dart';
+import 'package:pessoa_bonito/ui/widget/navigation_widget.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';

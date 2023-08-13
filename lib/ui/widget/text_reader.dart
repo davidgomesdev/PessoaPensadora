@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/widget_extensions.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TextReader extends StatelessWidget {
   final ScrollController _scrollController;
@@ -108,18 +109,38 @@ class ReaderContentText extends StatelessWidget {
         final List<ContextMenuButtonItem> buttonItems =
             state.contextMenuButtonItems;
 
-        buttonItems.add(ContextMenuButtonItem(
-          label: 'Share',
-          onPressed: () {
-            ContextMenuController.removeAny();
-            Share.share('"$selectedText" - $author');
-          },
-        ));
+        final isSingleWord = !selectedText.contains(' ');
+
+        if (isSingleWord) {
+          buttonItems.add(buildDefinitionButton(selectedText));
+        }
+
+        buttonItems.add(buildShareButton(selectedText));
 
         return AdaptiveTextSelectionToolbar.buttonItems(
           anchors: state.contextMenuAnchors,
           buttonItems: buttonItems,
         );
+      },
+    );
+  }
+
+  ContextMenuButtonItem buildDefinitionButton(String selectedWord) {
+    return ContextMenuButtonItem(
+        label: 'Definir',
+        onPressed: () {
+          ContextMenuController.removeAny();
+
+          launchUrl(Uri.https("dicionario.priberam.org", '/$selectedWord'));
+        });
+  }
+
+  ContextMenuButtonItem buildShareButton(String selectedText) {
+    return ContextMenuButtonItem(
+      label: 'Partilhar',
+      onPressed: () {
+        ContextMenuController.removeAny();
+        Share.share('"$selectedText" - $author');
       },
     );
   }
