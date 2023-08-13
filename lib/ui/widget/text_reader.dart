@@ -113,6 +113,8 @@ class ReaderContentText extends StatelessWidget {
 
         if (isSingleWord) {
           buttonItems.add(buildDefinitionButton(selectedText));
+        } else {
+          buttonItems.add(buildSearchButton(selectedText));
         }
 
         buttonItems.add(buildShareButton(selectedText));
@@ -125,9 +127,19 @@ class ReaderContentText extends StatelessWidget {
     );
   }
 
+  ContextMenuButtonItem buildSearchButton(String selectedText) {
+    return ContextMenuButtonItem(
+        label: '🔍 Pesquisar',
+        onPressed: () {
+          ContextMenuController.removeAny();
+
+          launchUrl(Uri.https("google.pt", '/search', {'q': selectedText}));
+        });
+  }
+
   ContextMenuButtonItem buildDefinitionButton(String selectedWord) {
     return ContextMenuButtonItem(
-        label: 'Definir',
+        label: '📖 Definir',
         onPressed: () {
           ContextMenuController.removeAny();
 
@@ -137,7 +149,7 @@ class ReaderContentText extends StatelessWidget {
 
   ContextMenuButtonItem buildShareButton(String selectedText) {
     return ContextMenuButtonItem(
-      label: 'Partilhar',
+      label: '📤 Partilhar',
       onPressed: () {
         ContextMenuController.removeAny();
         Share.share('"$selectedText" - $author');
