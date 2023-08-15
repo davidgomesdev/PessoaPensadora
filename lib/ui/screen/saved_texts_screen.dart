@@ -29,7 +29,10 @@ class SavedTextsScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               sliver: SavedTextsSliverList(
                 bookmarkedTexts: bookmarkedTexts,
-                onDismiss: (text) => service.deleteText(text.id),
+                onDismiss: (text) {
+                  service.deleteText(text.id);
+                  log.i('Saved text deleted.');
+                },
               )),
         ],
       ),
@@ -38,7 +41,7 @@ class SavedTextsScreen extends StatelessWidget {
 }
 
 class SavedTextsSliverList extends StatelessWidget {
-  final Function(SavedText) onDismiss;
+  final void Function(SavedText) onDismiss;
 
   const SavedTextsSliverList(
       {super.key, required this.bookmarkedTexts, required this.onDismiss});
@@ -56,6 +59,7 @@ class SavedTextsSliverList extends StatelessWidget {
           onDismissed: (direction) {
             onDismiss(text);
           },
+          confirmDismiss: (direction) => displayUndoSnackbar(context),
           direction: DismissDirection.endToStart,
           dragStartBehavior: DragStartBehavior.down,
           child: SavedTextTile(text.toModel()),
@@ -63,6 +67,30 @@ class SavedTextsSliverList extends StatelessWidget {
       },
       itemCount: bookmarkedTexts.length,
     );
+  }
+
+  /// Returns whether or not the action was accepted.
+  Future<bool> displayUndoSnackbar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: const Text('Removido dos textos marcados'),
+      action: SnackBarAction(
+          label: 'Cancelar',
+          onPressed: () {
+            log.i('Snackbar undo bookmarked text pressed.');
+          }),
+    );
+
+    return ScaffoldMessenger.of(context)
+        .showSnackBar(snackBar)
+        .closed
+        .then((closeReason) {
+      if (closeReason == SnackBarClosedReason.action) {
+        log.i('Bookmarked text removal was cancelled.');
+        return false;
+      }
+
+      return true;
+    });
   }
 }
 
@@ -83,7 +111,7 @@ class SavedTextTile extends StatelessWidget {
       title: Text(
         text.title,
         style:
-        bonitoTextTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+            bonitoTextTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
       ),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 8.0),
