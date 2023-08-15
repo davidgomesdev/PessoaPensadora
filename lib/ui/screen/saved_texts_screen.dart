@@ -22,7 +22,7 @@ class SavedTextsScreen extends StatelessWidget {
         scrollBehavior: const ScrollBehavior().copyWith(overscroll: false),
         slivers: [
           SliverAppBar(
-            title: Text("Marcar texto", style: bonitoTextTheme.displaySmall),
+            title: Text("Textos marcados", style: bonitoTextTheme.displaySmall),
             pinned: true,
           ),
           SliverPadding(
@@ -31,7 +31,6 @@ class SavedTextsScreen extends StatelessWidget {
                 bookmarkedTexts: bookmarkedTexts,
                 onDismiss: (text) {
                   service.deleteText(text.id);
-                  log.i('Saved text deleted.');
                 },
               )),
         ],
@@ -41,12 +40,11 @@ class SavedTextsScreen extends StatelessWidget {
 }
 
 class SavedTextsSliverList extends StatelessWidget {
+  final List<SavedText> bookmarkedTexts;
   final void Function(SavedText) onDismiss;
 
   const SavedTextsSliverList(
       {super.key, required this.bookmarkedTexts, required this.onDismiss});
-
-  final List<SavedText> bookmarkedTexts;
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +60,16 @@ class SavedTextsSliverList extends StatelessWidget {
           confirmDismiss: (direction) => displayUndoSnackbar(context),
           direction: DismissDirection.endToStart,
           dragStartBehavior: DragStartBehavior.down,
+          background: const Padding(
+            padding: EdgeInsets.only(right: 16.0),
+            child: Align(
+                child: Icon(
+                  Icons.delete_forever,
+                  size: 36.0,
+                  color: Colors.yellowAccent,
+                ),
+                alignment: Alignment.centerRight),
+          ),
           child: SavedTextTile(text.toModel()),
         );
       },
