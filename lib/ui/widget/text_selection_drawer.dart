@@ -107,6 +107,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
             ),
           ),
           IconButton(
+            tooltip: 'Textos marcados',
             icon: const Icon(Icons.bookmarks),
             onPressed: () {
               Get.toNamed(Routes.savedScreen);
