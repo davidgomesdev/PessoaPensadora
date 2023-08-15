@@ -16,14 +16,17 @@ class App extends StatelessWidget {
     return GetMaterialApp(
         theme: bonitoTheme,
         initialRoute: Routes.bootScreen,
-        getPages: [
-          GetPage(name: Routes.bootScreen, page: () => const BootScreen()),
-          GetPage(name: Routes.homeScreen, page: () => const HomeScreen()),
-          GetPage(
-              name: Routes.savedScreen, page: () => const SavedTextsScreen()),
-          GetPage(
-              name: Routes.readSavedScreen,
-              page: () => const SavedTextReaderScreen())
-        ]);
+        getPages: buildAppPages());
+  }
+
+  List<GetPage<dynamic>> buildAppPages() {
+    return [
+      GetPage(name: Routes.bootScreen, page: () => const BootScreen()),
+      GetPage(name: Routes.homeScreen, page: () => const HomeScreen()),
+      GetPage(name: Routes.savedScreen, page: () => const SavedTextsScreen()),
+      GetPage(
+          name: Routes.readSavedScreen,
+          page: () => const SavedTextReaderScreen())
+    ];
   }
 }
