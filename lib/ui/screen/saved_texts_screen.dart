@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/dto/box/box_person_text.dart';
+import 'package:pessoa_bonito/model/saved_text.dart';
 import 'package:pessoa_bonito/service/save_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 
@@ -23,14 +25,42 @@ class SavedTextsScreen extends StatelessWidget {
             pinned: true,
           ),
           SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            sliver: SliverList.list(children: [
-              ...bookmarkedTexts.map(
-                  (bookmarkedText) => SavedTextTile(bookmarkedText.toModel()))
-            ]),
-          )
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              sliver: SavedTextsSliverList(
+                bookmarkedTexts: bookmarkedTexts,
+                onDismiss: (text) => service.deleteText(text.id),
+              )),
         ],
       ),
+    );
+  }
+}
+
+class SavedTextsSliverList extends StatelessWidget {
+  final Function(SavedText) onDismiss;
+
+  const SavedTextsSliverList(
+      {super.key, required this.bookmarkedTexts, required this.onDismiss});
+
+  final List<SavedText> bookmarkedTexts;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList.builder(
+      itemBuilder: (context, index) {
+        final text = bookmarkedTexts[index];
+
+        return Dismissible(
+          key: Key(text.id.toString()),
+          onDismissed: (direction) {
+            onDismiss(text);
+          },
+          direction: DismissDirection.endToStart,
+          dragStartBehavior: DragStartBehavior.down,
+          child: SavedTextTile(text.toModel()),
+        );
+      },
+      itemCount: bookmarkedTexts.length,
     );
   }
 }
@@ -52,7 +82,7 @@ class SavedTextTile extends StatelessWidget {
       title: Text(
         text.title,
         style:
-            bonitoTextTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+        bonitoTextTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
       ),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 8.0),
