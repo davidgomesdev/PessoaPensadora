@@ -36,7 +36,7 @@ class SaveService {
 
   Future<void> deleteText(int id) async {
     await _box.delete(id);
-    log.i('Deleted text $id');
+    log.i('Deleted saved text $id');
   }
 
   bool isTextSaved(int id) => _box.containsKey(id);
