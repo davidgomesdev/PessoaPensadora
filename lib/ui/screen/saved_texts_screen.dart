@@ -5,6 +5,7 @@ import 'package:pessoa_bonito/dto/box/box_person_text.dart';
 import 'package:pessoa_bonito/model/saved_text.dart';
 import 'package:pessoa_bonito/service/save_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
+import 'package:pessoa_bonito/util/logger_factory.dart';
 
 import '../routes.dart';
 
@@ -21,7 +22,7 @@ class SavedTextsScreen extends StatelessWidget {
         scrollBehavior: const ScrollBehavior().copyWith(overscroll: false),
         slivers: [
           SliverAppBar(
-            title: Text("Saved texts", style: bonitoTextTheme.displaySmall),
+            title: Text("Marcar texto", style: bonitoTextTheme.displaySmall),
             pinned: true,
           ),
           SliverPadding(
