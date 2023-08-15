@@ -17,7 +17,7 @@ class SavedTextReaderScreen extends StatelessWidget {
           child: TextReader(
             categoryTitle: Get.arguments['categoryTitle'],
             title: Get.arguments['title'],
-            text: Get.arguments['text'],
+            content: Get.arguments['content'],
             author: Get.arguments['author'],
           ),
         ),

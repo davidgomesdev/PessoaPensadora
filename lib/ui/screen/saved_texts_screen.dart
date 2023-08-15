@@ -83,7 +83,7 @@ class SavedTextTile extends StatelessWidget {
         Get.toNamed(Routes.readSavedScreen, arguments: {
           "categoryTitle": text.category.title,
           "title": text.title,
-          "text": text.content,
+          "content": text.content,
           "author": text.author,
         });
       },

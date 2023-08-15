@@ -13,7 +13,7 @@ class SavedText {
 
   SavedText(this.id);
 
-  factory SavedText.from(PessoaText text) => SavedText(text.id);
+  factory SavedText.fromText(PessoaText text) => SavedText(text.id);
 
   BoxPessoaText toModel() {
     final TextStoreService storeService = Get.find();

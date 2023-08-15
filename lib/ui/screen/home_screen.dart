@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
-import 'package:pessoa_bonito/service/save_service.dart';
+import 'package:pessoa_bonito/model/saved_text.dart';
 import 'package:pessoa_bonito/service/text_store_service.dart';
 import 'package:pessoa_bonito/ui/widget/navigation_widget.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
+import 'package:pessoa_bonito/ui/widget/save_text_button.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
 import 'package:pessoa_bonito/util/generic_extensions.dart';
@@ -35,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final SaveService service = Get.find();
     final TextStoreService storeService = Get.find();
 
     return StreamBuilder<PessoaText>(
@@ -48,20 +48,7 @@ class _HomeScreenState extends State<HomeScreen>
               actions: (text == null)
                   ? []
                   : [
-                      IconButton(
-                          onPressed: () {
-                            setState(() {
-                              if (service.isTextSaved(text.id)) {
-                                service.deleteText(text.id);
-                              } else {
-                                service.saveText(text);
-                              }
-                            });
-                          },
-                          icon: Icon(service.isTextSaved(text.id)
-                              ? Icons.bookmark_outlined
-                              : Icons.bookmark_outline_outlined))
-                    ],
+                SaveTextButton(text: SavedText.fromText(text))],
             ),
             drawer: TextSelectionDrawer(
                 index: storeService.index,
@@ -132,7 +119,7 @@ class TextReaderArea extends StatelessWidget {
         child: TextReader(
           categoryTitle: currentText.category!.title,
           title: currentText.title,
-          text: currentText.content,
+          content: currentText.content,
           author: currentText.author,
           scrollController: scrollController,
         ),

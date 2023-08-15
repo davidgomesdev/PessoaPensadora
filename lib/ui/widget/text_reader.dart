@@ -8,7 +8,7 @@ class TextReader extends StatelessWidget {
   final ScrollController _scrollController;
   final String categoryTitle;
   final String title;
-  final String text;
+  final String content;
   final String author;
 
   TextReader({
@@ -16,7 +16,7 @@ class TextReader extends StatelessWidget {
     ScrollController? scrollController,
     required this.categoryTitle,
     required this.title,
-    required this.text,
+    required this.content,
     required this.author,
   })  : _scrollController =
             scrollController ?? ScrollController(keepScrollOffset: false),
@@ -42,7 +42,7 @@ class TextReader extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ReaderContentText(author, text),
+              child: ReaderContentText(author, content),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0, bottom: 12.0),

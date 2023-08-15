@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/model/saved_text.dart';
 
 import '../util/logger_factory.dart';
@@ -30,8 +29,8 @@ class SaveService {
     }
   }
 
-  Future<void> saveText(PessoaText text) async {
-    await _box.put(text.id, SavedText.from(text));
+  Future<void> saveText(SavedText text) async {
+    await _box.put(text.id, text);
     log.i('Saved text ${text.id}');
   }
 
