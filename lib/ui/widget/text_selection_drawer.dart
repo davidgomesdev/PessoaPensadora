@@ -265,7 +265,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
       title: Text(text.title, style: bonitoTextTheme.headlineMedium),
       textColor: (isTextRead) ? Colors.white60 : Colors.white,
       selected: text.id == selectedTextId,
-      selectedColor: Colors.white,
+      selectedColor: (isTextRead) ? Colors.white60 : Colors.white,
       selectedTileColor: Colors.white10,
       onTap: () {
         setState(() {
