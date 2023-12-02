@@ -12,11 +12,15 @@ extension NullableImprovement<E> on Iterable<E> {
 
 extension ListUtils<E> on List<E> {
   E? getNext(E element) {
-    final nextIndex = indexOf(element) + 1;
+    try {
+      final nextIndex = indexOf(element) + 1;
 
-    if (nextIndex > length) return null;
+      if (nextIndex > length) return null;
 
-    return elementAt(nextIndex);
+      return elementAt(nextIndex);
+    } on RangeError {
+      return null;
+    }
   }
 
   E? getPrevious(E element) {
