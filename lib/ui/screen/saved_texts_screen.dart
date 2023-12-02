@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/dto/box/box_person_text.dart';
 import 'package:pessoa_bonito/model/saved_text.dart';
-import 'package:pessoa_bonito/service/save_service.dart';
+import 'package:pessoa_bonito/repository/save_repository.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
@@ -14,7 +14,7 @@ class SavedTextsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SaveService service = Get.find();
+    final SaveRepository service = Get.find();
     final bookmarkedTexts = service.getTexts();
 
     return Scaffold(

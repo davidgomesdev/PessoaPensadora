@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/saved_text.dart';
-import 'package:pessoa_bonito/service/save_service.dart';
+import 'package:pessoa_bonito/repository/save_repository.dart';
+
+import '../../repository/read_repository.dart';
 
 class SaveTextButton extends StatefulWidget {
   final SavedText text;
@@ -17,19 +19,21 @@ class _SaveTextButtonState extends State<SaveTextButton> {
 
   @override
   Widget build(BuildContext context) {
-    final SaveService service = Get.find();
+    final SaveRepository repository = Get.find();
+    final ReadRepository readRepository = Get.find();
 
     return IconButton(
         onPressed: () {
           setState(() {
-            if (service.isTextSaved(textId)) {
-              service.deleteText(textId);
+            if (repository.isTextSaved(textId)) {
+              repository.deleteText(textId);
             } else {
-              service.saveText(widget.text);
+              readRepository.markAsRead(textId);
+              repository.saveText(widget.text);
             }
           });
         },
-        icon: Icon(service.isTextSaved(textId)
+        icon: Icon(repository.isTextSaved(textId)
             ? Icons.bookmark_outlined
             : Icons.bookmark_outline_outlined));
   }

@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
+import 'package:pessoa_bonito/repository/read_repository.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
@@ -212,6 +214,14 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         setState(() {
           widget.selectionSink.add(text);
           Navigator.pop(context);
+        });
+      },
+      onLongPress: () {
+        setState(() {
+          ReadRepository readRepository = Get.find();
+
+          readRepository.toggleRead(text.id);
+          HapticFeedback.mediumImpact();
         });
       },
     );

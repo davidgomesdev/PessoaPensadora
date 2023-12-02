@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/service/save_service.dart';
+import 'package:pessoa_bonito/repository/read_repository.dart';
+import 'package:pessoa_bonito/repository/save_repository.dart';
 import 'package:pessoa_bonito/service/text_store_service.dart';
 import 'package:pessoa_bonito/ui/routes.dart';
 
@@ -32,7 +33,8 @@ class _BootScreenState extends State<BootScreen> {
   }
 
   Future initializeDependencies(BuildContext context) async {
-    Get.put(await SaveService.initialize(), permanent: true);
+    Get.put(await SaveRepository.initialize(), permanent: true);
+    Get.put(await ReadRepository.initialize(), permanent: true);
 
     final assetBundle = DefaultAssetBundle.of(context);
     Get.put(await TextStoreService.initialize(assetBundle), permanent: true);
