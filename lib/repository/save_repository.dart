@@ -5,28 +5,22 @@ import '../util/logger_factory.dart';
 
 const _savedTextsBoxName = 'savedTexts';
 
-class SaveService {
+class SaveRepository {
   final Box<SavedText> _box;
 
-  SaveService._(this._box);
+  SaveRepository._(this._box);
 
-  static Future<SaveService> initialize() async {
+  static Future<SaveRepository> initialize() async {
     final box = await _getSavedTextsBox();
 
     log.i('Saved texts box initialized successfully');
     log.d('Texts found in box: ${box.keys}');
 
-    return SaveService._(box);
+    return SaveRepository._(box);
   }
 
   static Future<Box<SavedText>> _getSavedTextsBox() async {
-    try {
-      return await Hive.openBox(_savedTextsBoxName);
-    } catch (ex) {
-      log.w('Error opening saved texts box, re-creating it', ex);
-      await Hive.deleteBoxFromDisk(_savedTextsBoxName);
-      return await Hive.openBox(_savedTextsBoxName);
-    }
+    return await Hive.openBox(_savedTextsBoxName);
   }
 
   Future<void> saveText(SavedText text) async {
