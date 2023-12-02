@@ -202,11 +202,14 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   }
 
   ListTile buildTextTile(PessoaText text, int? selectedTextId) {
+    final isTextRead = Get.find<ReadRepository>().isTextRead(text.id);
+    
     return ListTile(
       horizontalTitleGap: 8.0,
       minLeadingWidth: 0.0,
       leading: const Icon(Icons.text_snippet_rounded),
       title: Text(text.title, style: bonitoTextTheme.headlineMedium),
+      textColor: (isTextRead) ? Colors.white60 : Colors.white,
       selected: text.id == selectedTextId,
       selectedColor: Colors.white,
       selectedTileColor: Colors.white10,
