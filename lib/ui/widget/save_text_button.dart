@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/saved_text.dart';
 import 'package:pessoa_bonito/repository/save_repository.dart';
+import 'package:pessoa_bonito/util/action_feedback.dart';
 
 import '../../repository/read_repository.dart';
 
@@ -31,7 +31,7 @@ class _SaveTextButtonState extends State<SaveTextButton> {
             } else {
               readRepository.markAsRead(textId);
               repository.saveText(widget.text);
-              HapticFeedback.lightImpact();
+              ActionFeedback.lightHaptic();
             }
           });
         },

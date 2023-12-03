@@ -8,6 +8,7 @@ import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/repository/read_repository.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/generic_extensions.dart';
+import 'package:pessoa_bonito/util/action_feedback.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
 import '../routes.dart';
@@ -278,7 +279,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           ReadRepository readRepository = Get.find();
 
           readRepository.toggleRead(text.id);
-          HapticFeedback.mediumImpact();
+          ActionFeedback.lightHaptic();
         });
       },
     );
