@@ -15,4 +15,6 @@ Criada para serem lidos numa interface mais moderna, e de fácil leitura no tele
 
 Run the code generator first: `dart run build_runner build`.
 
-Then run as normal. (via IDE or `fluter run`)
+Then run as normal. (via IDE or `fluter run --debug --flavor dev`)
+
+_**Note**: a `pessoa-bonito.jks` file and a `key.properties` is required on `android/`. (can be a random one for dev)_

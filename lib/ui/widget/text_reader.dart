@@ -132,7 +132,6 @@ class ReaderContentText extends StatelessWidget {
         label: '🔍 Pesquisar',
         onPressed: () {
           ContextMenuController.removeAny();
-
           launchUrl(Uri.https("google.pt", '/search', {'q': selectedText}));
         });
   }
@@ -142,7 +141,6 @@ class ReaderContentText extends StatelessWidget {
         label: '📖 Definir',
         onPressed: () {
           ContextMenuController.removeAny();
-
           launchUrl(Uri.https("dicionario.priberam.org", '/$selectedWord'));
         });
   }
