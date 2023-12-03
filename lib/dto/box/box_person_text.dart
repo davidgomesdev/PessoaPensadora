@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:pessoa_bonito/dto/box/box_person_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 
-import '../../service/text_store_service.dart';
+import '../../service/text_store.dart';
 
 part 'box_person_text.g.dart';
 

@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
-import 'package:pessoa_bonito/repository/read_repository.dart';
+import 'package:pessoa_bonito/repository/read.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
-import 'package:pessoa_bonito/util/generic_extensions.dart';
 import 'package:pessoa_bonito/util/action_feedback.dart';
+import 'package:pessoa_bonito/util/generic_extensions.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
 import '../routes.dart';
@@ -128,7 +127,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
   Padding buildTitle(PessoaCategory category) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0).copyWith(top: 16.0),
+      padding: const EdgeInsets.only(left: 16.0, right: 8.0).copyWith(top: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -138,15 +137,26 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               style: bonitoTextTheme.displaySmall,
             ),
           ),
-          IconButton(
-            tooltip: 'Textos marcados',
-            icon: const Icon(Icons.bookmarks),
-            onPressed: () {
-              Get.toNamed(Routes.savedScreen);
-            },
-            iconSize: 24.0,
-            splashRadius: 24.0,
-          ),
+          Row(children: [
+            IconButton(
+              tooltip: 'Textos marcados',
+              icon: const Icon(Icons.bookmarks),
+              onPressed: () {
+                Get.toNamed(Routes.savedScreen);
+              },
+              iconSize: 24.0,
+              splashRadius: 24.0,
+            ),
+            IconButton(
+              tooltip: 'Histórico',
+              icon: const Icon(Icons.history),
+              onPressed: () {
+                Get.toNamed(Routes.historyScreen);
+              },
+              iconSize: 24.0,
+              splashRadius: 24.0,
+            ),
+          ],)
         ],
       ),
     );

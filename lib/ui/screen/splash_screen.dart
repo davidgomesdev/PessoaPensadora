@@ -31,7 +31,10 @@ class _SplashScreenState extends State<SplashScreen> {
       builder: (context, snapshot) {
         final text = snapshot.data;
 
-        if (snapshot.hasError) snapshot.printError();
+        if (snapshot.hasError) {
+          snapshot.printError();
+          return ErrorWidget(snapshot.error!);
+        }
 
         if (text == null) return Container();
 

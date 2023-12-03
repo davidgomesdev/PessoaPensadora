@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';
 
-class SavedTextReaderScreen extends StatelessWidget {
-  const SavedTextReaderScreen({
+class TextReaderScreen extends StatelessWidget {
+  const TextReaderScreen({
     super.key,
   });
 
