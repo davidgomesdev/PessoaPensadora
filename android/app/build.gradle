@@ -76,7 +76,6 @@ android {
     productFlavors {
         prod {
             dimension "env"
-            isDefault true
         }
         dev {
             dimension "env"

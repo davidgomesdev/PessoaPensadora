@@ -24,7 +24,7 @@ jobs:
           channel: 'stable'
 
       - run: flutter pub get
-      - run: flutter build apk --release
+      - run: flutter build apk --release --flavor prod
 
       - run: rm android/pessoa-bonito.jks android/key.properties
       - run: mv build/app/outputs/flutter-apk/app-release.apk PessoaBonito.apk

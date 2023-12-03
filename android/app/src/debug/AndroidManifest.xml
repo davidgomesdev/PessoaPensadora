@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="me.l3n.pessoabonito.pessoa_bonito">
-    <!-- Flutter needs it to communicate with the running application
-         to allow setting breakpoints, to provide hot reload, etc.
-    -->
+    xmlns:tools="http://schemas.android.com/tools"
+    package="me.l3n.pessoabonito.pessoa_bonito" >
+    <application
+        android:label="Pessoa Bonito (dev)"
+        tools:replace="android:label" />
     <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
