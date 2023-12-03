@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/model/saved_text.dart';
-import 'package:pessoa_bonito/service/text_store_service.dart';
+import 'package:pessoa_bonito/service/text_store.dart';
 import 'package:pessoa_bonito/ui/widget/navigation_widget.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/save_text_button.dart';
@@ -12,6 +12,8 @@ import 'package:pessoa_bonito/ui/widget/text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
 import 'package:pessoa_bonito/util/generic_extensions.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
+
+import '../../repository/history.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -42,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen>
         stream: _streamController.stream,
         builder: (ctx, snapshot) {
           final text = snapshot.data;
+
+          if (text != null) Get.find<HistoryRepository>().saveVisit(text.id);
 
           return Scaffold(
             appBar: AppBar(

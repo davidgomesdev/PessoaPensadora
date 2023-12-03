@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/repository/read_repository.dart';
-import 'package:pessoa_bonito/repository/save_repository.dart';
-import 'package:pessoa_bonito/service/text_store_service.dart';
+import 'package:pessoa_bonito/repository/history.dart';
+import 'package:pessoa_bonito/repository/read.dart';
+import 'package:pessoa_bonito/repository/save.dart';
+import 'package:pessoa_bonito/service/text_store.dart';
 import 'package:pessoa_bonito/ui/routes.dart';
 
 import 'splash_screen.dart';
@@ -35,6 +36,7 @@ class _BootScreenState extends State<BootScreen> {
   Future initializeDependencies(BuildContext context) async {
     Get.put(await SaveRepository.initialize(), permanent: true);
     Get.put(await ReadRepository.initialize(), permanent: true);
+    Get.put(await HistoryRepository.initialize(), permanent: true);
 
     final assetBundle = DefaultAssetBundle.of(context);
     Get.put(await TextStoreService.initialize(assetBundle), permanent: true);

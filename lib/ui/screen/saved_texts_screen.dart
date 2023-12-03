@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/dto/box/box_person_text.dart';
 import 'package:pessoa_bonito/model/saved_text.dart';
-import 'package:pessoa_bonito/repository/save_repository.dart';
+import 'package:pessoa_bonito/repository/save.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
@@ -14,8 +14,8 @@ class SavedTextsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SaveRepository service = Get.find();
-    final bookmarkedTexts = service.getTexts();
+    final SaveRepository repository = Get.find();
+    final bookmarkedTexts = repository.getTexts();
 
     return Scaffold(
       body: CustomScrollView(
@@ -27,10 +27,10 @@ class SavedTextsScreen extends StatelessWidget {
           ),
           SliverPadding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              sliver: SavedTextsSliverList(
+              sliver: _SavedTextsSliverList(
                 bookmarkedTexts: bookmarkedTexts,
                 onDismiss: (text) {
-                  service.deleteText(text.id);
+                  repository.deleteText(text.id);
                 },
               )),
         ],
@@ -39,12 +39,12 @@ class SavedTextsScreen extends StatelessWidget {
   }
 }
 
-class SavedTextsSliverList extends StatelessWidget {
+class _SavedTextsSliverList extends StatelessWidget {
   final List<SavedText> bookmarkedTexts;
   final void Function(SavedText) onDismiss;
 
-  const SavedTextsSliverList(
-      {super.key, required this.bookmarkedTexts, required this.onDismiss});
+  const _SavedTextsSliverList(
+      {required this.bookmarkedTexts, required this.onDismiss});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class SavedTextsSliverList extends StatelessWidget {
                 ),
                 alignment: Alignment.centerRight),
           ),
-          child: SavedTextTile(text.toModel()),
+          child: _SavedTextTile(text.toModel()),
         );
       },
       itemCount: bookmarkedTexts.length,
@@ -102,13 +102,10 @@ class SavedTextsSliverList extends StatelessWidget {
   }
 }
 
-class SavedTextTile extends StatelessWidget {
+class _SavedTextTile extends StatelessWidget {
   final BoxPessoaText text;
 
-  const SavedTextTile(
-    this.text, {
-    super.key,
-  });
+  const _SavedTextTile(this.text);
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +144,7 @@ class SavedTextTile extends StatelessWidget {
         ),
       ),
       onTap: () {
-        Get.toNamed(Routes.readSavedScreen, arguments: {
+        Get.toNamed(Routes.readTextScreen, arguments: {
           "categoryTitle": text.category.title,
           "title": text.title,
           "content": text.content,

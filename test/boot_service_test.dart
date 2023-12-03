@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pessoa_bonito/service/text_store_service.dart';
+import 'package:pessoa_bonito/service/text_store.dart';
 import 'package:test/test.dart';
 
 import 'boot_service_test.mocks.dart';

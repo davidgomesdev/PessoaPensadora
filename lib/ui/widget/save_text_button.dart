@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/saved_text.dart';
-import 'package:pessoa_bonito/repository/save_repository.dart';
+import 'package:pessoa_bonito/repository/save.dart';
 import 'package:pessoa_bonito/util/action_feedback.dart';
 
-import '../../repository/read_repository.dart';
+import '../../repository/read.dart';
 
 class SaveTextButton extends StatefulWidget {
   final SavedText text;
