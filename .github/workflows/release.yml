@@ -27,7 +27,7 @@ jobs:
       - run: flutter build apk --release --flavor prod
 
       - run: rm android/pessoa-bonito.jks android/key.properties
-      - run: mv build/app/outputs/flutter-apk/app-release.apk PessoaBonito.apk
+      - run: mv build/app/outputs/flutter-apk/app-prod-release.apk PessoaBonito.apk
 
       - name: Upload archive
         uses: ncipollo/release-action@v1.8.10
