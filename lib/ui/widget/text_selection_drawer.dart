@@ -6,27 +6,11 @@ import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 import 'package:pessoa_bonito/repository/read.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
-import 'package:pessoa_bonito/util/action_feedback.dart';
+import 'package:pessoa_bonito/ui/widget/drawer_list_view.dart';
 import 'package:pessoa_bonito/util/generic_extensions.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
 import '../routes.dart';
-
-class TextSelectionDrawer extends StatefulWidget {
-  final PessoaCategory index;
-  final PessoaText? selectedText;
-  final Sink<PessoaText> selectionSink;
-
-  const TextSelectionDrawer({
-    Key? key,
-    required this.index,
-    required this.selectionSink,
-    required this.selectedText,
-  }) : super(key: key);
-
-  @override
-  _TextSelectionDrawerState createState() => _TextSelectionDrawerState();
-}
 
 class SearchFilter {
   String textFilter;
@@ -49,15 +33,31 @@ enum SearchReadFilter {
       SearchReadFilter.values.getNext(this) ?? SearchReadFilter.values.first;
 }
 
-extension SearchReadFilterExt on SearchReadFilter {
+class TextSelectionDrawer extends StatefulWidget {
+  final PessoaCategory index;
+  final PessoaText? selectedText;
+  final Sink<PessoaText> selectionSink;
+  final ScrollController scrollController;
+
+  const TextSelectionDrawer(
+      {Key? key,
+      required this.index,
+      required this.selectionSink,
+      required this.selectedText,
+      required this.scrollController})
+      : super(key: key);
+
+  @override
+  _TextSelectionDrawerState createState() => _TextSelectionDrawerState();
 }
 
 class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   StreamController<PessoaCategory?> categoryStream =
-  StreamController.broadcast();
-  StreamController<SearchFilter> searchFilterStream = StreamController
-      .broadcast();
+      StreamController.broadcast();
+  StreamController<SearchFilter> searchFilterStream =
+      StreamController.broadcast();
   final textEditingController = TextEditingController();
+  final listScrollController = ScrollController();
 
   @override
   void initState() {
@@ -86,8 +86,8 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                   initialData: SearchFilter(SearchReadFilter.all),
                   stream: searchFilterStream.stream,
                   builder: (context, snapshot) {
-                    final searchTextFilter = snapshot.data ??
-                        SearchFilter(SearchReadFilter.all);
+                    final searchTextFilter =
+                        snapshot.data ?? SearchFilter(SearchReadFilter.all);
 
                     log.i('Current filter: $searchTextFilter');
 
@@ -103,13 +103,13 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     final selectedTextId = widget.selectedText?.id;
 
     final subcategories = category.subcategories.map(
-            (subcategory) =>
-            buildSubcategoryTile(subcategory, selectedCategoryId));
+        (subcategory) => buildSubcategoryTile(subcategory, selectedCategoryId));
 
     final texts = category.texts;
-    final filteredTexts =
-    texts.where((text) => filterByContent(text, searchFilter.textFilter))
-        .where((text) => filterByReadState(text, searchFilter.readFilter)).toList();
+    final filteredTexts = texts
+        .where((text) => filterByContent(text, searchFilter.textFilter))
+        .where((text) => filterByReadState(text, searchFilter.readFilter))
+        .toList();
 
     return ScrollConfiguration(
       behavior: const ScrollBehavior().copyWith(overscroll: false),
@@ -127,7 +127,8 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
   Padding buildTitle(PessoaCategory category) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0, right: 8.0).copyWith(top: 16.0),
+      padding:
+          const EdgeInsets.only(left: 16.0, right: 8.0).copyWith(top: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -137,26 +138,28 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               style: bonitoTextTheme.displaySmall,
             ),
           ),
-          Row(children: [
-            IconButton(
-              tooltip: 'Textos marcados',
-              icon: const Icon(Icons.bookmarks),
-              onPressed: () {
-                Get.toNamed(Routes.savedScreen);
-              },
-              iconSize: 24.0,
-              splashRadius: 24.0,
-            ),
-            IconButton(
-              tooltip: 'Histórico',
-              icon: const Icon(Icons.history),
-              onPressed: () {
-                Get.toNamed(Routes.historyScreen);
-              },
-              iconSize: 24.0,
-              splashRadius: 24.0,
-            ),
-          ],)
+          Row(
+            children: [
+              IconButton(
+                tooltip: 'Textos marcados',
+                icon: const Icon(Icons.bookmarks),
+                onPressed: () {
+                  Get.toNamed(Routes.savedScreen);
+                },
+                iconSize: 24.0,
+                splashRadius: 24.0,
+              ),
+              IconButton(
+                tooltip: 'Histórico',
+                icon: const Icon(Icons.history),
+                onPressed: () {
+                  Get.toNamed(Routes.historyScreen);
+                },
+                iconSize: 24.0,
+                splashRadius: 24.0,
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -188,25 +191,27 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               ),
               cursorOpacityAnimates: true,
               onChanged: (searchFilter) {
-                searchFilterStream.add(
-                    currentFilter..textFilter = searchFilter);
+                searchFilterStream
+                    .add(currentFilter..textFilter = searchFilter);
               },
               controller: textEditingController,
             ),
           ),
-          Flexible(child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: IconButton(
-              tooltip: currentFilter.readFilter.label,
-              icon: Icon(currentFilter.readFilter.icon),
-              onPressed: () {
-                searchFilterStream.add(currentFilter
-                  ..readFilter = currentFilter.readFilter.next());
-              },
-              iconSize: 24.0,
-              splashRadius: 24.0,
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: IconButton(
+                tooltip: currentFilter.readFilter.label,
+                icon: Icon(currentFilter.readFilter.icon),
+                onPressed: () {
+                  searchFilterStream.add(currentFilter
+                    ..readFilter = currentFilter.readFilter.next());
+                },
+                iconSize: 24.0,
+                splashRadius: 24.0,
+              ),
             ),
-          ),)
+          )
         ],
       ),
     );
@@ -216,24 +221,18 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
       List<PessoaText> texts, int? selectedTextId) {
     return Expanded(
       child: Material(
-        child: ListView(
-          controller: ScrollController(),
-          children: [
-            ...ListTile.divideTiles(
-              color: Colors.white,
-              tiles: [
-                ...subcategories,
-                ...texts.map((text) => buildTextTile(text, selectedTextId))
-              ],
-            ),
-          ],
-        ),
-      ),
+          child: DrawerListView(
+        selectionSink: widget.selectionSink,
+        scrollController: listScrollController,
+        subcategories: subcategories,
+        texts: texts,
+        selectedTextId: selectedTextId,
+      )),
     );
   }
 
-  ListTile buildSubcategoryTile(PessoaCategory subcategory,
-      int? selectedCategoryId) {
+  ListTile buildSubcategoryTile(
+      PessoaCategory subcategory, int? selectedCategoryId) {
     return ListTile(
       horizontalTitleGap: 8.0,
       minLeadingWidth: 0.0,
@@ -242,6 +241,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
       selected: subcategory.id == selectedCategoryId,
       onTap: () {
         setState(() {
+          if (listScrollController.hasClients) listScrollController.jumpTo(0);
           categoryStream.add(subcategory);
 
           log.i('Navigated to "${subcategory.title}"');
@@ -266,35 +266,6 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     return filterWords.every((keyword) => contentInLowercase.contains(keyword));
   }
 
-  ListTile buildTextTile(PessoaText text, int? selectedTextId) {
-    final isTextRead = Get.find<ReadRepository>().isTextRead(text.id);
-
-    return ListTile(
-      horizontalTitleGap: 8.0,
-      minLeadingWidth: 0.0,
-      leading: const Icon(Icons.text_snippet_rounded),
-      title: Text(text.title, style: bonitoTextTheme.headlineMedium),
-      textColor: (isTextRead) ? Colors.white60 : Colors.white,
-      selected: text.id == selectedTextId,
-      selectedColor: (isTextRead) ? Colors.white60 : Colors.white,
-      selectedTileColor: Colors.white10,
-      onTap: () {
-        setState(() {
-          widget.selectionSink.add(text);
-          Navigator.pop(context);
-        });
-      },
-      onLongPress: () {
-        setState(() {
-          ReadRepository readRepository = Get.find();
-
-          readRepository.toggleRead(text.id);
-          ActionFeedback.lightHaptic();
-        });
-      },
-    );
-  }
-
   ListTile buildBackTile(PessoaCategory category) {
     return ListTile(
         horizontalTitleGap: 8.0,
@@ -304,6 +275,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         tileColor: Colors.black26,
         onTap: () {
           setState(() {
+            if (listScrollController.hasClients) listScrollController.jumpTo(0);
             final previousCategory = category.parentCategory;
             categoryStream.add(previousCategory);
 

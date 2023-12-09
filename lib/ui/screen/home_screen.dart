@@ -24,8 +24,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  final ScrollController scrollController =
+  final ScrollController readerScrollController =
       ScrollController(keepScrollOffset: false);
+  final ScrollController drawerScrollController = ScrollController();
   final StreamController<PessoaText> _streamController =
       StreamController.broadcast();
 
@@ -51,17 +52,17 @@ class _HomeScreenState extends State<HomeScreen>
             appBar: AppBar(
               actions: (text == null)
                   ? []
-                  : [
-                SaveTextButton(text: SavedText.fromText(text))],
+                  : [SaveTextButton(text: SavedText.fromText(text))],
             ),
             drawer: TextSelectionDrawer(
                 index: storeService.index,
                 selectionSink: _streamController.sink,
+                scrollController: drawerScrollController,
                 selectedText: text),
             body: HomeScreenBody(
                 text: text,
                 streamController: _streamController,
-                scrollController: scrollController),
+                scrollController: readerScrollController),
           );
         });
   }
