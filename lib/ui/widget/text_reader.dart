@@ -115,9 +115,8 @@ class ReaderContentText extends StatelessWidget {
           buttonItems.add(buildDefinitionButton(selectedText));
         } else {
           buttonItems.add(buildSearchButton(selectedText));
+          buttonItems.add(buildShareButton(selectedText));
         }
-
-        buttonItems.add(buildShareButton(selectedText));
 
         return AdaptiveTextSelectionToolbar.buttonItems(
           anchors: state.contextMenuAnchors,
@@ -127,21 +126,21 @@ class ReaderContentText extends StatelessWidget {
     );
   }
 
-  ContextMenuButtonItem buildSearchButton(String selectedText) {
-    return ContextMenuButtonItem(
-        label: '🔍 Pesquisar',
-        onPressed: () {
-          ContextMenuController.removeAny();
-          launchUrl(Uri.https("google.pt", '/search', {'q': selectedText}));
-        });
-  }
-
   ContextMenuButtonItem buildDefinitionButton(String selectedWord) {
     return ContextMenuButtonItem(
         label: '📖 Definir',
         onPressed: () {
           ContextMenuController.removeAny();
           launchUrl(Uri.https("dicionario.priberam.org", '/$selectedWord'));
+        });
+  }
+
+  ContextMenuButtonItem buildSearchButton(String selectedText) {
+    return ContextMenuButtonItem(
+        label: '🔍 Pesquisar',
+        onPressed: () {
+          ContextMenuController.removeAny();
+          launchUrl(Uri.https("google.pt", '/search', {'q': selectedText}));
         });
   }
 
