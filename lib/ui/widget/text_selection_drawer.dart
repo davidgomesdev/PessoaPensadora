@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/model/pessoa_category.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
-import 'package:pessoa_bonito/repository/read.dart';
+import 'package:pessoa_bonito/repository/read_store.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/ui/widget/drawer_list_view.dart';
 import 'package:pessoa_bonito/util/generic_extensions.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/dto/box/box_person_text.dart';
 import 'package:pessoa_bonito/model/saved_text.dart';
-import 'package:pessoa_bonito/repository/save.dart';
+import 'package:pessoa_bonito/repository/saved_store.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
@@ -123,6 +123,13 @@ class _SavedTextTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                text.categoryTree.map((e) => e.title).reduce((result, current) => "$result\n$current"),
+                style: bonitoTextTheme.labelSmall!.copyWith(fontStyle: FontStyle.italic),
+              ),
+            ),
             Text(
               textCondensed,
               style: bonitoTextTheme.bodySmall,

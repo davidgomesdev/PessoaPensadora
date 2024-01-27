@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:pessoa_bonito/dto/box/box_person_category.dart';
@@ -43,6 +45,21 @@ class BoxPessoaText {
     final category = categories[categoryId]!.toModel(categories, texts);
 
     return PessoaText(id, title, author, content)..category = category;
+  }
+
+  Queue<BoxPessoaCategory> get categoryTree {
+    final category = Get.find<TextStoreService>().categories[categoryId]!;
+    final tree = Queue.of([category]);
+    int parentCategoryId = category.parentCategoryId;
+
+    while (parentCategoryId != indexID) {
+      final category = Get.find<TextStoreService>().categories[parentCategoryId]!;
+
+      tree.addFirst(category);
+      parentCategoryId = category.parentCategoryId;
+    }
+
+    return tree;
   }
 
   BoxPessoaCategory get category =>

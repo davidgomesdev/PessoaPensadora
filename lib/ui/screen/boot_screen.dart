@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/repository/history.dart';
-import 'package:pessoa_bonito/repository/read.dart';
-import 'package:pessoa_bonito/repository/save.dart';
+import 'package:pessoa_bonito/repository/history_store.dart';
+import 'package:pessoa_bonito/repository/read_store.dart';
+import 'package:pessoa_bonito/repository/saved_store.dart';
 import 'package:pessoa_bonito/service/text_store.dart';
 import 'package:pessoa_bonito/ui/routes.dart';
 

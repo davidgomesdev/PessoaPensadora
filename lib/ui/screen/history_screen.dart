@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/dto/box/box_person_text.dart';
-import 'package:pessoa_bonito/repository/history.dart';
+import 'package:pessoa_bonito/repository/history_store.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/ui/screen/splash_screen.dart';
 

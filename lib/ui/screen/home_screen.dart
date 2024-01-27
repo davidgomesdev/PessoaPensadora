@@ -13,7 +13,7 @@ import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
 import 'package:pessoa_bonito/util/generic_extensions.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
-import '../../repository/history.dart';
+import '../../repository/history_store.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

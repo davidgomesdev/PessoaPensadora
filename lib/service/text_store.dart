@@ -7,6 +7,8 @@ import 'package:pessoa_bonito/util/logger_factory.dart';
 
 import '../dto/box/box_person_text.dart';
 
+const indexID = 0;
+
 class TextStoreService {
   final Map<int, BoxPessoaText> texts;
   final Map<int, BoxPessoaCategory> categories;

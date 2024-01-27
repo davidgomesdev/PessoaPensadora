@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pessoa_bonito/model/pessoa_text.dart';
 
+import '../service/text_store.dart';
+
 part 'pessoa_category.g.dart';
 
 @JsonSerializable()
@@ -23,7 +25,7 @@ class PessoaCategory {
       : title = "Índice",
         isIndex = true,
         texts = [],
-        id = 0;
+        id = indexID;
 
   factory PessoaCategory.fromJson(Map<String, dynamic> json) =>
       _$PessoaCategoryFromJson(json);

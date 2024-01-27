@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../model/pessoa_text.dart';
-import '../../repository/read.dart';
+import '../../repository/read_store.dart';
 import '../../util/action_feedback.dart';
 import '../bonito_theme.dart';
 
