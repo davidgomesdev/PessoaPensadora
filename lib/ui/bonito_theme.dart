@@ -24,6 +24,7 @@ final bonitoTextTheme = GoogleFonts.robotoTextTheme(
       )),
 );
 final bonitoTheme = ThemeData.dark().copyWith(
+  primaryColor: Colors.amber,
   textTheme: bonitoTextTheme.apply(bodyColor: Colors.white),
   focusColor: Colors.amberAccent,
   colorScheme:
