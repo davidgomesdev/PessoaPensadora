@@ -62,6 +62,8 @@ class BoxPessoaText {
     return tree;
   }
 
+  BoxPessoaCategory get rootCategory => categoryTree.first;
+
   BoxPessoaCategory get category =>
       Get.find<TextStoreService>().categories[categoryId]!;
 }
