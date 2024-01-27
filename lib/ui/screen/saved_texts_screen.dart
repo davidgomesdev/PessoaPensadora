@@ -10,16 +10,20 @@ import 'package:pessoa_bonito/util/logger_factory.dart';
 
 import '../routes.dart';
 
-class SavedTextsScreen extends StatelessWidget {
+class SavedTextsScreen extends StatefulWidget {
   const SavedTextsScreen({super.key});
 
+  @override
+  State<SavedTextsScreen> createState() => _SavedTextsScreenState();
+}
+
+class _SavedTextsScreenState extends State<SavedTextsScreen> {
   @override
   Widget build(BuildContext context) {
     final SaveRepository repository = Get.find();
     final savedTexts = repository.getTexts().map((e) => e.toModel());
     final bookmarkedTexts = groupBy<BoxPessoaText, BoxPessoaCategory>(
-        savedTexts, (text) => text.rootCategory
-    );
+        savedTexts, (text) => text.rootCategory);
 
     return Scaffold(
       body: CustomScrollView(
@@ -39,7 +43,9 @@ class SavedTextsScreen extends StatelessWidget {
               sliver: _SavedTextsSliverList(
                 bookmarkedTexts: bookmarkedTexts,
                 onDismiss: (textId) {
-                  repository.deleteText(textId);
+                  setState(() {
+                    repository.deleteText(textId);
+                  });
                 },
               )),
         ],
@@ -50,49 +56,76 @@ class SavedTextsScreen extends StatelessWidget {
 
 class _SavedTextsSliverList extends StatelessWidget {
   final Map<BoxPessoaCategory, List<BoxPessoaText>> bookmarkedTexts;
-  final void Function(int) onDismiss;
+  final ValueChanged<int> onDismiss;
 
-  const _SavedTextsSliverList(
-      {required this.bookmarkedTexts, required this.onDismiss});
+  const _SavedTextsSliverList({required this.bookmarkedTexts, required this.onDismiss});
 
   @override
   Widget build(BuildContext context) {
-    final entries = bookmarkedTexts.entries.sortedBy((element) => element.key.title);
-    
+    final entries =
+        bookmarkedTexts.entries.sortedBy((element) => element.key.title);
+
     return SliverList.builder(
-      itemBuilder: (context, index) {
+      itemBuilder: (_, index) {
         final textsByCategory = entries.elementAt(index);
 
-        return ExpansionTile(
-          title: Text(textsByCategory.key.title),
-          initiallyExpanded: true,
-          children: textsByCategory.value
-              .map(
-                (text) => Dismissible(
-                  key: Key(text.id.toString()),
-                  onDismissed: (direction) {
-                    onDismiss(text.id);
-                  },
-                  confirmDismiss: (direction) => displayUndoSnackbar(context),
-                  direction: DismissDirection.endToStart,
-                  dragStartBehavior: DragStartBehavior.down,
-                  background: const Padding(
-                    padding: EdgeInsets.only(right: 16.0),
-                    child: Align(
-                        child: Icon(
-                          Icons.delete_forever,
-                          size: 36.0,
-                          color: Colors.yellowAccent,
-                        ),
-                        alignment: Alignment.centerRight),
-                  ),
-                  child: _SavedTextTile(text),
-                ),
-              )
-              .toList(growable: false),
-        );
+        return _CategoryGroupTile(textsByCategory.key, textsByCategory.value, onDismiss);
       },
       itemCount: bookmarkedTexts.length,
+    );
+  }
+}
+
+class _CategoryGroupTile extends StatefulWidget {
+  final BoxPessoaCategory category;
+  final List<BoxPessoaText> texts;
+  final ValueChanged<int> onDismiss;
+
+  const _CategoryGroupTile(this.category, this.texts, this.onDismiss);
+
+  @override
+  State<_CategoryGroupTile> createState() => _CategoryGroupTileState();
+}
+
+class _CategoryGroupTileState extends State<_CategoryGroupTile> {
+  bool isExpanded = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      title: Text(widget.category.title),
+      trailing: Icon(isExpanded
+          ? Icons.arrow_drop_down_circle_outlined
+          : Icons.arrow_drop_down_circle_rounded),
+      collapsedIconColor: bonitoTheme.primaryColor,
+      initiallyExpanded: true,
+      onExpansionChanged: (newStatus) {
+        setState(() {
+          isExpanded = newStatus;
+        });
+      },
+      children: widget.texts
+          .map(
+            (text) => Dismissible(
+              key: Key(text.id.toString()),
+              onDismissed: (_) => widget.onDismiss(text.id),
+              confirmDismiss: (direction) => displayUndoSnackbar(context),
+              direction: DismissDirection.endToStart,
+              dragStartBehavior: DragStartBehavior.down,
+              background: const Padding(
+                padding: EdgeInsets.only(right: 16.0),
+                child: Align(
+                    child: Icon(
+                      Icons.delete_forever,
+                      size: 36.0,
+                      color: Colors.yellowAccent,
+                    ),
+                    alignment: Alignment.centerRight),
+              ),
+              child: _SavedTextTile(text),
+            ),
+          )
+          .toList(growable: false),
     );
   }
 
