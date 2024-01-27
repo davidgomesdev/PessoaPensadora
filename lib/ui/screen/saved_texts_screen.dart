@@ -1,8 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pessoa_bonito/dto/box/box_person_category.dart';
 import 'package:pessoa_bonito/dto/box/box_person_text.dart';
-import 'package:pessoa_bonito/model/saved_text.dart';
 import 'package:pessoa_bonito/repository/saved_store.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
@@ -15,22 +16,30 @@ class SavedTextsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SaveRepository repository = Get.find();
-    final bookmarkedTexts = repository.getTexts();
+    final savedTexts = repository.getTexts().map((e) => e.toModel());
+    final bookmarkedTexts = groupBy<BoxPessoaText, BoxPessoaCategory>(
+        savedTexts, (text) => text.rootCategory
+    );
 
     return Scaffold(
       body: CustomScrollView(
         scrollBehavior: const ScrollBehavior().copyWith(overscroll: false),
         slivers: [
           SliverAppBar(
-            title: Text("Textos marcados", style: bonitoTextTheme.displaySmall),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Textos marcados", style: bonitoTextTheme.displaySmall)
+              ],
+            ),
             pinned: true,
           ),
           SliverPadding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               sliver: _SavedTextsSliverList(
                 bookmarkedTexts: bookmarkedTexts,
-                onDismiss: (text) {
-                  repository.deleteText(text.id);
+                onDismiss: (textId) {
+                  repository.deleteText(textId);
                 },
               )),
         ],
@@ -40,37 +49,47 @@ class SavedTextsScreen extends StatelessWidget {
 }
 
 class _SavedTextsSliverList extends StatelessWidget {
-  final List<SavedText> bookmarkedTexts;
-  final void Function(SavedText) onDismiss;
+  final Map<BoxPessoaCategory, List<BoxPessoaText>> bookmarkedTexts;
+  final void Function(int) onDismiss;
 
   const _SavedTextsSliverList(
       {required this.bookmarkedTexts, required this.onDismiss});
 
   @override
   Widget build(BuildContext context) {
+    final entries = bookmarkedTexts.entries.sortedBy((element) => element.key.title);
+    
     return SliverList.builder(
       itemBuilder: (context, index) {
-        final text = bookmarkedTexts[index];
+        final textsByCategory = entries.elementAt(index);
 
-        return Dismissible(
-          key: Key(text.id.toString()),
-          onDismissed: (direction) {
-            onDismiss(text);
-          },
-          confirmDismiss: (direction) => displayUndoSnackbar(context),
-          direction: DismissDirection.endToStart,
-          dragStartBehavior: DragStartBehavior.down,
-          background: const Padding(
-            padding: EdgeInsets.only(right: 16.0),
-            child: Align(
-                child: Icon(
-                  Icons.delete_forever,
-                  size: 36.0,
-                  color: Colors.yellowAccent,
+        return ExpansionTile(
+          title: Text(textsByCategory.key.title),
+          initiallyExpanded: true,
+          children: textsByCategory.value
+              .map(
+                (text) => Dismissible(
+                  key: Key(text.id.toString()),
+                  onDismissed: (direction) {
+                    onDismiss(text.id);
+                  },
+                  confirmDismiss: (direction) => displayUndoSnackbar(context),
+                  direction: DismissDirection.endToStart,
+                  dragStartBehavior: DragStartBehavior.down,
+                  background: const Padding(
+                    padding: EdgeInsets.only(right: 16.0),
+                    child: Align(
+                        child: Icon(
+                          Icons.delete_forever,
+                          size: 36.0,
+                          color: Colors.yellowAccent,
+                        ),
+                        alignment: Alignment.centerRight),
+                  ),
+                  child: _SavedTextTile(text),
                 ),
-                alignment: Alignment.centerRight),
-          ),
-          child: _SavedTextTile(text.toModel()),
+              )
+              .toList(growable: false),
         );
       },
       itemCount: bookmarkedTexts.length,
@@ -123,13 +142,6 @@ class _SavedTextTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                text.categoryTree.map((e) => e.title).reduce((result, current) => "$result\n$current"),
-                style: bonitoTextTheme.labelSmall!.copyWith(fontStyle: FontStyle.italic),
-              ),
-            ),
             Text(
               textCondensed,
               style: bonitoTextTheme.bodySmall,
