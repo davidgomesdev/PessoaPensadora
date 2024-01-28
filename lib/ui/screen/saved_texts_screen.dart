@@ -58,7 +58,8 @@ class _SavedTextsSliverList extends StatelessWidget {
   final Map<BoxPessoaCategory, List<BoxPessoaText>> bookmarkedTexts;
   final ValueChanged<int> onDismiss;
 
-  const _SavedTextsSliverList({required this.bookmarkedTexts, required this.onDismiss});
+  const _SavedTextsSliverList(
+      {required this.bookmarkedTexts, required this.onDismiss});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +70,8 @@ class _SavedTextsSliverList extends StatelessWidget {
       itemBuilder: (_, index) {
         final textsByCategory = entries.elementAt(index);
 
-        return _CategoryGroupTile(textsByCategory.key, textsByCategory.value, onDismiss);
+        return _CategoryGroupTile(
+            textsByCategory.key, textsByCategory.value, onDismiss);
       },
       itemCount: bookmarkedTexts.length,
     );
@@ -106,26 +108,88 @@ class _CategoryGroupTileState extends State<_CategoryGroupTile> {
       },
       children: widget.texts
           .map(
-            (text) => Dismissible(
-              key: Key(text.id.toString()),
-              onDismissed: (_) => widget.onDismiss(text.id),
-              confirmDismiss: (direction) => displayUndoSnackbar(context),
-              direction: DismissDirection.endToStart,
-              dragStartBehavior: DragStartBehavior.down,
-              background: const Padding(
-                padding: EdgeInsets.only(right: 16.0),
-                child: Align(
-                    child: Icon(
-                      Icons.delete_forever,
-                      size: 36.0,
-                      color: Colors.yellowAccent,
-                    ),
-                    alignment: Alignment.centerRight),
-              ),
-              child: _SavedTextTile(text),
-            ),
+            (text) => _SavedTextTile(text, widget.onDismiss),
           )
           .toList(growable: false),
+    );
+  }
+}
+
+class _SavedTextTile extends StatelessWidget {
+  final BoxPessoaText text;
+  final ValueChanged<int> onDismiss;
+
+  const _SavedTextTile(this.text, this.onDismiss);
+
+  @override
+  Widget build(BuildContext context) {
+    var textCondensed = text.content.replaceAll("\n\n", "\n").trim();
+
+    return Dismissible(
+      key: Key(text.id.toString()),
+      onDismissed: (_) => onDismiss(text.id),
+      confirmDismiss: (direction) => displayUndoSnackbar(context),
+      direction: DismissDirection.endToStart,
+      dragStartBehavior: DragStartBehavior.down,
+      dismissThresholds: const {DismissDirection.endToStart: 0.6},
+      background: Stack(
+        children: [
+          Container(
+            color: Colors.amber,
+          ),
+          const Padding(
+            padding: EdgeInsets.only(right: 16.0),
+            child: Align(
+                child: Icon(
+                  Icons.delete_forever,
+                  size: 42.0,
+                  color: Colors.white,
+                ),
+                alignment: Alignment.centerRight),
+          ),
+        ],
+      ),
+      child: ListTile(
+        enableFeedback: true,
+        title: Text(
+          text.title,
+          style: bonitoTextTheme.titleMedium!
+              .copyWith(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                textCondensed,
+                style: bonitoTextTheme.bodySmall,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    text.author,
+                    textAlign: TextAlign.right,
+                    style: bonitoTextTheme.labelSmall,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        onTap: () {
+          Get.toNamed(Routes.readTextScreen, arguments: {
+            "categoryTitle": text.category.title,
+            "title": text.title,
+            "content": text.content,
+            "author": text.author,
+          });
+        },
+      ),
     );
   }
 
@@ -138,6 +202,7 @@ class _CategoryGroupTileState extends State<_CategoryGroupTile> {
           onPressed: () {
             log.i('Snackbar undo bookmarked text pressed.');
           }),
+      duration: Durations.extralong4,
     );
 
     return ScaffoldMessenger.of(context)
@@ -145,64 +210,11 @@ class _CategoryGroupTileState extends State<_CategoryGroupTile> {
         .closed
         .then((closeReason) {
       if (closeReason == SnackBarClosedReason.action) {
-        log.i('Bookmarked text removal was cancelled.');
+        log.i('Bookmarked text removal was cancelled');
         return false;
       }
 
       return true;
     });
-  }
-}
-
-class _SavedTextTile extends StatelessWidget {
-  final BoxPessoaText text;
-
-  const _SavedTextTile(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    var textCondensed = text.content.replaceAll("\n\n", "\n").trim();
-
-    return ListTile(
-      enableFeedback: true,
-      title: Text(
-        text.title,
-        style:
-            bonitoTextTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
-      ),
-      subtitle: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              textCondensed,
-              style: bonitoTextTheme.bodySmall,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  text.author,
-                  textAlign: TextAlign.right,
-                  style: bonitoTextTheme.labelSmall,
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-      onTap: () {
-        Get.toNamed(Routes.readTextScreen, arguments: {
-          "categoryTitle": text.category.title,
-          "title": text.title,
-          "content": text.content,
-          "author": text.author,
-        });
-      },
-    );
   }
 }
