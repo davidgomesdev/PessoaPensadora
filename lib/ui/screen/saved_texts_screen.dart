@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/dto/box/box_person_category.dart';
 import 'package:pessoa_bonito/dto/box/box_person_text.dart';
+import 'package:pessoa_bonito/repository/collapsable_store.dart';
 import 'package:pessoa_bonito/repository/saved_store.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
@@ -93,17 +94,29 @@ class _CategoryGroupTileState extends State<_CategoryGroupTile> {
   bool isExpanded = true;
 
   @override
+  void initState() {
+    super.initState();
+
+    final CollapsableRepository repository = Get.find();
+    isExpanded = repository.isExpanded(widget.category.id);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ExpansionTile(
       title: Text(widget.category.title),
-      trailing: Icon(isExpanded
-          ? Icons.arrow_drop_down_circle_outlined
-          : Icons.arrow_drop_down_circle_rounded),
+      trailing: Icon(
+        isExpanded
+            ? Icons.arrow_drop_down_circle_outlined
+            : Icons.arrow_drop_down_circle_rounded,
+      ),
       collapsedIconColor: bonitoTheme.primaryColor,
-      initiallyExpanded: true,
+      initiallyExpanded: isExpanded,
       onExpansionChanged: (newStatus) {
         setState(() {
-          isExpanded = newStatus;
+          final CollapsableRepository repository = Get.find();
+
+          repository.setStatus(widget.category.id, isExpanded = newStatus);
         });
       },
       children: widget.texts

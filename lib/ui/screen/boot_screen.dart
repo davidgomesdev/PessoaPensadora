@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pessoa_bonito/repository/collapsable_store.dart';
 import 'package:pessoa_bonito/repository/history_store.dart';
 import 'package:pessoa_bonito/repository/read_store.dart';
 import 'package:pessoa_bonito/repository/saved_store.dart';
@@ -37,6 +38,7 @@ class _BootScreenState extends State<BootScreen> {
     Get.put(await SaveRepository.initialize(), permanent: true);
     Get.put(await ReadRepository.initialize(), permanent: true);
     Get.put(await HistoryRepository.initialize(), permanent: true);
+    Get.put(await CollapsableRepository.initialize(), permanent: true);
 
     final assetBundle = DefaultAssetBundle.of(context);
     Get.put(await TextStoreService.initialize(assetBundle), permanent: true);
