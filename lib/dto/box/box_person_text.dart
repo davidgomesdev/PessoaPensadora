@@ -48,15 +48,16 @@ class BoxPessoaText {
   }
 
   Queue<BoxPessoaCategory> get categoryTree {
-    final category = Get.find<TextStoreService>().categories[categoryId]!;
-    final tree = Queue.of([category]);
-    int parentCategoryId = category.parentCategoryId;
+    final categories = Get.find<TextStoreService>().categories;
+    final currentCategory = categories[categoryId]!;
+    final tree = Queue.of([currentCategory]);
+    int parentCategoryId = currentCategory.parentCategoryId;
 
     while (parentCategoryId != indexID) {
-      final category = Get.find<TextStoreService>().categories[parentCategoryId]!;
+      final parentCategory = categories[parentCategoryId]!;
 
-      tree.addFirst(category);
-      parentCategoryId = category.parentCategoryId;
+      tree.addFirst(parentCategory);
+      parentCategoryId = parentCategory.parentCategoryId;
     }
 
     return tree;
