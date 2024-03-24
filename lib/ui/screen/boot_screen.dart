@@ -35,13 +35,13 @@ class _BootScreenState extends State<BootScreen> {
   }
 
   Future initializeDependencies(BuildContext context) async {
+    final assetBundle = DefaultAssetBundle.of(context);
+    Get.put(await TextStoreService.initialize(assetBundle), permanent: true);
+
     Get.put(await SaveRepository.initialize(), permanent: true);
     Get.put(await ReadRepository.initialize(), permanent: true);
     Get.put(await HistoryRepository.initialize(), permanent: true);
     Get.put(await CollapsableRepository.initialize(), permanent: true);
-
-    final assetBundle = DefaultAssetBundle.of(context);
-    Get.put(await TextStoreService.initialize(assetBundle), permanent: true);
 
     Get.offAndToNamed(Routes.homeScreen);
 

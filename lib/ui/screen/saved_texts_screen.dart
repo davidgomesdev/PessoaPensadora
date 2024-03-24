@@ -21,10 +21,13 @@ class SavedTextsScreen extends StatefulWidget {
 class _SavedTextsScreenState extends State<SavedTextsScreen> {
   @override
   Widget build(BuildContext context) {
+    final CollapsableRepository collapsableRepository = Get.find();
     final SaveRepository repository = Get.find();
     final savedTexts = repository.getTexts().map((e) => e.toModel());
     final bookmarkedTexts = groupBy<BoxPessoaText, BoxPessoaCategory>(
-        savedTexts, (text) => text.rootCategory);
+      savedTexts,
+      (text) => text.rootCategory,
+    ).map((cat, texts) => MapEntry(cat, CategoryTileData(texts)));
 
     return Scaffold(
       body: CustomScrollView(
@@ -34,7 +37,17 @@ class _SavedTextsScreenState extends State<SavedTextsScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Textos marcados", style: bonitoTextTheme.displaySmall)
+                Text("Textos marcados", style: bonitoTextTheme.displaySmall),
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        collapsableRepository.toggleAllStatus();
+                      });
+                    },
+                    icon: Obx(() => Icon(collapsableRepository.isAllCollapsed.value
+                          ? Icons.arrow_drop_down_circle_rounded
+                          : Icons.arrow_drop_down_circle_outlined),
+                    ))
               ],
             ),
             pinned: true,
@@ -56,7 +69,7 @@ class _SavedTextsScreenState extends State<SavedTextsScreen> {
 }
 
 class _SavedTextsSliverList extends StatelessWidget {
-  final Map<BoxPessoaCategory, List<BoxPessoaText>> bookmarkedTexts;
+  final Map<BoxPessoaCategory, CategoryTileData> bookmarkedTexts;
   final ValueChanged<int> onDismiss;
 
   const _SavedTextsSliverList(
@@ -81,45 +94,40 @@ class _SavedTextsSliverList extends StatelessWidget {
 
 class _CategoryGroupTile extends StatefulWidget {
   final BoxPessoaCategory category;
-  final List<BoxPessoaText> texts;
+  final CategoryTileData data;
   final ValueChanged<int> onDismiss;
 
-  const _CategoryGroupTile(this.category, this.texts, this.onDismiss);
+  const _CategoryGroupTile(this.category, this.data, this.onDismiss);
 
   @override
   State<_CategoryGroupTile> createState() => _CategoryGroupTileState();
 }
 
 class _CategoryGroupTileState extends State<_CategoryGroupTile> {
-  bool isExpanded = true;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final CollapsableRepository repository = Get.find();
-    isExpanded = repository.isExpanded(widget.category.id);
-  }
+  final CollapsableRepository repository = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    final isCollapsed = repository.isCollapsed(widget.category.id);
+
     return ExpansionTile(
       title: Text(widget.category.title),
       trailing: Icon(
-        isExpanded
-            ? Icons.arrow_drop_down_circle_outlined
-            : Icons.arrow_drop_down_circle_rounded,
+        isCollapsed
+            ? Icons.arrow_drop_down_circle_rounded
+            : Icons.arrow_drop_down_circle_outlined,
       ),
       collapsedIconColor: bonitoTheme.primaryColor,
-      initiallyExpanded: isExpanded,
+      initiallyExpanded: !isCollapsed,
+      key: UniqueKey(),
       onExpansionChanged: (newStatus) {
         setState(() {
           final CollapsableRepository repository = Get.find();
 
-          repository.setStatus(widget.category.id, isExpanded = newStatus);
+          repository.setStatus(widget.category.id, !newStatus);
         });
       },
-      children: widget.texts
+      children: widget.data.texts
           .map(
             (text) => _SavedTextTile(text, widget.onDismiss),
           )
@@ -230,4 +238,11 @@ class _SavedTextTile extends StatelessWidget {
       return true;
     });
   }
+}
+
+class CategoryTileData {
+  final controller = ExpansionTileController();
+  final List<BoxPessoaText> texts;
+
+  CategoryTileData(this.texts);
 }

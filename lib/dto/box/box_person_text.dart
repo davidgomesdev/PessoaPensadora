@@ -38,15 +38,6 @@ class BoxPessoaText {
         text.author,
       );
 
-  PessoaText toModel(
-    Map<int, BoxPessoaCategory> categories,
-    Map<int, BoxPessoaText> texts,
-  ) {
-    final category = categories[categoryId]!.toModel(categories, texts);
-
-    return PessoaText(id, title, author, content)..category = category;
-  }
-
   Queue<BoxPessoaCategory> get categoryTree {
     final categories = Get.find<TextStoreService>().categories;
     final currentCategory = categories[categoryId]!;
