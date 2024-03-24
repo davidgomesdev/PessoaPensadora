@@ -33,6 +33,14 @@ class TextStoreService {
     return service;
   }
 
+  BoxPessoaCategory getTextRootCategory(int textId) {
+    final text = texts[textId];
+
+    assert(text != null, "The text shouldn't be null");
+
+    return text!.rootCategory;
+  }
+
   static Future<PessoaCategory> _parseIndex(Map<int, BoxPessoaText> texts,
       Map<int, BoxPessoaCategory> categories, AssetBundle assetBundle) async {
     return await _parseJson(assetBundle, texts, categories);
