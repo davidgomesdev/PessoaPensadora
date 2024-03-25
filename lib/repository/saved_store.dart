@@ -10,8 +10,9 @@ import '../util/logger_factory.dart';
 const _savedTextsBoxName = 'savedTexts';
 
 class SaveRepository {
-  final TextStoreService service = Get.find();
   final Box<SavedText> _box;
+
+  final TextStoreService service = Get.find();
 
   SaveRepository._(this._box);
 

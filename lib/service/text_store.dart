@@ -33,6 +33,14 @@ class TextStoreService {
     return service;
   }
 
+  BoxPessoaCategory getCategory(int id) {
+    final category = categories[id];
+
+    assert(category != null, "The category shouldn't be null");
+
+    return category!;
+  }
+
   BoxPessoaCategory getTextRootCategory(int textId) {
     final text = texts[textId];
 
