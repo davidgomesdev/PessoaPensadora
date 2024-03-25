@@ -1,5 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:pessoa_bonito/repository/saved_store.dart';
 import 'package:pessoa_bonito/service/text_store.dart';
 import 'package:pessoa_bonito/util/logger_factory.dart';
 
@@ -9,6 +11,9 @@ class CollapsableRepository {
   final Box<bool> _box;
   final Rx<bool> isAllCollapsed;
 
+  final TextStoreService service = Get.find();
+  final SaveRepository saveRepository = Get.find();
+
   CollapsableRepository._(this._box, this.isAllCollapsed);
 
   static Future<CollapsableRepository> initialize() async {
@@ -16,8 +21,27 @@ class CollapsableRepository {
 
     log.i('Collapsable box initialized successfully');
 
-    return CollapsableRepository._(
+    final instance = CollapsableRepository._(
         box, box.values.every((isCollapsed) => isCollapsed == true).obs);
+
+    await instance._cleanupLeftovers();
+
+    return instance;
+  }
+
+  // Cleans up categories that don't have texts saved
+  Future<void> _cleanupLeftovers() async {
+    final categories = _box.keys.map((id) => service.getCategory(id));
+    final savedTexts = saveRepository.getTexts();
+
+    log.i('Root categories in the box: ${categories.map((c) => c.title)}');
+
+    final leftoverCategories = categories.where((cat) => savedTexts
+        .none((text) => service.getTextRootCategory(text.id).id == cat.id));
+
+    await _box.deleteAll(leftoverCategories.map((c) => c.id));
+
+    log.i('Cleaned leftovers: ${leftoverCategories.map((c) => c.title)}');
   }
 
   static Future<Box<bool>> _getCollapsableBox() async {
