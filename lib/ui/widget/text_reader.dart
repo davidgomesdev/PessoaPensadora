@@ -12,15 +12,14 @@ class TextReader extends StatelessWidget {
   final String author;
 
   TextReader({
-    Key? key,
+    super.key,
     ScrollController? scrollController,
     required this.categoryTitle,
     required this.title,
     required this.content,
     required this.author,
   })  : _scrollController =
-            scrollController ?? ScrollController(keepScrollOffset: false),
-        super(key: key);
+            scrollController ?? ScrollController(keepScrollOffset: false);
 
   @override
   Widget build(BuildContext context) {

@@ -161,12 +161,12 @@ class _SavedTextTile extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.only(right: 16.0),
             child: Align(
+                alignment: Alignment.centerRight,
                 child: Icon(
                   Icons.delete_forever,
                   size: 42.0,
                   color: Colors.white,
-                ),
-                alignment: Alignment.centerRight),
+                )),
           ),
         ],
       ),
