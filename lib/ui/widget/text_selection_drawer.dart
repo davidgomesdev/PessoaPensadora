@@ -40,15 +40,14 @@ class TextSelectionDrawer extends StatefulWidget {
   final ScrollController scrollController;
 
   const TextSelectionDrawer(
-      {Key? key,
+      {super.key,
       required this.index,
       required this.selectionSink,
       required this.selectedText,
-      required this.scrollController})
-      : super(key: key);
+      required this.scrollController});
 
   @override
-  _TextSelectionDrawerState createState() => _TextSelectionDrawerState();
+  State<TextSelectionDrawer> createState() => _TextSelectionDrawerState();
 }
 
 class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
