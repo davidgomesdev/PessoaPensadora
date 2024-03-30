@@ -16,7 +16,7 @@ class DrawerListView extends StatefulWidget {
   const DrawerListView(
       {super.key,
       required this.selectionSink,
-        required this.scrollController,
+      required this.scrollController,
       required this.subcategories,
       required this.texts,
       required this.selectedTextId});
@@ -26,7 +26,6 @@ class DrawerListView extends StatefulWidget {
 }
 
 class _DrawerListViewState extends State<DrawerListView> {
-
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -46,7 +45,7 @@ class _DrawerListViewState extends State<DrawerListView> {
   }
 }
 
-class DrawerListTile extends StatelessWidget {
+class DrawerListTile extends StatefulWidget {
   final Sink<PessoaText> selectionSink;
   final PessoaText text;
   final int? selectedTextId;
@@ -59,27 +58,34 @@ class DrawerListTile extends StatelessWidget {
   });
 
   @override
+  State<DrawerListTile> createState() => _DrawerListTileState();
+}
+
+class _DrawerListTileState extends State<DrawerListTile> {
+  @override
   Widget build(BuildContext context) {
-    final isTextRead = Get.find<ReadRepository>().isTextRead(text.id);
+    final isTextRead = Get.find<ReadRepository>().isTextRead(widget.text.id);
 
     return ListTile(
       horizontalTitleGap: 8.0,
       minLeadingWidth: 0.0,
       leading: const Icon(Icons.text_snippet_rounded),
-      title: Text(text.title, style: bonitoTextTheme.headlineMedium),
+      title: Text(widget.text.title, style: bonitoTextTheme.headlineMedium),
       textColor: (isTextRead) ? Colors.white60 : Colors.white,
-      selected: text.id == selectedTextId,
+      selected: widget.text.id == widget.selectedTextId,
       selectedColor: (isTextRead) ? Colors.white60 : Colors.white,
       selectedTileColor: Colors.white10,
       onTap: () {
-        selectionSink.add(text);
+        widget.selectionSink.add(widget.text);
         Navigator.pop(context);
       },
       onLongPress: () {
-        ReadRepository readRepository = Get.find();
+        setState(() {
+          ReadRepository readRepository = Get.find();
 
-        readRepository.toggleRead(text.id);
-        ActionFeedback.lightHaptic();
+          readRepository.toggleRead(widget.text.id);
+          ActionFeedback.lightHaptic();
+        });
       },
     );
   }
