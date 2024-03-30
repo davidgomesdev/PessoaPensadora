@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 
 import '../../model/pessoa_text.dart';
 import '../../repository/read_store.dart';
 import '../../util/action_feedback.dart';
 import '../bonito_theme.dart';
 
-class DrawerListView extends StatefulWidget {
+class DrawerListView extends StatelessWidget {
   final Sink<PessoaText> selectionSink;
   final Iterable<ListTile> subcategories;
   final List<PessoaText> texts;
   final int? selectedTextId;
   final ScrollController scrollController;
+  final Callback onReadChange;
 
   const DrawerListView(
       {super.key,
@@ -19,25 +21,21 @@ class DrawerListView extends StatefulWidget {
       required this.scrollController,
       required this.subcategories,
       required this.texts,
-      required this.selectedTextId});
+      required this.selectedTextId,
+      required this.onReadChange});
 
-  @override
-  State<DrawerListView> createState() => _DrawerListViewState();
-}
-
-class _DrawerListViewState extends State<DrawerListView> {
   @override
   Widget build(BuildContext context) {
     return ListView(
       key: const PageStorageKey("drawer-list-view"),
-      controller: widget.scrollController,
+      controller: scrollController,
       children: [
         ...ListTile.divideTiles(
           color: Colors.white,
           tiles: [
-            ...widget.subcategories,
-            ...widget.texts.map((text) => DrawerListTile(
-                widget.selectionSink, text, widget.selectedTextId))
+            ...subcategories,
+            ...texts.map((text) => DrawerListTile(
+                selectionSink, text, selectedTextId, onReadChange: onReadChange,))
           ],
         ),
       ],
@@ -49,11 +47,13 @@ class DrawerListTile extends StatefulWidget {
   final Sink<PessoaText> selectionSink;
   final PessoaText text;
   final int? selectedTextId;
+  final Callback onReadChange;
 
   const DrawerListTile(
     this.selectionSink,
     this.text,
     this.selectedTextId, {
+      required this.onReadChange,
     super.key,
   });
 
@@ -80,12 +80,11 @@ class _DrawerListTileState extends State<DrawerListTile> {
         Navigator.pop(context);
       },
       onLongPress: () {
-        setState(() {
           ReadRepository readRepository = Get.find();
 
           readRepository.toggleRead(widget.text.id);
           ActionFeedback.lightHaptic();
-        });
+          widget.onReadChange();
       },
     );
   }

@@ -123,7 +123,19 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           buildTitle(category),
           if (texts.isNotEmpty)
             buildFilters(filteredTexts.isNotEmpty, searchFilter, readAndTotal),
-          buildTilesList(subcategories, filteredTexts, selectedTextId),
+          Expanded(
+            child: Material(
+                child: DrawerListView(
+              selectionSink: widget.selectionSink,
+              scrollController: listScrollController,
+              subcategories: subcategories,
+              texts: texts,
+              selectedTextId: selectedTextId,
+              onReadChange: () {
+                setState(() {});
+              },
+            )),
+          ),
           if (!category.isIndex) buildBackTile(category),
         ],
       ),
@@ -227,20 +239,6 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           ),
         ],
       ),
-    );
-  }
-
-  Expanded buildTilesList(Iterable<ListTile> subcategories,
-      List<PessoaText> texts, int? selectedTextId) {
-    return Expanded(
-      child: Material(
-          child: DrawerListView(
-        selectionSink: widget.selectionSink,
-        scrollController: listScrollController,
-        subcategories: subcategories,
-        texts: texts,
-        selectedTextId: selectedTextId,
-      )),
     );
   }
 
