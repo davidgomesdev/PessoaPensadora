@@ -110,13 +110,19 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         .where((text) => filterByReadState(text, searchFilter.readFilter))
         .toList();
 
+    final readRepo = Get.find<ReadRepository>();
+    final readAndTotal = (
+      texts.where((text) => readRepo.isTextRead(text.id)).length,
+      texts.length
+    );
+
     return ScrollConfiguration(
       behavior: const ScrollBehavior().copyWith(overscroll: false),
       child: Column(
         children: [
           buildTitle(category),
           if (texts.isNotEmpty)
-            buildFilters(filteredTexts.isNotEmpty, searchFilter),
+            buildFilters(filteredTexts.isNotEmpty, searchFilter, readAndTotal),
           buildTilesList(subcategories, filteredTexts, selectedTextId),
           if (!category.isIndex) buildBackTile(category),
         ],
@@ -164,13 +170,14 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     );
   }
 
-  Padding buildFilters(bool hasTexts, SearchFilter currentFilter) {
+  Padding buildFilters(
+      bool hasTexts, SearchFilter currentFilter, (int, int) readCount) {
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
       child: Row(
         children: [
           Expanded(
-            flex: 6,
+            flex: 5,
             child: TextField(
               autocorrect: false,
               textAlignVertical: TextAlignVertical.center,
@@ -196,21 +203,28 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               controller: textEditingController,
             ),
           ),
-          Flexible(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: IconButton(
-                tooltip: currentFilter.readFilter.label,
-                icon: Icon(currentFilter.readFilter.icon),
-                onPressed: () {
-                  searchFilterStream.add(currentFilter
-                    ..readFilter = currentFilter.readFilter.next());
-                },
-                iconSize: 24.0,
-                splashRadius: 24.0,
+          Expanded(
+            flex: 2,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text('${readCount.$1}/${readCount.$2}'),
               ),
             ),
-          )
+          ),
+          Flexible(
+            child: IconButton(
+              tooltip: currentFilter.readFilter.label,
+              icon: Icon(currentFilter.readFilter.icon),
+              onPressed: () {
+                searchFilterStream.add(currentFilter
+                  ..readFilter = currentFilter.readFilter.next());
+              },
+              iconSize: 24.0,
+              splashRadius: 24.0,
+            ),
+          ),
         ],
       ),
     );
