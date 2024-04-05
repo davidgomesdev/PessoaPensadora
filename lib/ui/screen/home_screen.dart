@@ -8,6 +8,7 @@ import 'package:pessoa_bonito/service/text_store.dart';
 import 'package:pessoa_bonito/ui/widget/navigation_widget.dart';
 import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/save_text_button.dart';
+import 'package:pessoa_bonito/ui/widget/share_text_button.dart';
 import 'package:pessoa_bonito/ui/widget/text_reader.dart';
 import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
 import 'package:pessoa_bonito/util/generic_extensions.dart';
@@ -52,7 +53,13 @@ class _HomeScreenState extends State<HomeScreen>
             appBar: AppBar(
               actions: (text == null)
                   ? []
-                  : [SaveTextButton(text: SavedText.fromText(text))],
+                  : [
+                      SaveTextButton(text: SavedText.fromText(text)),
+                      ShareTextButton(
+                        text: text.content,
+                        author: text.author,
+                      )
+                    ],
             ),
             drawer: TextSelectionDrawer(
                 index: storeService.index,
