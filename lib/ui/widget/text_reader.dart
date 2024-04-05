@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pessoa_bonito/service/selection_action_service.dart';
 import 'package:pessoa_bonito/ui/bonito_theme.dart';
 import 'package:pessoa_bonito/util/widget_extensions.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class TextReader extends StatelessWidget {
   final ScrollController _scrollController;
@@ -88,10 +88,13 @@ class ReaderTitleText extends StatelessWidget {
 }
 
 class ReaderContentText extends StatelessWidget {
+  
+  final SelectionActionService _actionService = Get.find();
+  
   final String author;
   final String text;
 
-  const ReaderContentText(
+  ReaderContentText(
     this.author,
     this.text, {
     super.key,
@@ -130,7 +133,7 @@ class ReaderContentText extends StatelessWidget {
         label: '📖 Definir',
         onPressed: () {
           ContextMenuController.removeAny();
-          launchUrl(Uri.https("dicionario.priberam.org", '/$selectedWord'));
+          _actionService.defineWord(selectedWord);
         });
   }
 
@@ -139,7 +142,7 @@ class ReaderContentText extends StatelessWidget {
         label: '🔍 Pesquisar',
         onPressed: () {
           ContextMenuController.removeAny();
-          launchUrl(Uri.https("google.pt", '/search', {'q': selectedText}));
+          _actionService.searchOnline(selectedText);
         });
   }
 
@@ -148,7 +151,7 @@ class ReaderContentText extends StatelessWidget {
       label: '📤 Partilhar',
       onPressed: () {
         ContextMenuController.removeAny();
-        Share.share('"$selectedText" - $author');
+        _actionService.shareQuote(selectedText, author);
       },
     );
   }

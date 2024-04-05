@@ -4,6 +4,7 @@ import 'package:pessoa_bonito/repository/collapsable_store.dart';
 import 'package:pessoa_bonito/repository/history_store.dart';
 import 'package:pessoa_bonito/repository/read_store.dart';
 import 'package:pessoa_bonito/repository/saved_store.dart';
+import 'package:pessoa_bonito/service/selection_action_service.dart';
 import 'package:pessoa_bonito/service/text_store.dart';
 import 'package:pessoa_bonito/ui/routes.dart';
 
@@ -36,12 +37,14 @@ class _BootScreenState extends State<BootScreen> {
 
   Future initializeDependencies(BuildContext context) async {
     final assetBundle = DefaultAssetBundle.of(context);
+
     Get.put(await TextStoreService.initialize(assetBundle), permanent: true);
 
     Get.put(await SaveRepository.initialize(), permanent: true);
     Get.put(await ReadRepository.initialize(), permanent: true);
     Get.put(await HistoryRepository.initialize(), permanent: true);
     Get.put(await CollapsableRepository.initialize(), permanent: true);
+    Get.put(SelectionActionService(), permanent: true);
 
     Get.offAndToNamed(Routes.homeScreen);
 
