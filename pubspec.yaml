@@ -29,6 +29,7 @@ dependencies:
   url_launcher: ^6.1.12
   vibration: ^1.8.4
   collection: ^1.18.0
+  flutter_slidable: ^3.1.0
 
 dev_dependencies:
   flutter_test:

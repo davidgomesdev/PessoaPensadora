@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_bonito/dto/box/box_person_category.dart';
 import 'package:pessoa_bonito/dto/box/box_person_text.dart';
@@ -44,7 +47,8 @@ class _SavedTextsScreenState extends State<SavedTextsScreen> {
                         collapsableRepository.toggleAllStatus();
                       });
                     },
-                    icon: Obx(() => Icon(collapsableRepository.isAllCollapsed.value
+                    icon: Obx(
+                      () => Icon(collapsableRepository.isAllCollapsed.value
                           ? Icons.arrow_drop_down_circle_rounded
                           : Icons.arrow_drop_down_circle_outlined),
                     ))
@@ -136,86 +140,104 @@ class _CategoryGroupTileState extends State<_CategoryGroupTile> {
   }
 }
 
-class _SavedTextTile extends StatelessWidget {
+class _SavedTextTile extends StatefulWidget {
   final BoxPessoaText text;
   final ValueChanged<int> onDismiss;
 
   const _SavedTextTile(this.text, this.onDismiss);
 
   @override
-  Widget build(BuildContext context) {
-    var textCondensed = text.content.replaceAll("\n\n", "\n").trim();
+  State<_SavedTextTile> createState() => _SavedTextTileState();
+}
 
-    return Dismissible(
-      key: Key(text.id.toString()),
-      onDismissed: (_) => onDismiss(text.id),
-      confirmDismiss: (direction) => displayUndoSnackbar(context),
-      direction: DismissDirection.endToStart,
-      dragStartBehavior: DragStartBehavior.down,
-      dismissThresholds: const {DismissDirection.endToStart: 0.6},
-      background: Stack(
+class _SavedTextTileState extends State<_SavedTextTile> {
+  bool visible = true;
+
+  @override
+  Widget build(BuildContext context) {
+    var textCondensed = widget.text.content.replaceAll("\n\n", "\n").trim();
+
+    return Slidable(
+      key: Key(widget.text.id.toString()),
+      endActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        extentRatio: 0.25,
         children: [
-          Container(
-            color: Colors.amber,
-          ),
-          const Padding(
-            padding: EdgeInsets.only(right: 16.0),
-            child: Align(
-                alignment: Alignment.centerRight,
-                child: Icon(
-                  Icons.delete_forever,
-                  size: 42.0,
-                  color: Colors.white,
-                )),
+          SlidableAction(
+            onPressed: (ctx) {
+              setState(() {
+                visible = false;
+                displayUndoSnackbar(ctx).then((isConfirmed) {
+                  if (isConfirmed) {
+                    widget.onDismiss(widget.text.id);
+                  } else {
+                    setState(() {
+                      visible = true;
+                    });
+                  }
+                });
+              });
+            },
+            backgroundColor: Colors.amber,
+            foregroundColor: Colors.white,
+            icon: Icons.delete,
+            label: 'Apagar',
           ),
         ],
       ),
-      child: ListTile(
-        enableFeedback: true,
-        title: Text(
-          text.title,
-          style: bonitoTextTheme.titleMedium!
-              .copyWith(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                textCondensed,
-                style: bonitoTextTheme.bodySmall,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+      dragStartBehavior: DragStartBehavior.down,
+      child: visible
+          ? ListTile(
+              enableFeedback: true,
+              title: Text(
+                widget.text.title,
+                style: bonitoTextTheme.titleMedium!
+                    .copyWith(fontWeight: FontWeight.bold),
               ),
-              Padding(
+              subtitle: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    text.author,
-                    textAlign: TextAlign.right,
-                    style: bonitoTextTheme.labelSmall,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      textCondensed,
+                      style: bonitoTextTheme.bodySmall,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          widget.text.author,
+                          textAlign: TextAlign.right,
+                          style: bonitoTextTheme.labelSmall,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-        ),
-        onTap: () {
-          Get.toNamed(Routes.readTextScreen, arguments: {
-            "categoryTitle": text.category.title,
-            "title": text.title,
-            "content": text.content,
-            "author": text.author,
-          });
-        },
-      ),
+              ),
+              onTap: () {
+                Get.toNamed(Routes.readTextScreen, arguments: {
+                  "categoryTitle": widget.text.category.title,
+                  "title": widget.text.title,
+                  "content": widget.text.content,
+                  "author": widget.text.author,
+                });
+              },
+            )
+          : Container(),
     );
   }
 
   /// Returns whether or not the action was accepted.
   Future<bool> displayUndoSnackbar(BuildContext context) {
+    final messenger = ScaffoldMessenger.of(context);
+
+    messenger.clearSnackBars();
+
     final snackBar = SnackBar(
       content: const Text('Removido dos textos marcados'),
       action: SnackBarAction(
@@ -226,11 +248,9 @@ class _SavedTextTile extends StatelessWidget {
       duration: Durations.extralong4,
     );
 
-    return ScaffoldMessenger.of(context)
-        .showSnackBar(snackBar)
-        .closed
-        .then((closeReason) {
-      if (closeReason == SnackBarClosedReason.action) {
+    return messenger.showSnackBar(snackBar).closed.then((closeReason) {
+      if ([SnackBarClosedReason.action, SnackBarClosedReason.remove]
+          .contains(closeReason)) {
         log.i('Bookmarked text removal was cancelled');
         return false;
       }
