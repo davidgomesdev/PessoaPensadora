@@ -1,0 +1,42 @@
+{
+  "branches": ["main"],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "semantic-release-replace-plugin",
+      {
+        "replacements": [
+          {
+            "files": ["pubspec.yaml"],
+            "from": "^version: .+$",
+            "to": "version: \"${nextRelease.version}\"",
+            "results": [
+              {
+                "file": "pubspec.yaml",
+                "hasChanged": true,
+                "numMatches": 1,
+                "numReplacements": 1
+              }
+            ],
+            "countMatches": true
+          }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["lib/**/*.dart", "assets/**/*.*"]
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          { "path": "artifacts/PessoaBonito.apk", "label": "Android App" }
+        ]
+      }
+    ]
+  ]
+}

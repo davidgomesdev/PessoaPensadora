@@ -1,13 +1,20 @@
-name: Release APK
+name: Release App
 
 on:
   push:
-    branches: [ main ]
-  
-jobs:
-  release:
-    runs-on: ubuntu-latest
+    branches:
+      - main
 
+concurrency:
+  group: ${{ github.workflow }}
+
+permissions:
+  contents: read # for checkout
+
+jobs:
+  build:
+    name: Build App
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Retrieve the build signature secrets
@@ -29,14 +36,38 @@ jobs:
       - run: rm android/pessoa-bonito.jks android/key.properties
       - run: mv build/app/outputs/flutter-apk/app-prod-release.apk PessoaBonito.apk
 
-      - name: Upload archive
-        uses: ncipollo/release-action@v1.8.10
+      - name: 📦 - Copy artifact
+        uses: actions/upload-artifact@v4
         with:
-          artifacts: "PessoaBonito.apk"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          allowUpdates: true
-          removeArtifacts: true
-          artifactErrorsFailBuild: true
-          prerelease: true
-          name: latest
-          tag: latest
+          name: PessoaBonito.apk
+          path: PessoaBonito.apk
+          if-no-files-found: error
+
+  release:
+    name: Release
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 📦 - Copy server artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+          merge-multiple: true
+
+      - name: 🧐 - Display structure of downloaded artifacts
+        run: ls -R artifacts/
+
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          extra_plugins: |
+            semantic-release-replace-plugin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
