@@ -17,7 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Retrieve the build signature secrets
+
+      - name: 📩 - Retrieve the build signature secrets
         env:
           KEYSTORE: ${{ secrets.KEYSTORE }}
           KEY_PROPERTIES: ${{ secrets.KEY_PROPERTIES }}
@@ -25,16 +26,21 @@ jobs:
           echo -ne "$KEYSTORE" | base64 --decode > android/pessoa-bonito.jks && \
           echo "$KEY_PROPERTIES" > android/key.properties
 
-      - uses: subosito/flutter-action@v2.10.0
+      - name: 💎 - Install Flutter
+        uses: subosito/flutter-action@v2.10.0
         with:
           flutter-version: '3.x'
           channel: 'stable'
 
-      - run: flutter pub get
-      - run: flutter build apk --release --flavor prod
+      - name: 🌱 - Get dependencies
+        run: flutter pub get
+      - name: 🔨 - Build
+        run: flutter build apk --release --flavor prod
 
-      - run: rm android/pessoa-bonito.jks android/key.properties
-      - run: mv build/app/outputs/flutter-apk/app-prod-release.apk PessoaBonito.apk
+      - name: 🧹 - Cleanup
+        run: |
+          rm android/pessoa-bonito.jks android/key.properties
+          mv build/app/outputs/flutter-apk/app-prod-release.apk PessoaBonito.apk
 
       - name: 📦 - Copy artifact
         uses: actions/upload-artifact@v4
@@ -63,7 +69,7 @@ jobs:
       - name: 🧐 - Display structure of downloaded artifacts
         run: ls -R artifacts/
 
-      - name: Semantic Release
+      - name: 🚚 - Semantic Release
         uses: cycjimmy/semantic-release-action@v4
         with:
           extra_plugins: |

@@ -45,16 +45,8 @@ android {
 
     signingConfigs {
         release {
-            if (!keystorePropertiesFile.exists()) {
-                throw new IllegalArgumentException('A keystore is required to build as release.')
-            }
-
             def storeFilepath = "pessoa-bonito.jks"
             def storeFileObj = rootProject.file(storeFilepath)
-
-            if (!storeFileObj.exists()) {
-                throw new IllegalArgumentException("Couldn't find the store file. (filename: $storeFilepath)")
-            }
 
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
