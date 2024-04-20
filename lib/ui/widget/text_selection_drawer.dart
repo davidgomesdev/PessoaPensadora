@@ -17,6 +17,11 @@ class SearchFilter {
   SearchReadFilter readFilter;
 
   SearchFilter(this.readFilter) : textFilter = '';
+
+  @override
+  String toString() {
+    return "textFilter=$textFilter;readFilter='${readFilter.label}'";
+  }
 }
 
 enum SearchReadFilter {
@@ -129,7 +134,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               selectionSink: widget.selectionSink,
               scrollController: listScrollController,
               subcategories: subcategories,
-              texts: texts,
+              texts: filteredTexts,
               selectedTextId: selectedTextId,
               onReadChange: () {
                 setState(() {});
