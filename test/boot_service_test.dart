@@ -16,7 +16,7 @@ void main() {
     exampleJson = File('test/assets/example.json').readAsStringSync();
   });
 
-  test('Passes', () async {
+  test('TextStoreService reads texts json properly', () async {
     final assetBundleMock = MockAssetBundle();
 
     when(assetBundleMock.loadString(any)).thenAnswer((_) async => exampleJson);
