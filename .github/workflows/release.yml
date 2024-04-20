@@ -32,6 +32,11 @@ jobs:
           flutter-version: '3.x'
           channel: 'stable'
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '17'
+
       - name: 🌱 - Get dependencies
         run: flutter pub get
       - name: 🔨 - Build
