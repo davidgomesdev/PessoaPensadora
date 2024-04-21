@@ -10,6 +10,7 @@ import 'package:pessoa_bonito/ui/screen/saved_texts_screen.dart';
 import 'boot_screen.dart';
 
 class App extends StatelessWidget {
+
   const App({super.key});
 
   @override
