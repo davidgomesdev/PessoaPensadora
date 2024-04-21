@@ -64,7 +64,7 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
     final tempFolder = Directory('./temp-tests');
 
     if (await tempFolder.exists()) {
-      tempFolder.delete(recursive: true);
+      await tempFolder.delete(recursive: true);
     }
 
     await Hive.initFlutter(".");
@@ -93,4 +93,11 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
   });
 
   return Get.find<TextStoreService>();
+}
+
+Finder findScrollableTile(Finder tileFinder) {
+  return find.descendant(
+      of: tileFinder,
+      matching: find.byWidgetPredicate((w) => w is Scrollable),
+      matchRoot: true);
 }

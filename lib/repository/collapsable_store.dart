@@ -22,7 +22,10 @@ class CollapsableRepository {
     log.i('Collapsable box initialized successfully');
 
     final instance = CollapsableRepository._(
-        box, box.values.every((isCollapsed) => isCollapsed == true).obs);
+        box,
+        (box.values.every((isCollapsed) => isCollapsed == true) &&
+                box.values.isNotEmpty)
+            .obs);
 
     await instance._cleanupLeftovers();
 
@@ -51,14 +54,14 @@ class CollapsableRepository {
   Future<void> setStatus(int categoryId, bool isCollapsed) async {
     await _box.put(categoryId, isCollapsed);
 
-    final newStatus = areAllCollapsed();
+    final newStatus = _areAllCollapsed();
     isAllCollapsed.value = newStatus;
 
     log.i('Set expanded status of category id $categoryId to $isCollapsed');
   }
 
   Future<void> addCategory(int categoryId) async {
-    final status = areAllCollapsed();
+    final status = _areAllCollapsed();
 
     await _box.put(categoryId, status);
 
@@ -80,10 +83,11 @@ class CollapsableRepository {
     return isCollapsed;
   }
 
-  bool areAllCollapsed() => _box.values.every((isCollapsed) => isCollapsed);
+  bool _areAllCollapsed() =>
+      _box.values.every((isCollapsed) => isCollapsed) && _box.values.isNotEmpty;
 
   Future<void> toggleAllStatus() async {
-    final newStatus = !areAllCollapsed();
+    final newStatus = !_areAllCollapsed();
 
     isAllCollapsed.value = newStatus;
 
