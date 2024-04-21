@@ -9,6 +9,6 @@ void main() {
   testWidgets('Boot screen should show splash', (tester) async {
     await tester.pumpWidget(const MaterialApp(home: BootScreen()));
 
-    expect(find.byType(SplashScreen), findsOneWidget);
+    expect(find.byType(SplashScreen), findsOne);
   });
 }

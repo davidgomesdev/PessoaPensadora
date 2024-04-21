@@ -14,15 +14,15 @@ void main() {
     expect(
         find.widgetWithIcon(ListTile, Icons.subdirectory_arrow_right_rounded),
         findsExactly(9));
-    expect(find.text('Poemas de Alberto Caeiro'), findsOneWidget);
-    expect(find.text('Poesia de Álvaro de Campos'), findsOneWidget);
-    expect(find.text('Odes de Ricardo Reis'), findsOneWidget);
-    expect(find.text('Poesia Ortónima de Fernando Pessoa'), findsOneWidget);
-    expect(find.text('Livro do Desassossego'), findsOneWidget);
-    expect(find.text('MENSAGEM'), findsOneWidget);
-    expect(find.text('Textos Heterónimos'), findsOneWidget);
-    expect(find.text('Textos Publicados em vida'), findsOneWidget);
-    expect(find.text('Rubaiyat'), findsOneWidget);
+    expect(find.text('Poemas de Alberto Caeiro'), findsOne);
+    expect(find.text('Poesia de Álvaro de Campos'), findsOne);
+    expect(find.text('Odes de Ricardo Reis'), findsOne);
+    expect(find.text('Poesia Ortónima de Fernando Pessoa'), findsOne);
+    expect(find.text('Livro do Desassossego'), findsOne);
+    expect(find.text('MENSAGEM'), findsOne);
+    expect(find.text('Textos Heterónimos'), findsOne);
+    expect(find.text('Textos Publicados em vida'), findsOne);
+    expect(find.text('Rubaiyat'), findsOne);
   });
 
   testWidgets('Clicking on a category should show its texts', (tester) async {
@@ -32,19 +32,18 @@ void main() {
     await tester.tap(find.text('Rubaiyat'));
     await tester.pumpAndSettle();
 
-    expect(find.text('0/41'), findsOneWidget);
+    expect(find.text('0/41'), findsOne);
 
-    expect(find.text('A vida é terra e o vivê-la é lodo.'), findsOneWidget);
+    expect(find.text('A vida é terra e o vivê-la é lodo.'), findsOne);
 
     // before scrolling to it
     var textFinder = find.text('Vimos de nada e vamos para onde.');
     expect(textFinder, findsNothing);
 
     await tester.scrollUntilVisible(textFinder, 500.0,
-        scrollable: find.descendant(
-            of: find.byKey(const PageStorageKey("drawer-list-view")),
-            matching: find.byWidgetPredicate((w) => w is Scrollable)));
-    expect(textFinder, findsOneWidget);
+        scrollable: findScrollableTile(
+            find.byKey(const PageStorageKey("drawer-list-view"))));
+    expect(textFinder, findsOne);
   });
 
   testWidgets(
@@ -62,15 +61,15 @@ void main() {
     expect(
         find.widgetWithIcon(ListTile, Icons.subdirectory_arrow_right_rounded),
         findsExactly(9));
-    expect(find.text('Poemas de Alberto Caeiro'), findsOneWidget);
-    expect(find.text('Poesia de Álvaro de Campos'), findsOneWidget);
-    expect(find.text('Odes de Ricardo Reis'), findsOneWidget);
-    expect(find.text('Poesia Ortónima de Fernando Pessoa'), findsOneWidget);
-    expect(find.text('Livro do Desassossego'), findsOneWidget);
-    expect(find.text('MENSAGEM'), findsOneWidget);
-    expect(find.text('Textos Heterónimos'), findsOneWidget);
-    expect(find.text('Textos Publicados em vida'), findsOneWidget);
-    expect(find.text('Rubaiyat'), findsOneWidget);
+    expect(find.text('Poemas de Alberto Caeiro'), findsOne);
+    expect(find.text('Poesia de Álvaro de Campos'), findsOne);
+    expect(find.text('Odes de Ricardo Reis'), findsOne);
+    expect(find.text('Poesia Ortónima de Fernando Pessoa'), findsOne);
+    expect(find.text('Livro do Desassossego'), findsOne);
+    expect(find.text('MENSAGEM'), findsOne);
+    expect(find.text('Textos Heterónimos'), findsOne);
+    expect(find.text('Textos Publicados em vida'), findsOne);
+    expect(find.text('Rubaiyat'), findsOne);
   });
 
   testWidgets('Click on a text should open the reader with that text',
