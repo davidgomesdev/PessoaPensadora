@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
@@ -51,9 +52,18 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
   });
 
   await tester.runAsync(() async {
+    Get.reset();
+    Hive.resetAdapters();
+
+    try {
+      await Hive.close().timeout(const Duration(seconds: 1));
+    } on TimeoutException catch (_) {
+      // ignored: The Hive dependency has a deadlock issue in this method, the 5th test run was hanging here
+    }
+
     final tempFolder = Directory('./temp-tests');
 
-    if(await tempFolder.exists()) {
+    if (await tempFolder.exists()) {
       tempFolder.delete(recursive: true);
     }
 
@@ -61,11 +71,11 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
 
     EquatableConfig.stringify = true;
 
-    Hive.registerAdapter(BoxPessoaCategoryAdapter(), override: true);
-    Hive.registerAdapter(BoxPessoaTextAdapter(), override: true);
-    Hive.registerAdapter(SavedTextAdapter(), override: true);
+    Hive.registerAdapter(BoxPessoaCategoryAdapter());
+    Hive.registerAdapter(BoxPessoaTextAdapter());
+    Hive.registerAdapter(SavedTextAdapter());
 
-    final realJson = File('assets/json_files/texts.json').readAsStringSync();
+    final realJson = await File('assets/json_files/texts.json').readAsString();
 
     final assetBundleMock = MockAssetBundle();
 
