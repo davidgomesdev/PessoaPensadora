@@ -32,17 +32,19 @@ void main() {
     await tester.tap(find.text('Rubaiyat'));
     await tester.pumpAndSettle();
 
+    expect(find.text('0/41'), findsOneWidget);
+
     expect(find.text('A vida é terra e o vivê-la é lodo.'), findsOneWidget);
 
     // before scrolling to it
-    expect(find.text('Vimos de nada e vamos para onde.'), findsNothing);
+    var textFinder = find.text('Vimos de nada e vamos para onde.');
+    expect(textFinder, findsNothing);
 
-    await tester.scrollUntilVisible(
-        find.text('Vimos de nada e vamos para onde.'), 500.0,
+    await tester.scrollUntilVisible(textFinder, 500.0,
         scrollable: find.descendant(
             of: find.byKey(const PageStorageKey("drawer-list-view")),
             matching: find.byWidgetPredicate((w) => w is Scrollable)));
-    expect(find.text('Vimos de nada e vamos para onde.'), findsOneWidget);
+    expect(textFinder, findsOneWidget);
   });
 
   testWidgets(
@@ -71,17 +73,113 @@ void main() {
     expect(find.text('Rubaiyat'), findsOneWidget);
   });
 
-  testWidgets('Click on a text should open the reader with that text', (tester) async {
+  testWidgets('Click on a text should open the reader with that text',
+      (tester) async {
     await startApp(tester);
     await openDrawer(tester);
-    
+
     await tester.tap(find.text('Rubaiyat'));
     await tester.pumpAndSettle();
-    
-    await tester.tap(find.text('A vida é terra e o vivê-la é lodo.'));
+
+    var textFinder = find.text('A vida é terra e o vivê-la é lodo.');
+    await tester.tap(textFinder);
     await tester.pumpAndSettle();
 
-    expect(find.descendant(of: find.byType(TextReader), matching: find.text("A vida é terra e o vivê-la é lodo.")), findsOne);
-    expect(find.descendant(of: find.byType(TextReader), matching: find.textContaining("Em tudo quanto faças sê só tu,")), findsOne);
+    expect(
+        find.descendant(
+            of: find.byType(TextReader),
+            matching: find.text("A vida é terra e o vivê-la é lodo.")),
+        findsOne);
+    expect(
+        find.descendant(
+            of: find.byType(TextReader),
+            matching: find.textContaining("Em tudo quanto faças sê só tu,")),
+        findsOne);
+  });
+
+  testWidgets('Clicking on a text should mark it selected', (tester) async {
+    await startApp(tester);
+    await openDrawer(tester);
+
+    await tester.tap(find.text('Rubaiyat'));
+    await tester.pumpAndSettle();
+
+    var textFinder = find.text('A vida é terra e o vivê-la é lodo.');
+    var tile = tester.firstWidget<ListTile>(
+        find.ancestor(of: textFinder, matching: find.byType(ListTile)));
+
+    expect(tile.selected, equals(false));
+
+    await tester.tap(textFinder);
+    await tester.pumpAndSettle();
+
+    await openDrawer(tester);
+
+    tile = tester.firstWidget<ListTile>(
+        find.ancestor(of: textFinder, matching: find.byType(ListTile)));
+
+    expect(tile.selected, equals(true));
+  });
+
+  testWidgets('Long pressing an unread text should mark it as read',
+      (tester) async {
+    await startApp(tester);
+    await openDrawer(tester);
+
+    await tester.tap(find.text('Rubaiyat'));
+    await tester.pumpAndSettle();
+
+    var textFinder = find.text('A vida é terra e o vivê-la é lodo.');
+    var tile = tester.firstWidget<ListTile>(
+        find.ancestor(of: textFinder, matching: find.byType(ListTile)));
+
+    expect(tile.textColor, equals(Colors.white));
+    expect(tile.selectedColor, equals(Colors.white));
+    expect(tile.selected, equals(false));
+    expect(find.text('0/41'), findsOneWidget);
+
+    await tester.longPress(textFinder);
+    await tester.pumpAndSettle();
+
+    tile = tester.firstWidget<ListTile>(
+        find.ancestor(of: textFinder, matching: find.byType(ListTile)));
+
+    expect(tile.textColor, equals(Colors.white60));
+    expect(tile.selectedColor, equals(Colors.white60));
+    expect(tile.selected, equals(false));
+    expect(find.text('1/41'), findsOneWidget);
+  });
+
+  testWidgets('Long pressing a read text should mark it as unread',
+      (tester) async {
+    await startApp(tester);
+    await openDrawer(tester);
+
+    await tester.tap(find.text('Rubaiyat'));
+    await tester.pumpAndSettle();
+
+    final textFinder = find.text('A vida é terra e o vivê-la é lodo.');
+
+    var tile = tester.firstWidget<ListTile>(
+        find.ancestor(of: textFinder, matching: find.byType(ListTile)));
+
+    expect(tile.textColor, equals(Colors.white));
+    expect(tile.selectedColor, equals(Colors.white));
+    expect(tile.selected, equals(false));
+    expect(find.text('0/41'), findsOneWidget);
+
+    await tester.longPress(textFinder);
+    await tester.pumpAndSettle();
+
+    await tester.longPress(textFinder);
+    await tester.pumpAndSettle();
+
+    tile = tester.firstWidget<ListTile>(
+        find.ancestor(of: textFinder, matching: find.byType(ListTile)));
+
+    expect(tile.textColor, equals(Colors.white));
+    expect(tile.selectedColor, equals(Colors.white));
+    expect(tile.selected, equals(false));
+    expect(find.text('0/41'), findsOneWidget);
   });
 }
