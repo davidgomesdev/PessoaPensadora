@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -33,6 +34,14 @@ Future<void> startApp(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> openDrawer(WidgetTester tester) async {
+  final ScaffoldState state = tester.firstState(find.byType(Scaffold));
+
+  state.openDrawer();
+
+  await tester.pumpAndSettle();
+}
+
 Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
   const MethodChannel channel =
       MethodChannel('plugins.flutter.io/path_provider');
@@ -42,13 +51,19 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
   });
 
   await tester.runAsync(() async {
+    final tempFolder = Directory('./temp-tests');
+
+    if(await tempFolder.exists()) {
+      tempFolder.delete(recursive: true);
+    }
+
     await Hive.initFlutter(".");
 
     EquatableConfig.stringify = true;
 
-    Hive.registerAdapter(BoxPessoaCategoryAdapter());
-    Hive.registerAdapter(BoxPessoaTextAdapter());
-    Hive.registerAdapter(SavedTextAdapter());
+    Hive.registerAdapter(BoxPessoaCategoryAdapter(), override: true);
+    Hive.registerAdapter(BoxPessoaTextAdapter(), override: true);
+    Hive.registerAdapter(SavedTextAdapter(), override: true);
 
     final realJson = File('assets/json_files/texts.json').readAsStringSync();
 

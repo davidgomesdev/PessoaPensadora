@@ -34,8 +34,9 @@ class DrawerListView extends StatelessWidget {
           color: Colors.white,
           tiles: [
             ...subcategories,
-            ...texts.map((text) => DrawerListTile(
-                selectionSink, text, selectedTextId, onReadChange: onReadChange,))
+            ...texts.map((text) => DrawerTextTile(
+                selectionSink, text, selectedTextId,
+                onReadChange: onReadChange))
           ],
         ),
       ],
@@ -43,25 +44,25 @@ class DrawerListView extends StatelessWidget {
   }
 }
 
-class DrawerListTile extends StatefulWidget {
+class DrawerTextTile extends StatefulWidget {
   final Sink<PessoaText> selectionSink;
   final PessoaText text;
   final int? selectedTextId;
   final Callback onReadChange;
 
-  const DrawerListTile(
+  const DrawerTextTile(
     this.selectionSink,
     this.text,
     this.selectedTextId, {
-      required this.onReadChange,
+    required this.onReadChange,
     super.key,
   });
 
   @override
-  State<DrawerListTile> createState() => _DrawerListTileState();
+  State<DrawerTextTile> createState() => _DrawerTextTileState();
 }
 
-class _DrawerListTileState extends State<DrawerListTile> {
+class _DrawerTextTileState extends State<DrawerTextTile> {
   @override
   Widget build(BuildContext context) {
     final isTextRead = Get.find<ReadRepository>().isTextRead(widget.text.id);
@@ -80,11 +81,11 @@ class _DrawerListTileState extends State<DrawerListTile> {
         Navigator.pop(context);
       },
       onLongPress: () {
-          ReadRepository readRepository = Get.find();
+        ReadRepository readRepository = Get.find();
 
-          readRepository.toggleRead(widget.text.id);
-          ActionFeedback.lightHaptic();
-          widget.onReadChange();
+        readRepository.toggleRead(widget.text.id);
+        ActionFeedback.lightHaptic();
+        widget.onReadChange();
       },
     );
   }
