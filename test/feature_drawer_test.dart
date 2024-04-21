@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pessoa_bonito/ui/widget/text_reader.dart';
 
 import 'utils.dart';
 
@@ -68,5 +69,19 @@ void main() {
     expect(find.text('Textos Heterónimos'), findsOneWidget);
     expect(find.text('Textos Publicados em vida'), findsOneWidget);
     expect(find.text('Rubaiyat'), findsOneWidget);
+  });
+
+  testWidgets('Click on a text should open the reader with that text', (tester) async {
+    await startApp(tester);
+    await openDrawer(tester);
+    
+    await tester.tap(find.text('Rubaiyat'));
+    await tester.pumpAndSettle();
+    
+    await tester.tap(find.text('A vida é terra e o vivê-la é lodo.'));
+    await tester.pumpAndSettle();
+
+    expect(find.descendant(of: find.byType(TextReader), matching: find.text("A vida é terra e o vivê-la é lodo.")), findsOne);
+    expect(find.descendant(of: find.byType(TextReader), matching: find.textContaining("Em tudo quanto faças sê só tu,")), findsOne);
   });
 }
