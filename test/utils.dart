@@ -44,11 +44,13 @@ Future<void> openDrawer(WidgetTester tester) async {
 }
 
 Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
+  final randomPath = "./temp-tests/${DateTime.timestamp()}";
   const MethodChannel channel =
       MethodChannel('plugins.flutter.io/path_provider');
+
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-    return "./temp-tests";
+    return randomPath;
   });
 
   await tester.runAsync(() async {
@@ -59,12 +61,6 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
       await Hive.close().timeout(const Duration(seconds: 1));
     } on TimeoutException catch (_) {
       // ignored: The Hive dependency has a deadlock issue in this method, the 5th test run was hanging here
-    }
-
-    final tempFolder = Directory('./temp-tests');
-
-    if (await tempFolder.exists()) {
-      await tempFolder.delete(recursive: true);
     }
 
     await Hive.initFlutter(".");
