@@ -3,6 +3,9 @@ name: Build
 on:
   pull_request:
 
+permissions:
+  contents: read # for checkout
+
 jobs:
   build:
     runs-on: ubuntu-latest
