@@ -74,9 +74,8 @@ void main() {
     await tester.tap(find.byIcon(Icons.bookmarks));
     await tester.pumpAndSettle();
 
-    final tileFinder = find.ancestor(
-        of: textFinder,
-        matching: find.byType(Slidable));
+    final tileFinder =
+        find.ancestor(of: textFinder, matching: find.byType(Slidable));
 
     await tester.drag(tileFinder, const Offset(-500.0, 0));
     await tester.pumpAndSettle();
@@ -106,7 +105,8 @@ void main() {
     expect(tileFinder, findsNothing);
   });
 
-  testWidgets('Clicking on a saved text should make the saved reader screen show with it',
+  testWidgets(
+      'Clicking on a saved text should make the saved reader screen show with it',
       (tester) async {
     await startApp(tester);
     await openDrawer(tester);
@@ -129,7 +129,7 @@ void main() {
 
     await tester.tap(textFinder);
     await tester.pumpAndSettle();
-    
+
     final reader = tester.widget<TextReader>(find.byType(TextReader));
 
     expect(reader.author, equals('Fernando Pessoa'));
@@ -165,9 +165,8 @@ void main() {
     await tester.tap(find.byIcon(Icons.bookmarks));
     await tester.pumpAndSettle();
 
-    final tileFinder = find.ancestor(
-        of: textFinder,
-        matching: find.byType(Slidable));
+    final tileFinder =
+        find.ancestor(of: textFinder, matching: find.byType(Slidable));
 
     await tester.drag(tileFinder, const Offset(-500.0, 0));
     await tester.pumpAndSettle();
@@ -198,7 +197,8 @@ void main() {
     expect(tileFinder, findsOne);
   });
 
-  testWidgets('Saving two texts of the same category should appear in the same group of the saved texts screen',
+  testWidgets(
+      'Saving two texts of the same category should appear in the same group of the saved texts screen',
       (tester) async {
     await startApp(tester);
     await openDrawer(tester);
@@ -229,7 +229,11 @@ void main() {
     await tester.tap(find.byIcon(Icons.bookmarks));
     await tester.pumpAndSettle();
 
-    expect(find.descendant(of: find.byType(SavedTextsScreen), matching: find.byType(ExpansionTile)), findsOne);
+    expect(
+        find.descendant(
+            of: find.byType(SavedTextsScreen),
+            matching: find.byType(ExpansionTile)),
+        findsOne);
     expect(find.widgetWithText(ExpansionTile, 'Rubaiyat'), findsOne);
     expect(
         find.descendant(
@@ -243,7 +247,8 @@ void main() {
         findsOne);
   });
 
-  testWidgets('Saving two texts of the different categories should appear in different groups of the saved texts screen',
+  testWidgets(
+      'Saving two texts of the different categories should appear in different groups of the saved texts screen',
       (tester) async {
     await startApp(tester);
     await openDrawer(tester);
@@ -267,11 +272,13 @@ void main() {
     await tester.tap(find.text('Livro do Desassossego'));
     await tester.pumpAndSettle();
 
-    var secondTextFinder = find.text('Vivo sempre no presente. O futuro, não o conheço.');
+    var secondTextFinder =
+        find.text('Vivo sempre no presente. O futuro, não o conheço.');
 
     await tester.scrollUntilVisible(secondTextFinder, 300.0,
         scrollable: findScrollableTile(
-            find.byKey(const PageStorageKey("drawer-list-view"))), maxScrolls: 500);
+            find.byKey(const PageStorageKey("drawer-list-view"))),
+        maxScrolls: 500);
 
     await tester.tap(secondTextFinder);
     await tester.pumpAndSettle();
@@ -284,7 +291,11 @@ void main() {
     await tester.tap(find.byIcon(Icons.bookmarks));
     await tester.pumpAndSettle();
 
-    expect(find.descendant(of: find.byType(SavedTextsScreen), matching: find.byType(ExpansionTile)), findsNWidgets(2));
+    expect(
+        find.descendant(
+            of: find.byType(SavedTextsScreen),
+            matching: find.byType(ExpansionTile)),
+        findsNWidgets(2));
     expect(find.widgetWithText(ExpansionTile, 'Rubaiyat'), findsOne);
     expect(
         find.descendant(
@@ -292,11 +303,149 @@ void main() {
             matching: firstTextFinder),
         findsOne);
 
-    expect(find.widgetWithText(ExpansionTile, 'Livro do Desassossego'), findsOne);
+    expect(
+        find.widgetWithText(ExpansionTile, 'Livro do Desassossego'), findsOne);
     expect(
         find.descendant(
             of: find.widgetWithText(ExpansionTile, 'Livro do Desassossego'),
             matching: secondTextFinder),
         findsOne);
+  });
+
+  group('Expansion status', () {
+    testWidgets(
+        'When a text is saved with no other texts, it should be expanded',
+        (tester) async {
+      await startApp(tester);
+      await openDrawer(tester);
+
+      await tester.tap(find.text('Rubaiyat'));
+      await tester.pumpAndSettle();
+
+      var textFinder = find.text('A vida é terra e o vivê-la é lodo.');
+
+      await tester.tap(textFinder);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
+      await tester.pumpAndSettle();
+
+      await openDrawer(tester);
+
+      await tester.tap(find.byIcon(Icons.bookmarks));
+      await tester.pumpAndSettle();
+
+      expect(
+          find.widgetWithIcon(
+              ExpansionTile, Icons.arrow_drop_down_circle_outlined),
+          findsOne);
+    });
+
+    testWidgets(
+        'When a text is saved with other texts being expanded, it should be expanded',
+        (tester) async {});
+
+    testWidgets(
+        'When a text is expanded and its expansion button is pressed, it should become collapsed',
+        (tester) async {
+      await startApp(tester);
+      await openDrawer(tester);
+
+      await tester.tap(find.text('Rubaiyat'));
+      await tester.pumpAndSettle();
+
+      var textFinder = find.text('A vida é terra e o vivê-la é lodo.');
+
+      await tester.tap(textFinder);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
+      await tester.pumpAndSettle();
+
+      await openDrawer(tester);
+
+      await tester.tap(find.byIcon(Icons.bookmarks));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.descendant(
+          of: find.byType(ExpansionTile),
+          matching: find.byIcon(Icons.arrow_drop_down_circle_outlined)));
+      await tester.pumpAndSettle();
+
+      expect(
+          find.widgetWithIcon(
+              ExpansionTile, Icons.arrow_drop_down_circle_rounded),
+          findsOne);
+      expect(textFinder, findsNothing);
+
+      await tester.pageBack();
+      await openDrawer(tester);
+      await tester.tap(find.byIcon(Icons.bookmarks));
+      await tester.pumpAndSettle();
+
+      expect(
+          find.widgetWithIcon(
+              ExpansionTile, Icons.arrow_drop_down_circle_rounded),
+          findsOne);
+      expect(textFinder, findsNothing);
+    });
+
+    testWidgets(
+        'When a text is collapsed and its expansion button is pressed, it should become expanded',
+        (tester) async {
+      await startApp(tester);
+      await openDrawer(tester);
+
+      await tester.tap(find.text('Rubaiyat'));
+      await tester.pumpAndSettle();
+
+      var textFinder = find.text('A vida é terra e o vivê-la é lodo.');
+
+      await tester.tap(textFinder);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
+      await tester.pumpAndSettle();
+
+      await openDrawer(tester);
+
+      await tester.tap(find.byIcon(Icons.bookmarks));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.descendant(
+          of: find.byType(ExpansionTile),
+          matching: find.byIcon(Icons.arrow_drop_down_circle_outlined)));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.descendant(
+          of: find.byType(ExpansionTile),
+          matching: find.byIcon(Icons.arrow_drop_down_circle_rounded)));
+      await tester.pumpAndSettle();
+
+      expect(
+          find.widgetWithIcon(
+              ExpansionTile, Icons.arrow_drop_down_circle_outlined),
+          findsOne);
+      expect(textFinder, findsOne);
+
+      await tester.pageBack();
+      await openDrawer(tester);
+      await tester.tap(find.byIcon(Icons.bookmarks));
+      await tester.pumpAndSettle();
+
+      expect(
+          find.widgetWithIcon(
+              ExpansionTile, Icons.arrow_drop_down_circle_outlined),
+          findsOne);
+      expect(textFinder, findsOne);
+    });
+
+    testWidgets(
+        'When a text is expanded and the global expansion button is pressed, all texts should become collapsed',
+        (tester) async {});
+
+    testWidgets(
+        'When a text is collapsed and the global expansion button is pressed, all texts should become expanded',
+        (tester) async {});
   });
 }
