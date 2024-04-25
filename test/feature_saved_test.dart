@@ -339,11 +339,75 @@ void main() {
           find.widgetWithIcon(
               ExpansionTile, Icons.arrow_drop_down_circle_outlined),
           findsOne);
+      expect(
+          find.widgetWithIcon(
+              SliverAppBar, Icons.arrow_drop_down_circle_outlined),
+          findsOne);
     });
 
     testWidgets(
-        'When a text is saved with other texts being expanded, it should be expanded',
-        (tester) async {});
+        'When a text is saved with other texts being collapsed, it should be collapsed',
+        (tester) async {
+      await startApp(tester);
+      await openDrawer(tester);
+
+      final textFinder = find.text('A vida é terra e o vivê-la é lodo.');
+
+      await tester.tap(find.text('Rubaiyat'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(textFinder);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
+      await tester.pumpAndSettle();
+
+      await openDrawer(tester);
+
+      await tester.tap(find.byIcon(Icons.bookmarks));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.descendant(
+          of: find.byType(ExpansionTile),
+          matching: find.byIcon(Icons.arrow_drop_down_circle_outlined)));
+      await tester.pumpAndSettle();
+
+      await tester.pageBack();
+      await openDrawer(tester);
+
+      await tester.tap(find.text('Voltar'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Livro do Desassossego'));
+      await tester.pumpAndSettle();
+
+      final secondTextFinder = find.text('A DIVINA INVEJA');
+
+      await tester.scrollUntilVisible(secondTextFinder, 300.0,
+          scrollable: findScrollableTile(
+              find.byKey(const PageStorageKey("drawer-list-view"))));
+      await tester.tap(secondTextFinder);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
+      await tester.pumpAndSettle();
+
+      await openDrawer(tester);
+
+      await tester.tap(find.byIcon(Icons.bookmarks));
+      await tester.pumpAndSettle();
+
+      expect(
+          find.widgetWithIcon(
+              ExpansionTile, Icons.arrow_drop_down_circle_rounded),
+          findsNWidgets(2));
+      expect(textFinder, findsNothing);
+      expect(secondTextFinder, findsNothing);
+      expect(
+          find.widgetWithIcon(
+              SliverAppBar, Icons.arrow_drop_down_circle_rounded),
+          findsOne);
+    });
 
     testWidgets(
         'When a text is expanded and its expansion button is pressed, it should become collapsed',
@@ -388,6 +452,11 @@ void main() {
               ExpansionTile, Icons.arrow_drop_down_circle_rounded),
           findsOne);
       expect(textFinder, findsNothing);
+      expect(
+          find.descendant(
+              of: find.byType(SliverAppBar),
+              matching: find.byIcon(Icons.arrow_drop_down_circle_outlined)),
+          findsOne);
     });
 
     testWidgets(
@@ -438,14 +507,98 @@ void main() {
               ExpansionTile, Icons.arrow_drop_down_circle_outlined),
           findsOne);
       expect(textFinder, findsOne);
+      expect(
+          find.widgetWithIcon(
+              SliverAppBar, Icons.arrow_drop_down_circle_outlined),
+          findsOne);
     });
 
     testWidgets(
         'When a text is expanded and the global expansion button is pressed, all texts should become collapsed',
-        (tester) async {});
+        (tester) async {
+      await startApp(tester);
+      await openDrawer(tester);
+
+      final textFinder = find.text('A vida é terra e o vivê-la é lodo.');
+      final secondTextFinder = find.text('A DIVINA INVEJA');
+
+      await bookmarkTwoTexts(tester, textFinder, secondTextFinder);
+
+      await openDrawer(tester);
+      await tester.tap(find.byIcon(Icons.bookmarks));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.descendant(
+          of: find.byType(SliverAppBar),
+          matching: find.byIcon(Icons.arrow_drop_down_circle_outlined)));
+      await tester.pumpAndSettle();
+
+      expect(
+          find.byIcon(Icons.arrow_drop_down_circle_rounded), findsNWidgets(3));
+      expect(find.byIcon(Icons.arrow_drop_down_circle_outlined), findsNothing);
+      expect(textFinder, findsNothing);
+      expect(secondTextFinder, findsNothing);
+    });
 
     testWidgets(
-        'When a text is collapsed and the global expansion button is pressed, all texts should become expanded',
-        (tester) async {});
+        'When the texts are collapsed and the global expansion button is pressed, all texts should become expanded',
+        (tester) async {
+      await startApp(tester);
+      await openDrawer(tester);
+
+      final textFinder = find.text('A vida é terra e o vivê-la é lodo.');
+      final secondTextFinder = find.text('A DIVINA INVEJA');
+
+      await bookmarkTwoTexts(tester, textFinder, secondTextFinder);
+
+      await openDrawer(tester);
+      await tester.tap(find.byIcon(Icons.bookmarks));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.descendant(
+          of: find.byType(SliverAppBar),
+          matching: find.byIcon(Icons.arrow_drop_down_circle_outlined)));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.descendant(
+          of: find.byType(SliverAppBar),
+          matching: find.byIcon(Icons.arrow_drop_down_circle_rounded)));
+      await tester.pumpAndSettle();
+
+      expect(
+          find.byIcon(Icons.arrow_drop_down_circle_outlined), findsNWidgets(3));
+      expect(find.byIcon(Icons.arrow_drop_down_circle_rounded), findsNothing);
+      expect(textFinder, findsOne);
+      expect(secondTextFinder, findsOne);
+    });
   });
+}
+
+Future<void> bookmarkTwoTexts(
+    WidgetTester tester, Finder textFinder, Finder secondTextFinder) async {
+  await tester.tap(find.text('Rubaiyat'));
+  await tester.pumpAndSettle();
+
+  await tester.tap(textFinder);
+  await tester.pumpAndSettle();
+
+  await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
+  await tester.pumpAndSettle();
+
+  await openDrawer(tester);
+
+  await tester.tap(find.text('Voltar'));
+  await tester.pumpAndSettle();
+
+  await tester.tap(find.text('Livro do Desassossego'));
+  await tester.pumpAndSettle();
+
+  await tester.scrollUntilVisible(secondTextFinder, 300.0,
+      scrollable: findScrollableTile(
+          find.byKey(const PageStorageKey("drawer-list-view"))));
+  await tester.tap(secondTextFinder);
+  await tester.pumpAndSettle();
+
+  await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
+  await tester.pumpAndSettle();
 }
