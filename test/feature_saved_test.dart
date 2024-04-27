@@ -51,6 +51,39 @@ void main() {
   });
 
   testWidgets(
+      'Saving a text of a subcategory should appear '
+      'in the saved texts screen with the root category', (tester) async {
+    await startApp(tester);
+    await openDrawer(tester);
+
+    await tester.tap(find.text('Poemas de Alberto Caeiro'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('POEMAS INCONJUNTOS'));
+    await tester.pumpAndSettle();
+
+    var textFinder = find.text('A criança que pensa em fadas e acredita nas fadas');
+
+    await tester.tap(textFinder);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.bookmark_outlined), findsOne);
+
+    await openDrawer(tester);
+
+    await tester.tap(find.byIcon(Icons.bookmarks));
+    await tester.pumpAndSettle();
+
+    expect(
+        find.descendant(
+            of: find.widgetWithText(ExpansionTile, 'Poemas de Alberto Caeiro'),
+            matching: textFinder),
+        findsOne);
+  });
+
+  testWidgets(
       'Unsaving a text should make it disappear from the saved texts screen',
       (tester) async {
     await startApp(tester);
