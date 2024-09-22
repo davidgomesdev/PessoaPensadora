@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/model/pessoa_text.dart';
-import 'package:pessoa_bonito/model/saved_text.dart';
-import 'package:pessoa_bonito/service/text_store.dart';
-import 'package:pessoa_bonito/ui/widget/navigation_widget.dart';
-import 'package:pessoa_bonito/ui/widget/no_text_reader.dart';
-import 'package:pessoa_bonito/ui/widget/save_text_button.dart';
-import 'package:pessoa_bonito/ui/widget/share_text_button.dart';
-import 'package:pessoa_bonito/ui/widget/text_reader.dart';
-import 'package:pessoa_bonito/ui/widget/text_selection_drawer.dart';
-import 'package:pessoa_bonito/util/generic_extensions.dart';
-import 'package:pessoa_bonito/util/logger_factory.dart';
+import 'package:pessoa_pensadora/model/pessoa_text.dart';
+import 'package:pessoa_pensadora/model/saved_text.dart';
+import 'package:pessoa_pensadora/service/text_store.dart';
+import 'package:pessoa_pensadora/ui/widget/navigation_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/no_text_reader.dart';
+import 'package:pessoa_pensadora/ui/widget/save_text_button.dart';
+import 'package:pessoa_pensadora/ui/widget/share_text_button.dart';
+import 'package:pessoa_pensadora/ui/widget/text_reader.dart';
+import 'package:pessoa_pensadora/ui/widget/text_selection_drawer.dart';
+import 'package:pessoa_pensadora/util/generic_extensions.dart';
+import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 import '../../repository/history_store.dart';
 

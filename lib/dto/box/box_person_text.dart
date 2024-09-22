@@ -2,8 +2,8 @@ import 'dart:collection';
 
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:pessoa_bonito/dto/box/box_person_category.dart';
-import 'package:pessoa_bonito/model/pessoa_text.dart';
+import 'package:pessoa_pensadora/dto/box/box_person_category.dart';
+import 'package:pessoa_pensadora/model/pessoa_text.dart';
 
 import '../../service/text_store.dart';
 

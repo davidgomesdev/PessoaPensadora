@@ -23,7 +23,7 @@ jobs:
           KEYSTORE: ${{ secrets.KEYSTORE }}
           KEY_PROPERTIES: ${{ secrets.KEY_PROPERTIES }}
         run: |
-          echo -ne "$KEYSTORE" | base64 --decode > android/pessoa-bonito.jks && \
+          echo -ne "$KEYSTORE" | base64 --decode > android/pessoa-pensadora.jks && \
           echo "$KEY_PROPERTIES" > android/key.properties
 
       - name: 💎 - Install Flutter
@@ -44,14 +44,14 @@ jobs:
 
       - name: 🧹 - Cleanup
         run: |
-          rm android/pessoa-bonito.jks android/key.properties
-          mv build/app/outputs/flutter-apk/app-prod-release.apk PessoaBonito.apk
+          rm android/pessoa-pensadora.jks android/key.properties
+          mv build/app/outputs/flutter-apk/app-prod-release.apk PessoaPensadora.apk
 
       - name: 📦 - Copy artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PessoaBonito.apk
-          path: PessoaBonito.apk
+          name: PessoaPensadora.apk
+          path: PessoaPensadora.apk
           if-no-files-found: error
 
   release:

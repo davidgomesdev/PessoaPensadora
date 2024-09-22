@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/service/selection_action_service.dart';
-import 'package:pessoa_bonito/ui/bonito_theme.dart';
-import 'package:pessoa_bonito/util/widget_extensions.dart';
+import 'package:pessoa_pensadora/service/selection_action_service.dart';
+import 'package:pessoa_pensadora/ui/bonito_theme.dart';
+import 'package:pessoa_pensadora/util/widget_extensions.dart';
 
 class TextReader extends StatelessWidget {
   final ScrollController _scrollController;

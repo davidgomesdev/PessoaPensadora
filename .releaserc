@@ -34,7 +34,7 @@
       "@semantic-release/github",
       {
         "assets": [
-          { "path": "artifacts/PessoaBonito.apk", "label": "Android App" }
+          { "path": "artifacts/PessoaPensadora.apk", "label": "Android App" }
         ]
       }
     ]

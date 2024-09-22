@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:pessoa_bonito/model/pessoa_text.dart';
+import 'package:pessoa_pensadora/model/pessoa_text.dart';
 
 import '../service/text_store.dart';
 

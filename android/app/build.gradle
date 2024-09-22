@@ -36,8 +36,8 @@ android {
     }
 
     defaultConfig {
-        applicationId "me.l3n.pessoabonito.pessoa_bonito"
-        minSdkVersion 19
+        applicationId "me.l3n.pessoapensadora.pessoa_pensadora"
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -45,7 +45,7 @@ android {
 
     signingConfigs {
         release {
-            def storeFilepath = "pessoa-bonito.jks"
+            def storeFilepath = "pessoa-pensadora.jks"
             def storeFileObj = rootProject.file(storeFilepath)
 
             keyAlias keystoreProperties['keyAlias']
@@ -68,7 +68,7 @@ android {
         }
         dev {
             dimension "env"
-            resValue "string", "app_name", "PessoaBonito (dev)"
+            resValue "string", "app_name", "PessoaPensadora (dev)"
             applicationIdSuffix ".dev"
         }
     }

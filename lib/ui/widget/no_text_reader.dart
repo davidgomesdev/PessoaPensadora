@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pessoa_bonito/ui/bonito_theme.dart';
+import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 
 class NoTextReader extends StatelessWidget {
   const NoTextReader({super.key});
@@ -8,7 +8,7 @@ class NoTextReader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Text(
-      "Arquivo Pessoa (Bonito)",
+      "Pessoa Pensadora",
       style: bonitoTextTheme.displayMedium,
     ));
   }

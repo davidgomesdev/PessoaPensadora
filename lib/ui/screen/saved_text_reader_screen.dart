@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/ui/widget/share_text_button.dart';
-import 'package:pessoa_bonito/ui/widget/text_reader.dart';
+import 'package:pessoa_pensadora/ui/widget/share_text_button.dart';
+import 'package:pessoa_pensadora/ui/widget/text_reader.dart';
 
 class TextReaderScreen extends StatelessWidget {
   const TextReaderScreen({

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
-import 'package:pessoa_bonito/dto/box/box_person_category.dart';
-import 'package:pessoa_bonito/model/pessoa_category.dart';
-import 'package:pessoa_bonito/util/logger_factory.dart';
+import 'package:pessoa_pensadora/dto/box/box_person_category.dart';
+import 'package:pessoa_pensadora/model/pessoa_category.dart';
+import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 import '../dto/box/box_person_text.dart';
 

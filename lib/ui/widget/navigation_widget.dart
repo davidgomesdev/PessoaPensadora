@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:pessoa_bonito/util/logger_factory.dart';
+import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 // Avoids accidental swipe when scrolling
 const swipeSensitivity = 16;

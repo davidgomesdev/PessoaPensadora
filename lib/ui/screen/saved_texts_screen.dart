@@ -4,12 +4,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/dto/box/box_person_category.dart';
-import 'package:pessoa_bonito/dto/box/box_person_text.dart';
-import 'package:pessoa_bonito/repository/collapsable_store.dart';
-import 'package:pessoa_bonito/repository/saved_store.dart';
-import 'package:pessoa_bonito/ui/bonito_theme.dart';
-import 'package:pessoa_bonito/util/logger_factory.dart';
+import 'package:pessoa_pensadora/dto/box/box_person_category.dart';
+import 'package:pessoa_pensadora/dto/box/box_person_text.dart';
+import 'package:pessoa_pensadora/repository/collapsable_store.dart';
+import 'package:pessoa_pensadora/repository/saved_store.dart';
+import 'package:pessoa_pensadora/ui/bonito_theme.dart';
+import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 import '../routes.dart';
 
