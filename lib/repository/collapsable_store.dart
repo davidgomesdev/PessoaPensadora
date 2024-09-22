@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:pessoa_bonito/repository/saved_store.dart';
-import 'package:pessoa_bonito/service/text_store.dart';
-import 'package:pessoa_bonito/util/logger_factory.dart';
+import 'package:pessoa_pensadora/repository/saved_store.dart';
+import 'package:pessoa_pensadora/service/text_store.dart';
+import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 const _savedCollapsableBoxName = 'collapsable';
 

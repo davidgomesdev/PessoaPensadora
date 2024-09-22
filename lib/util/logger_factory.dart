@@ -9,5 +9,5 @@ final log = Logger(
       lineLength: 120,
       colors: true,
       printEmojis: true,
-      printTime: true),
+      dateTimeFormat: DateTimeFormat.dateAndTime),
 );

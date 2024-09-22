@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="me.l3n.pessoabonito.pessoa_bonito" >
+    package="me.l3n.pessoapensadora.pessoa_pensadora" >
     <application
-        android:label="Pessoa Bonito (dev)"
+        android:label="Pessoa Pensadora (dev)"
         tools:replace="android:label" />
     <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

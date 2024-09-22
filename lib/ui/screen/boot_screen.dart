@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/repository/collapsable_store.dart';
-import 'package:pessoa_bonito/repository/history_store.dart';
-import 'package:pessoa_bonito/repository/read_store.dart';
-import 'package:pessoa_bonito/repository/saved_store.dart';
-import 'package:pessoa_bonito/service/selection_action_service.dart';
-import 'package:pessoa_bonito/service/text_store.dart';
-import 'package:pessoa_bonito/ui/routes.dart';
+import 'package:pessoa_pensadora/repository/collapsable_store.dart';
+import 'package:pessoa_pensadora/repository/history_store.dart';
+import 'package:pessoa_pensadora/repository/read_store.dart';
+import 'package:pessoa_pensadora/repository/saved_store.dart';
+import 'package:pessoa_pensadora/service/selection_action_service.dart';
+import 'package:pessoa_pensadora/service/text_store.dart';
+import 'package:pessoa_pensadora/ui/routes.dart';
 
 import 'splash_screen.dart';
 

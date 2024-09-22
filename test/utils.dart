@@ -8,17 +8,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pessoa_bonito/dto/box/box_person_category.dart';
-import 'package:pessoa_bonito/dto/box/box_person_text.dart';
-import 'package:pessoa_bonito/model/saved_text.dart';
-import 'package:pessoa_bonito/repository/collapsable_store.dart';
-import 'package:pessoa_bonito/repository/history_store.dart';
-import 'package:pessoa_bonito/repository/read_store.dart';
-import 'package:pessoa_bonito/repository/saved_store.dart';
-import 'package:pessoa_bonito/service/selection_action_service.dart';
-import 'package:pessoa_bonito/service/text_store.dart';
-import 'package:pessoa_bonito/ui/routes.dart';
-import 'package:pessoa_bonito/ui/screen/base_screen.dart';
+import 'package:pessoa_pensadora/dto/box/box_person_category.dart';
+import 'package:pessoa_pensadora/dto/box/box_person_text.dart';
+import 'package:pessoa_pensadora/model/saved_text.dart';
+import 'package:pessoa_pensadora/repository/collapsable_store.dart';
+import 'package:pessoa_pensadora/repository/history_store.dart';
+import 'package:pessoa_pensadora/repository/read_store.dart';
+import 'package:pessoa_pensadora/repository/saved_store.dart';
+import 'package:pessoa_pensadora/service/selection_action_service.dart';
+import 'package:pessoa_pensadora/service/text_store.dart';
+import 'package:pessoa_pensadora/ui/routes.dart';
+import 'package:pessoa_pensadora/ui/screen/base_screen.dart';
 
 import 'boot_service_test.mocks.dart';
 

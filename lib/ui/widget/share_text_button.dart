@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/service/selection_action_service.dart';
+import 'package:pessoa_pensadora/service/selection_action_service.dart';
 
 class ShareTextButton extends StatelessWidget {
   final String text, author;

@@ -1,4 +1,4 @@
-package me.l3n.pessoabonito.pessoa_bonito
+package me.l3n.pessoapensadora.pessoa_pensadora
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_bonito/ui/bonito_theme.dart';
-import 'package:pessoa_bonito/ui/routes.dart';
-import 'package:pessoa_bonito/ui/screen/history_screen.dart';
-import 'package:pessoa_bonito/ui/screen/home_screen.dart';
-import 'package:pessoa_bonito/ui/screen/saved_text_reader_screen.dart';
-import 'package:pessoa_bonito/ui/screen/saved_texts_screen.dart';
+import 'package:pessoa_pensadora/ui/bonito_theme.dart';
+import 'package:pessoa_pensadora/ui/routes.dart';
+import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/home_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/saved_text_reader_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
 
 import 'boot_screen.dart';
 

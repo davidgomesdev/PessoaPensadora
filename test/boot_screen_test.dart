@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pessoa_bonito/ui/screen/boot_screen.dart';
-import 'package:pessoa_bonito/ui/screen/splash_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/boot_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/splash_screen.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

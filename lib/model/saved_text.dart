@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:pessoa_bonito/dto/box/box_person_text.dart';
-import 'package:pessoa_bonito/model/pessoa_text.dart';
-import 'package:pessoa_bonito/service/text_store.dart';
+import 'package:pessoa_pensadora/dto/box/box_person_text.dart';
+import 'package:pessoa_pensadora/model/pessoa_text.dart';
+import 'package:pessoa_pensadora/service/text_store.dart';
 
 part 'saved_text.g.dart';
 
