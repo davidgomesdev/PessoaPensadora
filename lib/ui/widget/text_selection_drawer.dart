@@ -9,6 +9,8 @@ import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/widget/drawer_list_view.dart';
 import 'package:pessoa_pensadora/util/generic_extensions.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../routes.dart';
 
@@ -162,24 +164,32 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           ),
           Row(
             children: [
+              if (category.isIndex)
+                IconButton(
+                    tooltip: 'Reportar problema',
+                    icon: const Icon(Icons.report_problem),
+                    onPressed: () {
+                      launchUrl(Uri.parse(
+                          'mailto:problemas-app@davidgomes.blog?'
+                          'subject=RESUME-O-PROBLEMA-AQUI&'
+                          'body=Descreve aqui detalhadamente o problema.\n\n'
+                          'Escreve como aconteceu.\n\n'
+                          'E inclui screenshots ou '
+                          'um video mostrando o que fizeste para o problema surgir, '
+                          'para que eu consiga replicar do meu lado.'));
+                    }),
               IconButton(
-                tooltip: 'Textos marcados',
-                icon: const Icon(Icons.bookmarks),
-                onPressed: () {
-                  Get.toNamed(Routes.savedScreen);
-                },
-                iconSize: 24.0,
-                splashRadius: 24.0,
-              ),
+                  tooltip: 'Textos marcados',
+                  icon: const Icon(Icons.bookmarks),
+                  onPressed: () {
+                    Get.toNamed(Routes.savedScreen);
+                  }),
               IconButton(
-                tooltip: 'Histórico',
-                icon: const Icon(Icons.history),
-                onPressed: () {
-                  Get.toNamed(Routes.historyScreen);
-                },
-                iconSize: 24.0,
-                splashRadius: 24.0,
-              ),
+                  tooltip: 'Histórico',
+                  icon: const Icon(Icons.history),
+                  onPressed: () {
+                    Get.toNamed(Routes.historyScreen);
+                  }),
             ],
           )
         ],

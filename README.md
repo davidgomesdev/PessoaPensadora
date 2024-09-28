@@ -20,6 +20,10 @@ A aplicação começou por ser desenvolvida com o objetivo de eu próprio ler a 
 
 Dado que agora reconheço a utilidade da aplicação para fins académicos e até mesmo para outros entusiastas de Fernando Pessoa, no futuro irei colocar uma opção para ler a sua obra na íntegra.
 
+## Reportar problemas
+
+Para problemas com a aplicação, peço que cries um issue aqui no GitHub, descrevendo o problema com _screenshots_ e/ou vídeo e os passos para reproduzir o problema.
+
 ## Developer docs (english)
 
 ### Building
