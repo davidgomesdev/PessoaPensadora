@@ -8,15 +8,26 @@ class NoTextReader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(),
+        Column(
           children: [
-            Container(),
             Text(
-                  "Pessoa Pensadora",
-                  style: bonitoTextTheme.displayMedium,
-                ),
-            Text("Textos provenientes de Arquivo Pessoa (sem qualquer afiliação)", style: bonitoTextTheme.labelSmall!.copyWith(fontStyle: FontStyle.italic),)
+              "Pessoa Pensadora",
+              style: bonitoTextTheme.displayMedium,
+            ),
+            Text(
+                "Textos provenientes de Arquivo Pessoa (sem qualquer afiliação)",
+                style: bonitoTextTheme.labelSmall!
+                    .copyWith(fontStyle: FontStyle.italic)),
           ],
-        ));
+        ),
+        Text(
+            "Nota: atualmente apenas inclui parte dos textos. No futuro haverá uma opção para poder ler a sua obra na íntegra.",
+            style: bonitoTextTheme.labelSmall!
+                .copyWith(fontStyle: FontStyle.italic))
+      ],
+    ));
   }
 }
