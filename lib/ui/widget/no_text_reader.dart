@@ -7,9 +7,16 @@ class NoTextReader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Text(
-      "Pessoa Pensadora",
-      style: bonitoTextTheme.displayMedium,
-    ));
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(),
+            Text(
+                  "Pessoa Pensadora",
+                  style: bonitoTextTheme.displayMedium,
+                ),
+            Text("Textos provenientes de Arquivo Pessoa (sem qualquer afiliação)", style: bonitoTextTheme.labelSmall!.copyWith(fontStyle: FontStyle.italic),)
+          ],
+        ));
   }
 }

@@ -1,10 +1,10 @@
-# PessoaPensadora
+# Pessoa Pensadora
 
 Uma aplicação para ler os textos de [Fernando Pessoa](https://pt.wikipedia.org/wiki/Fernando_Pessoa), provenientes de [Arquivo Pessoa](http://arquivopessoa.net/).
 
 Criada para serem lidos numa interface mais moderna e de fácil leitura no telemóvel.
 
-> **Nota**: esta aplicação não tem qualquer afiliação ao website [Arquivo Pessoa](http://arquivopessoa.net/info/ficha), exceto a extração dos textos do mesmo.
+> **Nota**: esta aplicação não possui qualquer afiliação ao website [Arquivo Pessoa](http://arquivopessoa.net/info/ficha), exceto a extração dos textos do mesmo.
 
 ## Imagens
 
