@@ -47,5 +47,5 @@ final bonitoTheme = ThemeData.dark().copyWith(
     focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(style: BorderStyle.solid, color: Colors.amber),
     ),
-  ),
+  )
 );
