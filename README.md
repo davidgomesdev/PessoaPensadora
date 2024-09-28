@@ -24,6 +24,12 @@ Dado que agora reconheço a utilidade da aplicação para fins académicos e at�
 
 Para problemas com a aplicação, peço que cries um issue aqui no GitHub, descrevendo o problema com _screenshots_ e/ou vídeo e os passos para reproduzir o problema.
 
+## Nota importante
+
+Não é permitido redistribuir ou reutilizar/alterar o código aqui presente para fins lucrativos.
+
+A aplicação é, e será sempre, gratuita e de código aberto.
+
 ## Developer docs (english)
 
 ### Building
