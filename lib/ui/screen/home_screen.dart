@@ -30,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen>
   final ScrollController drawerScrollController = ScrollController();
   final StreamController<PessoaText> _streamController =
       StreamController.broadcast();
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   _HomeScreenState() : super();
 
@@ -50,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen>
           if (text != null) Get.find<HistoryRepository>().saveVisit(text.id);
 
           return Scaffold(
+            key: _key,
             appBar: AppBar(
               actions: (text == null)
                   ? []
@@ -65,7 +67,9 @@ class _HomeScreenState extends State<HomeScreen>
                 index: storeService.index,
                 selectionSink: _streamController.sink,
                 scrollController: drawerScrollController,
-                selectedText: text),
+                selectedText: text,
+              scaffoldKey: _key
+            ),
             body: HomeScreenBody(
                 text: text,
                 streamController: _streamController,
