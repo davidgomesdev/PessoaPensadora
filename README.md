@@ -24,6 +24,10 @@ Dado que agora reconheço a utilidade da aplicação para fins académicos e at�
 
 Para problemas com a aplicação, peço que cries um issue aqui no GitHub, descrevendo o problema com _screenshots_ e/ou vídeo e os passos para reproduzir o problema.
 
+Em alternativa, utiliza o botão na aplicação para reportar problemas, via e-mail.
+
+  <img alt="Botão para reportar problemas" src="images/bug-report-button.jpg" width="200px" hspace="20"/>
+
 ## Nota importante
 
 Não é permitido redistribuir ou reutilizar/alterar o código aqui presente para fins lucrativos.
