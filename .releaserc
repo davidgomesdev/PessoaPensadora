@@ -10,7 +10,7 @@
           {
             "files": ["pubspec.yaml"],
             "from": "^version: .+$",
-            "to": "version: \"${nextRelease.version}\"",
+            "to": "version: ${nextRelease.version}",
             "results": [
               {
                 "file": "pubspec.yaml",
@@ -27,7 +27,7 @@
     [
       "@semantic-release/git",
       {
-        "assets": ["lib/**/*.dart", "assets/**/*.*"]
+        "assets": ["pubspec.yaml", ".metadata"]
       }
     ],
     [
