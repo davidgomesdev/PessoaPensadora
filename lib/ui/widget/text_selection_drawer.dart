@@ -6,11 +6,10 @@ import 'package:pessoa_pensadora/model/pessoa_category.dart';
 import 'package:pessoa_pensadora/model/pessoa_text.dart';
 import 'package:pessoa_pensadora/repository/read_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
+import 'package:pessoa_pensadora/ui/widget/bug_report_button.dart';
 import 'package:pessoa_pensadora/ui/widget/drawer_list_view.dart';
 import 'package:pessoa_pensadora/util/generic_extensions.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../routes.dart';
 
@@ -45,13 +44,16 @@ class TextSelectionDrawer extends StatefulWidget {
   final PessoaText? selectedText;
   final Sink<PessoaText> selectionSink;
   final ScrollController scrollController;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const TextSelectionDrawer(
-      {super.key,
-      required this.index,
-      required this.selectionSink,
-      required this.selectedText,
-      required this.scrollController});
+  const TextSelectionDrawer({
+    super.key,
+    required this.index,
+    required this.selectionSink,
+    required this.selectedText,
+    required this.scrollController,
+    required this.scaffoldKey,
+  });
 
   @override
   State<TextSelectionDrawer> createState() => _TextSelectionDrawerState();
@@ -83,6 +85,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         stream: categoryStream.stream,
         builder: (ctx, snapshot) {
           final category = snapshot.data ?? widget.index;
+
           searchFilterStream.add(SearchFilter(SearchReadFilter.all));
           textEditingController.text = '';
 
@@ -165,19 +168,9 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           Row(
             children: [
               if (category.isIndex)
-                IconButton(
-                    tooltip: 'Reportar problema',
-                    icon: const Icon(Icons.report_problem),
-                    onPressed: () {
-                      launchUrl(Uri.parse(
-                          'mailto:problemas-app@davidgomes.blog?'
-                          'subject=RESUME-O-PROBLEMA-AQUI&'
-                          'body=Descreve aqui detalhadamente o problema.\n\n'
-                          'Escreve como aconteceu.\n\n'
-                          'E inclui screenshots ou '
-                          'um video mostrando o que fizeste para o problema surgir, '
-                          'para que eu consiga replicar do meu lado.'));
-                    }),
+                BugReportButton(
+                  scaffoldKey: widget.scaffoldKey,
+                ),
               IconButton(
                   tooltip: 'Textos marcados',
                   icon: const Icon(Icons.bookmarks),
