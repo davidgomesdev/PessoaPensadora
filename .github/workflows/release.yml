@@ -39,19 +39,30 @@ jobs:
 
       - name: 🌱 - Get dependencies
         run: flutter pub get
+
       - name: 🔨 - Build
-        run: flutter build apk --release --flavor prod
+        run: |
+          flutter build apk --release --flavor prod
+          flutter build appbundle --release --flavor prod
 
       - name: 🧹 - Cleanup
         run: |
           rm android/pessoa-pensadora.jks android/key.properties
           mv build/app/outputs/flutter-apk/app-prod-release.apk PessoaPensadora.apk
+          mv build/app/outputs/flutter-apk/app-prod-release.aab PessoaPensadora.aab
 
-      - name: 📦 - Copy artifact
+      - name: 📦 - Copy APK
         uses: actions/upload-artifact@v4
         with:
           name: PessoaPensadora.apk
           path: PessoaPensadora.apk
+          if-no-files-found: error
+
+      - name: 📦 - Copy App Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: PessoaPensadora.aab
+          path: PessoaPensadora.aab
           if-no-files-found: error
 
   release:
@@ -81,4 +92,3 @@ jobs:
             semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
