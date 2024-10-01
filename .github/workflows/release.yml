@@ -49,7 +49,7 @@ jobs:
         run: |
           rm android/pessoa-pensadora.jks android/key.properties
           mv build/app/outputs/flutter-apk/app-prod-release.apk PessoaPensadora.apk
-          mv build/app/outputs/flutter-apk/app-prod-release.aab PessoaPensadora.aab
+          mv build/app/outputs/bundle/prodRelease/app-prod-release.aab PessoaPensadora.aab
 
       - name: 📦 - Copy APK
         uses: actions/upload-artifact@v4
