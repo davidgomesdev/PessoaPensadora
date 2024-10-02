@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - fix/release-building-wrong-version
 
 concurrency:
   group: ${{ github.workflow }}
@@ -37,8 +38,18 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
 
+      - name: 🚚 - Semantic Release
+        uses: cycjimmy/semantic-release-action@v4
+        continue-on-error: true
+        with:
+          dry_run: true
+          extra_plugins: |
+            semantic-release-replace-plugin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: 🌱 - Get dependencies
-        run: flutter pub get
+        run: cat pubspec.yaml && flutter pub get
 
       - name: 🔨 - Build
         run: |
