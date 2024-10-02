@@ -40,13 +40,12 @@ jobs:
 
       - name: 🚚 - Semantic Release
         uses: cycjimmy/semantic-release-action@v4
-        continue-on-error: true
         with:
           dry_run: true
           extra_plugins: |
             semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_PAT }}
 
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && flutter pub get
@@ -102,4 +101,4 @@ jobs:
           extra_plugins: |
             semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_PAT }}
