@@ -10,7 +10,7 @@ concurrency:
   group: ${{ github.workflow }}
 
 permissions:
-  contents: read # for checkout
+  contents: write
 
 jobs:
   build:
@@ -45,7 +45,7 @@ jobs:
           extra_plugins: |
             semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && flutter pub get
@@ -80,7 +80,6 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       issues: write
       pull-requests: write
     steps:
@@ -101,4 +100,4 @@ jobs:
           extra_plugins: |
             semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
