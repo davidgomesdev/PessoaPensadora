@@ -97,7 +97,7 @@ jobs:
 
       # Needed to avoid "no change" failure on semantic release
       - name: 🔨 - Prepare Semantic release
-        run: git reset pubspec.yaml
+        run: git checkout HEAD -- pubspec.yaml
 
       - name: 🚚 - Semantic Release
         uses: cycjimmy/semantic-release-action@v4
