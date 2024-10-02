@@ -40,6 +40,7 @@ jobs:
 
       - name: 🚚 - Semantic Release
         uses: cycjimmy/semantic-release-action@v4
+        id: semantic-release
         with:
           dry_run: true
           extra_plugins: |
@@ -47,8 +48,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 🔧 - Prepare release
+        run: |
+          sed 's/version: .*/version: {{ steps.semantic-release.outputs.new_release_version }}/g' 
+
       - name: 🌱 - Get dependencies
-        run: cat pubspec.yaml && flutter pub get
+        run: cat pubspec.yaml && echo && flutter pub get
 
       - name: 🔨 - Build
         run: |
@@ -94,10 +99,6 @@ jobs:
 
       - name: 🧐 - Display structure of downloaded artifacts
         run: ls -R artifacts/
-
-      # Needed to avoid "no change" failure on semantic release
-      - name: 🔨 - Prepare Semantic release
-        run: git checkout HEAD -- pubspec.yaml
 
       - name: 🚚 - Semantic Release
         uses: cycjimmy/semantic-release-action@v4
