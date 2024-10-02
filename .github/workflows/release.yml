@@ -95,6 +95,10 @@ jobs:
       - name: 🧐 - Display structure of downloaded artifacts
         run: ls -R artifacts/
 
+      # Needed to avoid "no change" failure on semantic release
+      - name: 🔨 -  Prepare Semantic release
+        run: git reset --hard pubspec.yaml
+
       - name: 🚚 - Semantic Release
         uses: cycjimmy/semantic-release-action@v4
         with:
