@@ -46,7 +46,7 @@ jobs:
           extra_plugins: |
             semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && flutter pub get
@@ -102,4 +102,4 @@ jobs:
           extra_plugins: |
             semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
