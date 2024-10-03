@@ -52,7 +52,7 @@ jobs:
       - name: 🔧 - Prepare release
         run: |
           versionCode=$(date '+%Y%m%d')
-          sed "s/version: .*/version: {{ steps.semantic-release.outputs.new_release_version }}+$versionCode/g" pubspec.yaml 
+          sed -i -e "s/version: .*/version: ${{ steps.semantic-release.outputs.new_release_version }}+$versionCode/g" pubspec.yaml 
 
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && echo && flutter pub get
