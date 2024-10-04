@@ -8,11 +8,11 @@ Criada para serem lidos numa interface mais moderna e de fácil leitura no telem
 
 ## Imagens
 
-  <img alt="Página Inicial" src="images/homepage.jpg" width="200px" hspace="20"/> <img alt="Índice" src="images/index.jpg" width="200px" hspace="20"/> <img alt="Exemplo de um poema de Mensagem" src="images/text-example.jpg" width="200px" hspace="20"/>
+  <img alt="Página Inicial" src="images/phone/homepage.jpg" width="200px" hspace="20"/> <img alt="Índice" src="images/phone/index.jpg" width="200px" hspace="20"/> <img alt="Exemplo de um poema de Mensagem" src="images/phone/text-example.jpg" width="200px" hspace="20"/>
 
 ### Funcionalidades
 
-  <img alt="Textos guardados" src="images/saved-texts.jpg" width="200px" hspace="20"/> <img alt="Histórico" src="images/history.jpg" width="200px" hspace="20"/>
+  <img alt="Textos guardados" src="images/phone/saved-texts.jpg" width="200px" hspace="20"/> <img alt="Histórico" src="images/phone/history.jpg" width="200px" hspace="20"/>
 
 ## Textos removidos
 
@@ -26,7 +26,7 @@ Para problemas com a aplicação, peço que cries um issue aqui no GitHub, descr
 
 Em alternativa, utiliza o botão na aplicação para reportar problemas, via e-mail.
 
-  <img alt="Botão para reportar problemas" src="images/bug-report-button.jpg" width="200px" hspace="20"/>
+  <img alt="Botão para reportar problemas" src="images/phone/bug-report-button.jpg" width="200px" hspace="20"/>
 
 ## Nota importante
 
