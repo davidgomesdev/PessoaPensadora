@@ -32,7 +32,7 @@ Em alternativa, utiliza o botão na aplicação para reportar problemas, via e-m
 
 Não é permitido redistribuir ou reutilizar/alterar o código aqui presente para fins lucrativos.
 
-A aplicação é, e será sempre, gratuita e de código aberto.
+A aplicação é, e será **sempre**, **gratuita e de código aberto**.
 
 ## Developer docs (english)
 
