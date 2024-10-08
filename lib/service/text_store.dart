@@ -20,7 +20,20 @@ class TextStoreService {
   static Future<TextStoreService> initialize(AssetBundle assetBundle) async {
     final categories = <int, BoxPessoaCategory>{};
     final texts = <int, BoxPessoaText>{};
-    final index = await _parseIndex(texts, categories, assetBundle);
+
+    String data = await assetBundle.loadString("assets/json_files/all_texts.json");
+    Iterable json = jsonDecode(data);
+
+    final parsedCategories = List<PessoaCategory>.from(
+        json.map((it) => PessoaCategory.fromJson(it)));
+
+    final index = PessoaCategory.index(parsedCategories);
+
+    for (var it in parsedCategories) {
+      it.parentCategory = index;
+
+      _fillCategory(texts, categories, index, it);
+    }
 
     final service = TextStoreService._(
       index,
@@ -47,33 +60,6 @@ class TextStoreService {
     assert(text != null, "The text shouldn't be null");
 
     return text!.rootCategory;
-  }
-
-  static Future<PessoaCategory> _parseIndex(Map<int, BoxPessoaText> texts,
-      Map<int, BoxPessoaCategory> categories, AssetBundle assetBundle) async {
-    return await _parseJson(assetBundle, texts, categories);
-  }
-
-  static Future<PessoaCategory> _parseJson(
-    AssetBundle assetBundle,
-    Map<int, BoxPessoaText> texts,
-    Map<int, BoxPessoaCategory> categories,
-  ) async {
-    String data = await assetBundle.loadString("assets/json_files/texts.json");
-    Iterable json = jsonDecode(data);
-
-    final parsedCategories = List<PessoaCategory>.from(
-        json.map((it) => PessoaCategory.fromJson(it)));
-
-    final index = PessoaCategory.index(parsedCategories);
-
-    for (var it in parsedCategories) {
-      it.parentCategory = index;
-
-      _fillCategory(texts, categories, index, it);
-    }
-
-    return index;
   }
 }
 

@@ -13,6 +13,17 @@ import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 import '../routes.dart';
 
+const mainCategories = [
+  26, // 1. Poemas de Alberto Caeiro
+  23, // 2. Poesia de Álvaro de Campos
+  25, // 3. Odes de Ricardo Reis
+  27, // 4. Poesia Ortónima de Fernando Pessoa
+  33, // 5. Livro do Desassossego
+  24, // 6. MENSAGEM
+  67, // 8. Textos Heterónimos
+  139 // 17. Textos Publicados em vida
+];
+
 class SearchFilter {
   String textFilter;
   SearchReadFilter readFilter;
@@ -111,7 +122,11 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     final selectedCategoryId = widget.selectedText?.category!.id;
     final selectedTextId = widget.selectedText?.id;
 
-    final subcategories = category.subcategories.map(
+    final subcategories = (category.isIndex)
+        ? category.subcategories.where((cat) => mainCategories.contains(cat.id))
+        : category.subcategories;
+
+    final subcategoryWidgets = subcategories.map(
         (subcategory) => buildSubcategoryTile(subcategory, selectedCategoryId));
 
     final texts = category.texts;
@@ -138,7 +153,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                 child: DrawerListView(
               selectionSink: widget.selectionSink,
               scrollController: listScrollController,
-              subcategories: subcategories,
+              subcategories: subcategoryWidgets,
               texts: filteredTexts,
               selectedTextId: selectedTextId,
               onReadChange: () {
