@@ -57,8 +57,8 @@ void main() {
     expect(categoryWithSubcategoriesAndTexts.texts[1].id, equals(9));
   });
 
-  test('TextStoreService reads real texts json and functions properly', () async {
-    final realJson = File('assets/json_files/texts.json').readAsStringSync();
+  test('TextStoreService reads all texts json and functions properly', () async {
+    final realJson = File('assets/json_files/all_texts.json').readAsStringSync();
 
     final assetBundleMock = MockAssetBundle();
 
@@ -70,7 +70,7 @@ void main() {
 
     final index = service.index;
 
-    expect(index.subcategories, hasLength(9));
+    expect(index.subcategories, hasLength(22));
     expect(index.texts, isEmpty);
 
     final marPortuguesCategory = service.getCategory(34);
@@ -80,5 +80,13 @@ void main() {
     final infanteRootCategory = service.getTextRootCategory(2375);
 
     expect(infanteRootCategory.title, "Poesia Ortónima de Fernando Pessoa");
+
+    final textosFilosoficosCategory = service.getCategory(86);
+
+    expect(textosFilosoficosCategory.title, "Textos Filosóficos");
+
+    final textosIntimosCategory = service.getTextRootCategory(4411);
+
+    expect(textosIntimosCategory.title, "Escritos Íntimos");
   });
 }

@@ -50,7 +50,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/json_files/texts.json
+    - assets/json_files/all_texts.json
     - assets/json_files/splash_texts.json
     - assets/images/splash_art.jpg
     # fonts
