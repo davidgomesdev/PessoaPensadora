@@ -43,4 +43,16 @@ class PessoaCategory {
       _$PessoaCategoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$PessoaCategoryToJson(this);
+
+  List<int> getParentTree() {
+    final tree = List<int>.empty(growable: true);
+    PessoaCategory? category = this;
+
+    while (category != null) {
+      tree.add(category.id);
+      category = category.parentCategory;
+    }
+
+    return tree;
+  }
 }
