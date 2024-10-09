@@ -8,21 +8,11 @@ import 'package:pessoa_pensadora/repository/read_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/widget/bug_report_button.dart';
 import 'package:pessoa_pensadora/ui/widget/drawer_list_view.dart';
+import 'package:pessoa_pensadora/ui/widget/reading_type_button.dart';
 import 'package:pessoa_pensadora/util/generic_extensions.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 import '../routes.dart';
-
-const mainCategories = [
-  26, // 1. Poemas de Alberto Caeiro
-  23, // 2. Poesia de Álvaro de Campos
-  25, // 3. Odes de Ricardo Reis
-  27, // 4. Poesia Ortónima de Fernando Pessoa
-  33, // 5. Livro do Desassossego
-  24, // 6. MENSAGEM
-  67, // 8. Textos Heterónimos
-  139 // 17. Textos Publicados em vida
-];
 
 class SearchFilter {
   String textFilter;
@@ -51,19 +41,24 @@ enum SearchReadFilter {
 }
 
 class TextSelectionDrawer extends StatefulWidget {
-  final PessoaCategory index;
+  final PessoaCategory mainIndex, fullIndex;
   final PessoaText? selectedText;
   final Sink<PessoaText> selectionSink;
   final ScrollController scrollController;
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final bool isFullReading;
+  final void Function(bool) onFullReadingChange;
 
   const TextSelectionDrawer({
     super.key,
-    required this.index,
+    required this.mainIndex,
+    required this.fullIndex,
     required this.selectionSink,
     required this.selectedText,
     required this.scrollController,
     required this.scaffoldKey,
+    required this.isFullReading,
+    required this.onFullReadingChange,
   });
 
   @override
@@ -71,9 +66,9 @@ class TextSelectionDrawer extends StatefulWidget {
 }
 
 class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
-  StreamController<PessoaCategory?> categoryStream =
+  final StreamController<PessoaCategory?> categoryStream =
       StreamController.broadcast();
-  StreamController<SearchFilter> searchFilterStream =
+  final StreamController<SearchFilter> searchFilterStream =
       StreamController.broadcast();
   final textEditingController = TextEditingController();
   final listScrollController = ScrollController();
@@ -95,7 +90,8 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         initialData: widget.selectedText?.category,
         stream: categoryStream.stream,
         builder: (ctx, snapshot) {
-          final category = snapshot.data ?? widget.index;
+          final category = snapshot.data ??
+              ((widget.isFullReading) ? widget.fullIndex : widget.mainIndex);
 
           searchFilterStream.add(SearchFilter(SearchReadFilter.all));
           textEditingController.text = '';
@@ -122,11 +118,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
     final selectedCategoryId = widget.selectedText?.category!.id;
     final selectedTextId = widget.selectedText?.id;
 
-    final subcategories = (category.isIndex)
-        ? category.subcategories.where((cat) => mainCategories.contains(cat.id))
-        : category.subcategories;
-
-    final subcategoryWidgets = subcategories.map(
+    final subcategoryWidgets = category.subcategories.map(
         (subcategory) => buildSubcategoryTile(subcategory, selectedCategoryId));
 
     final texts = category.texts;
@@ -185,6 +177,11 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               if (category.isIndex)
                 BugReportButton(
                   scaffoldKey: widget.scaffoldKey,
+                ),
+              if (category.isIndex)
+                ReadingTypeButton(
+                  isFullReading: widget.isFullReading,
+                  onPress: (isFullReading) => widget.onFullReadingChange(isFullReading),
                 ),
               IconButton(
                   tooltip: 'Textos marcados',
@@ -310,7 +307,9 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         onTap: () {
           setState(() {
             if (listScrollController.hasClients) listScrollController.jumpTo(0);
+
             final previousCategory = category.parentCategory;
+
             categoryStream.add(previousCategory);
 
             if (previousCategory == null) {

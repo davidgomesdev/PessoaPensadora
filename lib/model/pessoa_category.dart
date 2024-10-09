@@ -16,15 +16,27 @@ class PessoaCategory {
   @JsonKey(defaultValue: false)
   bool isIndex;
 
-  PessoaCategory(this.id, String title, this.parentCategory, this.subcategories,
-      this.texts)
-      : isIndex = false,
-        title = title.replaceAll(RegExp('(\\d+\\.)+ '), '');
+  @JsonKey(includeFromJson: false)
+  bool isFullIndex;
 
-  PessoaCategory.index(this.subcategories)
+  PessoaCategory(this.id, String title, this.parentCategory, this.subcategories,
+      this.texts,
+      {this.isIndex = false})
+      : title = title.replaceAll(RegExp('(\\d+\\.)+ '), ''),
+        isFullIndex = false;
+
+  PessoaCategory.fullIndex(this.subcategories)
       : title = "Índice",
         isIndex = true,
+        isFullIndex = true,
         texts = [],
+        id = indexID;
+
+  PessoaCategory.mainIndex(PessoaCategory fullIndex, this.subcategories)
+      : title = "Índice",
+        isIndex = true,
+        isFullIndex = false,
+        texts = fullIndex.texts,
         id = indexID;
 
   factory PessoaCategory.fromJson(Map<String, dynamic> json) =>

@@ -2,11 +2,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
-import 'package:test/test.dart';
 
 import 'boot_service_test.mocks.dart';
 
@@ -23,7 +23,7 @@ void main() {
     when(assetBundleMock.loadString(any)).thenAnswer((_) async => exampleJson);
 
     final service = await TextStoreService.initialize(assetBundleMock);
-    final index = service.index;
+    final index = service.mainIndex;
 
     expect(index.subcategories, hasLength(4));
     expect(index.texts, isEmpty);
@@ -57,6 +57,39 @@ void main() {
     expect(categoryWithSubcategoriesAndTexts.texts[1].id, equals(9));
   });
 
+  test('TextStoreService reads only main texts json and functions properly', () async {
+    final realJson = File('assets/json_files/all_texts.json').readAsStringSync();
+
+    final assetBundleMock = MockAssetBundle();
+
+    when(assetBundleMock.loadString(any)).thenAnswer((_) async => realJson);
+
+    final service = await TextStoreService.initialize(assetBundleMock);
+
+    Get.put(service);
+
+    final index = service.fullIndex;
+
+    expect(index.subcategories, hasLength(22));
+    expect(index.texts, isEmpty);
+
+    final marPortuguesCategory = service.getCategory(34);
+
+    expect(marPortuguesCategory.title, "Segunda parte: MAR PORTUGUÊS");
+
+    final infanteRootCategory = service.getTextRootCategory(2375);
+
+    expect(infanteRootCategory.title, "Poesia Ortónima de Fernando Pessoa");
+
+    final textosFilosoficosCategory = service.getCategory(86);
+
+    expect(textosFilosoficosCategory.title, "Textos Filosóficos");
+
+    final textosIntimosCategory = service.getTextRootCategory(4411);
+
+    expect(textosIntimosCategory, throwsAssertionError);
+  });
+
   test('TextStoreService reads all texts json and functions properly', () async {
     final realJson = File('assets/json_files/all_texts.json').readAsStringSync();
 
@@ -68,7 +101,7 @@ void main() {
 
     Get.put(service);
 
-    final index = service.index;
+    final index = service.fullIndex;
 
     expect(index.subcategories, hasLength(22));
     expect(index.texts, isEmpty);

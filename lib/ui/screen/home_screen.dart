@@ -30,7 +30,8 @@ class _HomeScreenState extends State<HomeScreen>
   final ScrollController drawerScrollController = ScrollController();
   final StreamController<PessoaText> _streamController =
       StreamController.broadcast();
-  final GlobalKey<ScaffoldState> _key = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  bool isFullReading = false;
 
   _HomeScreenState() : super();
 
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen>
           if (text != null) Get.find<HistoryRepository>().saveVisit(text.id);
 
           return Scaffold(
-            key: _key,
+            key: _scaffoldKey,
             appBar: AppBar(
               actions: (text == null)
                   ? []
@@ -64,11 +65,16 @@ class _HomeScreenState extends State<HomeScreen>
                     ],
             ),
             drawer: TextSelectionDrawer(
-                index: storeService.index,
-                selectionSink: _streamController.sink,
-                scrollController: drawerScrollController,
-                selectedText: text,
-              scaffoldKey: _key
+              mainIndex: storeService.mainIndex,
+              fullIndex: storeService.fullIndex,
+              selectionSink: _streamController.sink,
+              scrollController: drawerScrollController,
+              selectedText: text,
+              scaffoldKey: _scaffoldKey,
+              isFullReading: isFullReading,
+              onFullReadingChange: (newValue) => setState(() {
+                isFullReading = newValue;
+              }),
             ),
             body: HomeScreenBody(
                 text: text,
