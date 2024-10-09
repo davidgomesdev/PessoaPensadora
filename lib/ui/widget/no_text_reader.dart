@@ -8,9 +8,8 @@ class NoTextReader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(),
         Column(
           children: [
             Text(
@@ -22,11 +21,7 @@ class NoTextReader extends StatelessWidget {
                 style: bonitoTextTheme.labelSmall!
                     .copyWith(fontStyle: FontStyle.italic)),
           ],
-        ),
-        Text(
-            "Nota: atualmente apenas inclui parte dos textos. No futuro haverá uma opção para poder ler a sua obra na íntegra.",
-            style: bonitoTextTheme.labelSmall!
-                .copyWith(fontStyle: FontStyle.italic))
+        )
       ],
     ));
   }

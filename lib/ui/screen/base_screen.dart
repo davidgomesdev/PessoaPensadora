@@ -10,15 +10,15 @@ import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
 import 'boot_screen.dart';
 
 class App extends StatelessWidget {
-
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        theme: bonitoTheme,
-        initialRoute: Routes.bootScreen,
-        getPages: buildAppPages());
+      theme: bonitoTheme,
+      initialRoute: Routes.bootScreen,
+      getPages: buildAppPages(),
+    );
   }
 
   List<GetPage<dynamic>> buildAppPages() {

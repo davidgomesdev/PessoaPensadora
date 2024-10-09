@@ -9,25 +9,44 @@ import '../dto/box/box_person_text.dart';
 
 const indexID = 0;
 
+const mainCategories = [
+  26, // 1. Poemas de Alberto Caeiro
+  23, // 2. Poesia de Álvaro de Campos
+  25, // 3. Odes de Ricardo Reis
+  27, // 4. Poesia Ortónima de Fernando Pessoa
+  33, // 5. Livro do Desassossego
+  24, // 6. MENSAGEM
+  67, // 8. Textos Heterónimos
+  139 // 17. Textos Publicados em vida
+];
+
 class TextStoreService {
   final Map<int, BoxPessoaText> texts;
   final Map<int, BoxPessoaCategory> categories;
-  final PessoaCategory index;
+  late final PessoaCategory mainIndex, fullIndex;
 
-  TextStoreService._(this.index,
-      {required this.texts, required this.categories});
+  TextStoreService._(this.fullIndex,
+      {required this.texts, required this.categories}) {
+    mainIndex = PessoaCategory.mainIndex(
+      fullIndex,
+      fullIndex.subcategories
+          .where((cat) => mainCategories.contains(cat.id))
+          .toList(growable: false),
+    );
+  }
 
   static Future<TextStoreService> initialize(AssetBundle assetBundle) async {
     final categories = <int, BoxPessoaCategory>{};
     final texts = <int, BoxPessoaText>{};
 
-    String data = await assetBundle.loadString("assets/json_files/all_texts.json");
+    String data =
+        await assetBundle.loadString("assets/json_files/all_texts.json");
     Iterable json = jsonDecode(data);
 
     final parsedCategories = List<PessoaCategory>.from(
         json.map((it) => PessoaCategory.fromJson(it)));
 
-    final index = PessoaCategory.index(parsedCategories);
+    final index = PessoaCategory.fullIndex(parsedCategories);
 
     for (var it in parsedCategories) {
       it.parentCategory = index;
