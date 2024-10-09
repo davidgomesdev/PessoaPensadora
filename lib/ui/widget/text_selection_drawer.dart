@@ -115,11 +115,14 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   }
 
   Widget buildListView(PessoaCategory category, SearchFilter searchFilter) {
-    final selectedCategoryId = widget.selectedText?.category!.id;
+    final selectedCategory = widget.selectedText?.category!;
     final selectedTextId = widget.selectedText?.id;
 
-    final subcategoryWidgets = category.subcategories.map(
-        (subcategory) => buildSubcategoryTile(subcategory, selectedCategoryId));
+    final subcategoryWidgets =
+        category.subcategories.map((subcategory) => buildSubcategoryTile(
+              subcategory,
+              selectedCategory?.getParentTree() ?? [],
+            ));
 
     final texts = category.texts;
     final filteredTexts = texts
@@ -181,7 +184,8 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               if (category.isIndex)
                 ReadingTypeButton(
                   isFullReading: widget.isFullReading,
-                  onPress: (isFullReading) => widget.onFullReadingChange(isFullReading),
+                  onPress: (isFullReading) =>
+                      widget.onFullReadingChange(isFullReading),
                 ),
               IconButton(
                   tooltip: 'Textos marcados',
@@ -263,13 +267,13 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   }
 
   ListTile buildSubcategoryTile(
-      PessoaCategory subcategory, int? selectedCategoryId) {
+      PessoaCategory subcategory, List<int> selectedCategoryTree) {
     return ListTile(
       horizontalTitleGap: 8.0,
       minLeadingWidth: 0.0,
       leading: const Icon(Icons.subdirectory_arrow_right_rounded),
       title: Text(subcategory.title, style: bonitoTextTheme.headlineMedium),
-      selected: subcategory.id == selectedCategoryId,
+      selected: selectedCategoryTree.contains(subcategory.id),
       onTap: () {
         setState(() {
           if (listScrollController.hasClients) listScrollController.jumpTo(0);
