@@ -71,7 +71,7 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
     Hive.registerAdapter(BoxPessoaTextAdapter());
     Hive.registerAdapter(SavedTextAdapter());
 
-    final realJson = await File('assets/json_files/texts.json').readAsString();
+    final realJson = await File('assets/json_files/all_texts.json').readAsString();
 
     final assetBundleMock = MockAssetBundle();
 
