@@ -17,7 +17,8 @@ const mainCategories = [
   33, // 5. Livro do Desassossego
   24, // 6. MENSAGEM
   67, // 8. Textos Heterónimos
-  139 // 17. Textos Publicados em vida
+  139, // 17. Textos Publicados em vida
+  10000, // Rubaiyat
 ];
 
 class TextStoreService {
