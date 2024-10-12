@@ -33,8 +33,7 @@ void main() {
     await tester.tap(textFinder);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-    await tester.pumpAndSettle();
+    await enterBookmarkScreen(tester);
 
     expect(find.byIcon(Icons.bookmark_outlined), findsOne);
 
@@ -61,13 +60,13 @@ void main() {
     await tester.tap(find.text('POEMAS INCONJUNTOS'));
     await tester.pumpAndSettle();
 
-    var textFinder = find.text('A criança que pensa em fadas e acredita nas fadas');
+    var textFinder =
+        find.text('A criança que pensa em fadas e acredita nas fadas');
 
     await tester.tap(textFinder);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-    await tester.pumpAndSettle();
+    await enterBookmarkScreen(tester);
 
     expect(find.byIcon(Icons.bookmark_outlined), findsOne);
 
@@ -97,8 +96,7 @@ void main() {
     await tester.tap(textFinder);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-    await tester.pumpAndSettle();
+    await enterBookmarkScreen(tester);
 
     expect(find.byIcon(Icons.bookmark_outlined), findsOne);
 
@@ -152,8 +150,7 @@ void main() {
     await tester.tap(textFinder);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-    await tester.pumpAndSettle();
+    await enterBookmarkScreen(tester);
 
     await openDrawer(tester);
 
@@ -188,8 +185,7 @@ void main() {
     await tester.tap(textFinder);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-    await tester.pumpAndSettle();
+    await enterBookmarkScreen(tester);
 
     expect(find.byIcon(Icons.bookmark_outlined), findsOne);
 
@@ -244,8 +240,7 @@ void main() {
     await tester.tap(firstTextFinder);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-    await tester.pumpAndSettle();
+    await enterBookmarkScreen(tester);
 
     await openDrawer(tester);
 
@@ -254,8 +249,7 @@ void main() {
     await tester.tap(secondTextFinder);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-    await tester.pumpAndSettle();
+    await enterBookmarkScreen(tester);
 
     await openDrawer(tester);
 
@@ -294,13 +288,11 @@ void main() {
     await tester.tap(firstTextFinder);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-    await tester.pumpAndSettle();
+    await enterBookmarkScreen(tester);
 
     await openDrawer(tester);
 
-    await tester.tap(find.text('Voltar'));
-    await tester.pumpAndSettle();
+    await hitBackDrawerButton(tester);
 
     await tester.tap(find.text('Livro do Desassossego'));
     await tester.pumpAndSettle();
@@ -308,16 +300,12 @@ void main() {
     var secondTextFinder =
         find.text('Vivo sempre no presente. O futuro, não o conheço.');
 
-    await tester.dragUntilVisible(
-        secondTextFinder,
-        find.byKey(const PageStorageKey("drawer-list-view")),
-        const Offset(0, -300), maxIteration: 500);
+    await dragDrawerUntilVisible(tester, secondTextFinder, maxIterations: 500);
 
     await tester.tap(secondTextFinder);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-    await tester.pumpAndSettle();
+    await enterBookmarkScreen(tester);
 
     await openDrawer(tester);
 
@@ -345,6 +333,95 @@ void main() {
         findsOne);
   });
 
+  testWidgets(
+      'When reading type is main, saving a text of an extra category should appear in the saved texts screen',
+      (tester) async {
+    await startApp(tester);
+    await openDrawer(tester);
+
+    await switchReadingTypeToFull(tester);
+
+    final rootCategoryFinder =
+        find.widgetWithText(ListTile, "Textos Filosóficos");
+
+    await dragDrawerUntilVisible(tester, rootCategoryFinder);
+    await tester.pumpAndSettle();
+
+    await tester.tap(rootCategoryFinder);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Filósofos'));
+    await tester.pumpAndSettle();
+
+    final textFinder = find.text('CHANGE');
+
+    await tester.tap(textFinder);
+    await tester.pumpAndSettle();
+
+    await enterBookmarkScreen(tester);
+
+    await openDrawer(tester);
+
+    await hitBackDrawerButton(tester);
+    await hitBackDrawerButton(tester);
+
+    await switchReadingTypeToMain(tester);
+
+    await openDrawer(tester);
+
+    await tester.tap(find.byIcon(Icons.bookmarks));
+    await tester.pumpAndSettle();
+
+    expect(
+        find.descendant(
+            of: find.byType(SavedTextsScreen),
+            matching: find.descendant(
+                of: find.widgetWithText(ExpansionTile, 'Textos Filosóficos'),
+                matching: textFinder)),
+        findsOneWidget);
+  });
+
+  testWidgets(
+      'When reading type is full, saving a text of an extra category should appear in the saved texts screen',
+      (tester) async {
+    await startApp(tester);
+    await openDrawer(tester);
+
+    await switchReadingTypeToFull(tester);
+
+    final rootCategoryFinder =
+        find.widgetWithText(ListTile, "Textos Filosóficos");
+
+    await dragDrawerUntilVisible(tester, rootCategoryFinder);
+    await tester.pumpAndSettle();
+
+    await tester.tap(rootCategoryFinder);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Filósofos'));
+    await tester.pumpAndSettle();
+
+    final textFinder = find.text('CHANGE');
+
+    await tester.tap(textFinder);
+    await tester.pumpAndSettle();
+
+    await enterBookmarkScreen(tester);
+
+    await openDrawer(tester);
+
+    await tester.tap(find.byIcon(Icons.bookmarks));
+    await tester.pumpAndSettle();
+
+    expect(
+        find.descendant(
+            of: find.byType(SavedTextsScreen),
+            matching: find.descendant(
+                of: find.widgetWithText(ExpansionTile, 'Textos Filosóficos'),
+                matching: textFinder)),
+        findsOneWidget);
+  });
+
   group('Expansion status', () {
     testWidgets(
         'When a text is saved with no other texts, it should be expanded',
@@ -360,8 +437,7 @@ void main() {
       await tester.tap(textFinder);
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-      await tester.pumpAndSettle();
+      await enterBookmarkScreen(tester);
 
       await openDrawer(tester);
 
@@ -392,8 +468,7 @@ void main() {
       await tester.tap(textFinder);
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-      await tester.pumpAndSettle();
+      await enterBookmarkScreen(tester);
 
       await openDrawer(tester);
 
@@ -442,8 +517,7 @@ void main() {
       await tester.tap(textFinder);
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
-      await tester.pumpAndSettle();
+      await enterBookmarkScreen(tester);
 
       await openDrawer(tester);
 

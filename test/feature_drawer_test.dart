@@ -41,10 +41,7 @@ void main() {
     var textFinder = find.text('Vimos de nada e vamos para onde.');
     expect(textFinder, findsNothing);
 
-    await tester.dragUntilVisible(
-        textFinder,
-        find.byKey(const PageStorageKey("drawer-list-view")),
-        const Offset(0, -200));
+    await dragDrawerUntilVisible(tester, textFinder);
     expect(textFinder, findsOne);
   });
 
@@ -118,8 +115,7 @@ void main() {
         expect(find.text('Textos Publicados em vida'), findsOne);
         expect(find.text('Rubaiyat'), findsOne);
 
-        await tester.tap(find.byIcon(Icons.read_more_rounded));
-        await tester.pumpAndSettle();
+        await switchReadingTypeToFull(tester);
 
         expect(
             find.widgetWithIcon(
@@ -137,8 +133,7 @@ void main() {
         await tester.tap(find.text('Rubaiyat'));
         await tester.pumpAndSettle();
 
-        await tester.tap(find.text('Voltar'));
-        await tester.pumpAndSettle();
+        await hitBackDrawerButton(tester);
 
         expect(
             find.widgetWithIcon(
@@ -161,16 +156,12 @@ void main() {
         await startApp(tester);
         await openDrawer(tester);
 
-        await tester.tap(find.byIcon(Icons.read_more_rounded));
-        await tester.pumpAndSettle();
+        await switchReadingTypeToFull(tester);
 
         final rootCategoryFinder =
             find.widgetWithText(ListTile, "Textos Filosóficos");
 
-        await tester.dragUntilVisible(
-            rootCategoryFinder,
-            find.byKey(const PageStorageKey("drawer-list-view")),
-            const Offset(0, -200));
+        await dragDrawerUntilVisible(tester, rootCategoryFinder);
         await tester.pumpAndSettle();
         await tester.tap(rootCategoryFinder);
         await tester.pumpAndSettle();
@@ -181,19 +172,15 @@ void main() {
 
         await openDrawer(tester);
 
-        await tester.tap(find.text('Voltar'));
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.text('Voltar'));
-        await tester.pumpAndSettle();
+        await hitBackDrawerButton(tester);
+        await hitBackDrawerButton(tester);
 
         await tester.scrollUntilVisible(rootCategoryFinder, 50,
             scrollable: find.descendant(
                 of: find.byKey(const PageStorageKey("drawer-list-view")),
                 matching: find.byWidgetPredicate((w) => w is Scrollable)));
 
-        await tester.tap(find.byIcon(Icons.unfold_less_double_rounded));
-        await tester.pumpAndSettle();
+        await switchReadingTypeToMain(tester);
 
         expect(
             find.widgetWithIcon(
@@ -203,6 +190,7 @@ void main() {
         expect(rootCategoryFinder, findsNothing);
       });
     });
+
     group('In full reading', () {
       testWidgets(
           'After clicking on a category and then "Back" it should go back to the full index',
@@ -210,18 +198,16 @@ void main() {
         await startApp(tester);
         await openDrawer(tester);
 
-        await tester.tap(find.byIcon(Icons.read_more_rounded));
-        await tester.pumpAndSettle();
+        await switchReadingTypeToFull(tester);
 
-        await tester.dragUntilVisible(
-            find.text('Textos Filosóficos'),
-            find.byKey(const PageStorageKey("drawer-list-view")),
-            const Offset(0, -200));
+        await dragDrawerUntilVisible(
+          tester,
+          find.text('Textos Filosóficos'),
+        );
         await tester.tap(find.text('Textos Filosóficos'));
         await tester.pumpAndSettle();
 
-        await tester.tap(find.text('Voltar'));
-        await tester.pumpAndSettle();
+        await hitBackDrawerButton(tester);
 
         expect(
             find.widgetWithIcon(
@@ -250,16 +236,14 @@ void main() {
                 ListTile, Icons.subdirectory_arrow_right_rounded),
             findsExactly(9));
 
-        await tester.tap(find.byIcon(Icons.read_more_rounded));
-        await tester.pumpAndSettle();
+        await switchReadingTypeToFull(tester);
 
         expect(
             find.widgetWithIcon(
                 ListTile, Icons.subdirectory_arrow_right_rounded),
             findsAtLeast(10));
 
-        await tester.tap(find.byIcon(Icons.unfold_less_double_rounded));
-        await tester.pumpAndSettle();
+        await switchReadingTypeToMain(tester);
 
         expect(
             find.widgetWithIcon(
@@ -282,16 +266,12 @@ void main() {
         await startApp(tester);
         await openDrawer(tester);
 
-        await tester.tap(find.byIcon(Icons.read_more_rounded));
-        await tester.pumpAndSettle();
+        await switchReadingTypeToFull(tester);
 
         final rootCategoryFinder =
             find.widgetWithText(ListTile, "Textos Filosóficos");
 
-        await tester.dragUntilVisible(
-            rootCategoryFinder,
-            find.byKey(const PageStorageKey("drawer-list-view")),
-            const Offset(0, -200));
+        await dragDrawerUntilVisible(tester, rootCategoryFinder);
         await tester.pumpAndSettle();
         await tester.tap(rootCategoryFinder);
         await tester.pumpAndSettle();
@@ -302,16 +282,10 @@ void main() {
 
         await openDrawer(tester);
 
-        await tester.tap(find.text('Voltar'));
-        await tester.pumpAndSettle();
+        await hitBackDrawerButton(tester);
+        await hitBackDrawerButton(tester);
 
-        await tester.tap(find.text('Voltar'));
-        await tester.pumpAndSettle();
-
-        await tester.dragUntilVisible(
-            rootCategoryFinder,
-            find.byKey(const PageStorageKey("drawer-list-view")),
-            const Offset(0, -200));
+        await dragDrawerUntilVisible(tester, rootCategoryFinder);
         final categoryButtonWidget =
             rootCategoryFinder.evaluate().first.widget as ListTile;
 
