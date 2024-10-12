@@ -12,7 +12,7 @@ class ReadRepository {
   static Future<ReadRepository> initialize() async {
     final box = await _getReadTextsBox();
 
-    log.i('Read texts box initialized successfully');
+    log.d('Read texts box initialized successfully');
     log.d('Texts found in box: ${box.keys}');
 
     return ReadRepository._(box);

@@ -19,8 +19,8 @@ class SaveRepository {
   static Future<SaveRepository> initialize() async {
     final box = await _getSavedTextsBox();
 
-    log.i('Saved texts box initialized successfully');
-    log.d('Texts found in box: ${box.keys}');
+    log.d('Saved texts box initialized successfully');
+    log.i('Texts found in box: ${box.keys}');
 
     return SaveRepository._(box);
   }
