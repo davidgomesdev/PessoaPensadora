@@ -12,8 +12,8 @@ class HistoryRepository {
   static Future<HistoryRepository> initialize() async {
     final box = await _getHistoryBox();
 
-    log.i('History box initialized successfully');
-    log.d('Text ids found in history box: ${box.values}');
+    log.d('History box initialized successfully');
+    log.i('Text ids found in history box: ${box.values}');
 
     return HistoryRepository._(box);
   }

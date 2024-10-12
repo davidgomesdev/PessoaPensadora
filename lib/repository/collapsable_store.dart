@@ -19,7 +19,7 @@ class CollapsableRepository {
   static Future<CollapsableRepository> initialize() async {
     final box = await _getCollapsableBox();
 
-    log.i('Collapsable box initialized successfully');
+    log.d('Collapsable box initialized successfully');
 
     final instance = CollapsableRepository._(
         box,
@@ -37,7 +37,7 @@ class CollapsableRepository {
     final categories = _box.keys.map((id) => service.getCategory(id));
     final savedTexts = saveRepository.getTexts();
 
-    log.i('Root categories in the box: ${categories.map((c) => c.title)}');
+    log.d('Root categories in the box: ${categories.map((c) => c.title)}');
 
     final leftoverCategories = categories.where((cat) => savedTexts
         .none((text) => service.getTextRootCategory(text.id).id == cat.id));

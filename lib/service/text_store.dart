@@ -61,7 +61,7 @@ class TextStoreService {
       categories: categories,
     );
 
-    log.i('Index initialized successfully.');
+    log.d('Index initialized successfully.');
 
     return service;
   }
