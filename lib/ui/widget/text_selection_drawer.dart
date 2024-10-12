@@ -105,7 +105,9 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                     final searchTextFilter =
                         snapshot.data ?? SearchFilter(SearchReadFilter.all);
 
-                    log.i('Current filter: $searchTextFilter');
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      log.i('Current filter: $searchTextFilter');
+                    }
 
                     return buildListView(category, searchTextFilter);
                   }),
@@ -279,7 +281,8 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           if (listScrollController.hasClients) listScrollController.jumpTo(0);
           categoryStream.add(subcategory);
 
-          log.i('Navigated to "${subcategory.title}"');
+          log.i(
+              'Navigated to "${subcategory.title}"${(subcategory.isFullIndex) ? "Full" : ""}');
         });
       },
     );
@@ -314,13 +317,15 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
             final previousCategory = category.parentCategory;
 
-            categoryStream.add(previousCategory);
+            assert(previousCategory != null);
 
-            if (previousCategory == null) {
-              log.i("Backing to index");
+            if (previousCategory!.isIndex) {
+              categoryStream.add(null);
+              log.i("Backing to index ${(widget.isFullReading) ? "(Full)" : "(Main)"}");
             } else {
-              log.i('Backing to previous category '
-                  '"${previousCategory.title}"');
+              categoryStream.add(previousCategory);
+              log.i(
+                  'Backing to previous category "${previousCategory.title}"');
             }
           });
         });
