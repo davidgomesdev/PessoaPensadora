@@ -90,10 +90,3 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
 
   return Get.find<TextStoreService>();
 }
-
-Finder findScrollableTile(Finder tileFinder) {
-  return find.descendant(
-      of: tileFinder,
-      matching: find.byWidgetPredicate((w) => w is Scrollable),
-      matchRoot: true);
-}
