@@ -71,7 +71,8 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
     Hive.registerAdapter(BoxPessoaTextAdapter());
     Hive.registerAdapter(SavedTextAdapter());
 
-    final realJson = await File('assets/json_files/all_texts.json').readAsString();
+    final realJson =
+        await File('assets/json_files/all_texts.json').readAsString();
 
     final assetBundleMock = MockAssetBundle();
 
@@ -89,4 +90,33 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
   });
 
   return Get.find<TextStoreService>();
+}
+
+Future<void> dragDrawerUntilVisible(WidgetTester tester, Finder finder,
+    {int maxIterations = 50}) async {
+  await tester.dragUntilVisible(
+      finder,
+      find.byKey(const PageStorageKey("drawer-list-view")),
+      const Offset(0, -200),
+      maxIteration: maxIterations);
+}
+
+Future<void> switchReadingTypeToMain(WidgetTester tester) async {
+  await tester.tap(find.byIcon(Icons.unfold_less_double_rounded));
+  await tester.pumpAndSettle();
+}
+
+Future<void> switchReadingTypeToFull(WidgetTester tester) async {
+  await tester.tap(find.byIcon(Icons.read_more_rounded));
+  await tester.pumpAndSettle();
+}
+
+Future<void> enterBookmarkScreen(WidgetTester tester) async {
+  await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
+  await tester.pumpAndSettle();
+}
+
+Future<void> hitBackDrawerButton(WidgetTester tester) async {
+  await tester.tap(find.text('Voltar'));
+  await tester.pumpAndSettle();
 }
