@@ -23,7 +23,7 @@ void main() {
     when(assetBundleMock.loadString(any)).thenAnswer((_) async => exampleJson);
 
     final service = await TextStoreService.initialize(assetBundleMock);
-    final index = service.mainIndex;
+    final index = service.fullIndex;
 
     expect(index.subcategories, hasLength(4));
     expect(index.texts, isEmpty);
@@ -57,7 +57,7 @@ void main() {
     expect(categoryWithSubcategoriesAndTexts.texts[1].id, equals(9));
   });
 
-  test('TextStoreService reads only main texts json and functions properly', () async {
+  test('TextStoreService reads main and all texts json, and the getters work properly', () async {
     final realJson = File('assets/json_files/all_texts.json').readAsStringSync();
 
     final assetBundleMock = MockAssetBundle();
@@ -70,41 +70,13 @@ void main() {
 
     final index = service.fullIndex;
 
-    expect(index.subcategories, hasLength(22));
+    expect(index.subcategories, hasLength(23));
     expect(index.texts, isEmpty);
 
-    final marPortuguesCategory = service.getCategory(34);
+    final mainIndex = service.mainIndex;
 
-    expect(marPortuguesCategory.title, "Segunda parte: MAR PORTUGUÊS");
-
-    final infanteRootCategory = service.getTextRootCategory(2375);
-
-    expect(infanteRootCategory.title, "Poesia Ortónima de Fernando Pessoa");
-
-    final textosFilosoficosCategory = service.getCategory(86);
-
-    expect(textosFilosoficosCategory.title, "Textos Filosóficos");
-
-    final textosIntimosCategory = service.getTextRootCategory(4411);
-
-    expect(textosIntimosCategory, throwsAssertionError);
-  });
-
-  test('TextStoreService reads all texts json and functions properly', () async {
-    final realJson = File('assets/json_files/all_texts.json').readAsStringSync();
-
-    final assetBundleMock = MockAssetBundle();
-
-    when(assetBundleMock.loadString(any)).thenAnswer((_) async => realJson);
-
-    final service = await TextStoreService.initialize(assetBundleMock);
-
-    Get.put(service);
-
-    final index = service.fullIndex;
-
-    expect(index.subcategories, hasLength(22));
-    expect(index.texts, isEmpty);
+    expect(mainIndex.subcategories, hasLength(9));
+    expect(mainIndex.texts, isEmpty);
 
     final marPortuguesCategory = service.getCategory(34);
 
