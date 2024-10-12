@@ -308,10 +308,10 @@ void main() {
     var secondTextFinder =
         find.text('Vivo sempre no presente. O futuro, não o conheço.');
 
-    await tester.scrollUntilVisible(secondTextFinder, 300.0,
-        scrollable: findScrollableTile(
-            find.byKey(const PageStorageKey("drawer-list-view"))),
-        maxScrolls: 500);
+    await tester.dragUntilVisible(
+        secondTextFinder,
+        find.byKey(const PageStorageKey("drawer-list-view")),
+        const Offset(0, -300), maxIteration: 500);
 
     await tester.tap(secondTextFinder);
     await tester.pumpAndSettle();
