@@ -22,7 +22,7 @@ Dado que agora reconheço a utilidade da aplicação para fins académicos e at�
 
 ## Reportar problemas
 
-Para problemas com a aplicação, peço que cries um issue aqui no GitHub, descrevendo o problema com _screenshots_ e/ou vídeo e os passos para reproduzir o problema.
+Para problemas com a aplicação, peço que cries um issue aqui no GitHub, descrevendo o problema com _screenshots_ e/ou vídeo assim como os passos tomados para poder reproduzir o problema.
 
 Em alternativa, utiliza o botão na aplicação para reportar problemas, via e-mail.
 
