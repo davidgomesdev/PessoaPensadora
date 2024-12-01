@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_pensadora/model/pessoa_text.dart';
@@ -38,6 +39,10 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scaffoldKey.currentState?.openDrawer();
+    });
   }
 
   @override
@@ -64,17 +69,20 @@ class _HomeScreenState extends State<HomeScreen>
                       )
                     ],
             ),
-            drawer: TextSelectionDrawer(
-              mainIndex: storeService.mainIndex,
-              fullIndex: storeService.fullIndex,
-              selectionSink: _streamController.sink,
-              scrollController: drawerScrollController,
-              selectedText: text,
-              scaffoldKey: _scaffoldKey,
-              isFullReading: isFullReading,
-              onFullReadingChange: (newValue) => setState(() {
-                isFullReading = newValue;
-              }),
+            drawer: AnimatedContainer(
+              duration: Durations.extralong4,
+              child: TextSelectionDrawer(
+                mainIndex: storeService.mainIndex,
+                fullIndex: storeService.fullIndex,
+                selectionSink: _streamController.sink,
+                scrollController: drawerScrollController,
+                selectedText: text,
+                scaffoldKey: _scaffoldKey,
+                isFullReading: isFullReading,
+                onFullReadingChange: (newValue) => setState(() {
+                  isFullReading = newValue;
+                }),
+              ),
             ),
             body: HomeScreenBody(
                 text: text,

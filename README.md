@@ -6,6 +6,7 @@ Criada para serem lidos numa interface mais moderna e de fácil leitura no telem
 
 > **Nota**: esta aplicação não possui qualquer afiliação ao website [Arquivo Pessoa](http://arquivopessoa.net/info/ficha), exceto a extração dos textos do mesmo.
 > 
+<img alt="Paga-me um chá" src="images/other/buy-me-a-coffee-qr.png" width="120px"/>
 
 ## Imagens
 
@@ -42,8 +43,6 @@ A aplicação é, e será **sempre**, **gratuita e de código aberto**.
 Run the code generator first: `dart run build_runner build`.
 
 Then run as normal. (via IDE or `fluter run --debug --flavor dev`)
-
-## Se me quiseres pagar um chá!
 
 <img alt="Paga-me um chá" src="images/other/buy-me-a-coffee-qr.png" width="200px"/>
 
