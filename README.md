@@ -44,8 +44,6 @@ Run the code generator first: `dart run build_runner build`.
 
 Then run as normal. (via IDE or `fluter run --debug --flavor dev`)
 
-<img alt="Paga-me um chá" src="images/other/buy-me-a-coffee-qr.png" width="200px"/>
-
 ## Notice for non-Portuguese speakers
 
 The app is solely in Portuguese with no plans for translation because although Fernando Pessoa does have English texts, these are not the focus of the application.
