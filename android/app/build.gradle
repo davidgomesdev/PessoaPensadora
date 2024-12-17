@@ -37,7 +37,7 @@ android {
 
     defaultConfig {
         applicationId "me.l3n.pessoapensadora.pessoa_pensadora"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 24
         targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -79,6 +79,6 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.24"
     implementation "com.google.android.material:material:1.12.0"
 }
