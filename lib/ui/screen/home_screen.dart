@@ -68,20 +68,17 @@ class _HomeScreenState extends State<HomeScreen>
                       )
                     ],
             ),
-            drawer: AnimatedContainer(
-              duration: Durations.extralong4,
-              child: TextSelectionDrawer(
-                mainIndex: storeService.mainIndex,
-                fullIndex: storeService.fullIndex,
-                selectionSink: _streamController.sink,
-                scrollController: drawerScrollController,
-                selectedText: text,
-                scaffoldKey: _scaffoldKey,
-                isFullReading: isFullReading,
-                onFullReadingChange: (newValue) => setState(() {
-                  isFullReading = newValue;
-                }),
-              ),
+            drawer: TextSelectionDrawer(
+              mainIndex: storeService.mainIndex,
+              fullIndex: storeService.fullIndex,
+              selectionSink: _streamController.sink,
+              scrollController: drawerScrollController,
+              selectedText: text,
+              scaffoldKey: _scaffoldKey,
+              isFullReading: isFullReading,
+              onFullReadingChange: (newValue) => setState(() {
+                isFullReading = newValue;
+              }),
             ),
             body: HomeScreenBody(
                 text: text,
