@@ -17,7 +17,7 @@ class NoTextReader extends StatelessWidget {
               style: bonitoTextTheme.displayMedium,
             ),
             Text(
-                "Textos provenientes de Arquivo Pessoa (sem qualquer afiliação)",
+                "Textos de Fernando Pessoa, provenientes de Arquivo Pessoa (sem qualquer afiliação)",
                 style: bonitoTextTheme.labelSmall!
                     .copyWith(fontStyle: FontStyle.italic)),
           ],
