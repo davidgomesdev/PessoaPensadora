@@ -460,8 +460,6 @@ void main() {
       await tester.enterText(find.byType(TextField), 'A DIVINA INVEJ');
       await tester.pumpAndSettle();
 
-      debugDumpApp();
-
       expect(exampleTextFinder, findsOne);
       expect(find.byIcon(Icons.text_snippet_rounded), findsOne);
       expect(
