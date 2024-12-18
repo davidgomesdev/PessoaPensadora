@@ -59,6 +59,27 @@ class _HomeScreenState extends State<HomeScreen>
           return Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
+              leading: Builder(
+                builder: (context) {
+                  return GestureDetector(
+                    onTap: () => Scaffold.of(context).openDrawer(),
+                    child: const Padding(
+                      padding: EdgeInsets.only(left: 16),
+                      child: Row(
+                        children: [
+                          Icon(Icons.menu),
+                          SizedBox(width: 8),
+                          Text(
+                            "Índice",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              ),
+              leadingWidth: 120,
               actions: (text == null)
                   ? []
                   : [
