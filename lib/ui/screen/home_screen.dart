@@ -5,11 +5,12 @@ import 'package:get/get.dart';
 import 'package:pessoa_pensadora/model/pessoa_text.dart';
 import 'package:pessoa_pensadora/model/saved_text.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
+import 'package:pessoa_pensadora/ui/widget/button/arquivo_pessoa_button.dart';
 import 'package:pessoa_pensadora/ui/widget/navigation_widget.dart';
-import 'package:pessoa_pensadora/ui/widget/no_text_reader.dart';
-import 'package:pessoa_pensadora/ui/widget/save_text_button.dart';
-import 'package:pessoa_pensadora/ui/widget/share_text_button.dart';
-import 'package:pessoa_pensadora/ui/widget/text_reader.dart';
+import 'package:pessoa_pensadora/ui/widget/reader/no_text_reader.dart';
+import 'package:pessoa_pensadora/ui/widget/button/save_text_button.dart';
+import 'package:pessoa_pensadora/ui/widget/button/share_text_button.dart';
+import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
 import 'package:pessoa_pensadora/ui/widget/text_selection_drawer.dart';
 import 'package:pessoa_pensadora/util/generic_extensions.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
@@ -62,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ? []
                   : [
                       SaveTextButton(text: SavedText.fromText(text)),
+                      ArquivoPessoaButton(textId: text.id),
                       ShareTextButton(
                         text: text.content,
                         author: text.author,

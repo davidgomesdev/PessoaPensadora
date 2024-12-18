@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
-import 'package:pessoa_pensadora/ui/widget/text_reader.dart';
+import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
 
 import 'utils.dart';
 

@@ -112,6 +112,7 @@ class _HistoryTextTile extends StatelessWidget {
       ),
       onTap: () {
         Get.toNamed(Routes.readTextScreen, arguments: {
+          "id": text.id,
           "categoryTitle": text.category.title,
           "title": text.title,
           "content": text.content,

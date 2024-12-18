@@ -4,7 +4,7 @@ import 'package:pessoa_pensadora/model/saved_text.dart';
 import 'package:pessoa_pensadora/repository/saved_store.dart';
 import 'package:pessoa_pensadora/util/action_feedback.dart';
 
-import '../../repository/read_store.dart';
+import '../../../repository/read_store.dart';
 
 class SaveTextButton extends StatefulWidget {
   final SavedText text;
