@@ -7,22 +7,32 @@ class NoTextReader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Column(
-          children: [
-            Text(
-              "Pessoa Pensadora",
-              style: bonitoTextTheme.displayMedium,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Pessoa Pensadora",
+            style: bonitoTextTheme.displayMedium,
+          ),
+          const SizedBox(
+            height: 32,
+          ),
+          DefaultTextStyle(
+            style: bonitoTextTheme.labelSmall!
+                .copyWith(fontStyle: FontStyle.italic),
+            child: const Column(
+              children: [
+                Text(
+                    "Textos de Fernando Pessoa, provenientes de Arquivo Pessoa"),
+                SizedBox(
+                  height: 8,
+                ),
+                Text("(sem qualquer afiliação)")
+              ],
             ),
-            Text(
-                "Textos de Fernando Pessoa, provenientes de Arquivo Pessoa (sem qualquer afiliação)",
-                style: bonitoTextTheme.labelSmall!
-                    .copyWith(fontStyle: FontStyle.italic)),
-          ],
-        )
-      ],
-    ));
+          ),
+        ],
+      ),
+    );
   }
 }
