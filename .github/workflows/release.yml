@@ -1,9 +1,8 @@
 name: Release App
 
 on:
-  push:
-    branches:
-      - main
+  # Only publishes on main (by semantic release)
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}
