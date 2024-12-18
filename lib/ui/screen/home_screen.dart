@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen>
                   return GestureDetector(
                     onTap: () => Scaffold.of(context).openDrawer(),
                     child: const Padding(
-                      padding: EdgeInsets.only(left: 16),
+                      padding: EdgeInsets.only(left: 8),
                       child: Row(
                         children: [
                           Icon(Icons.menu),
