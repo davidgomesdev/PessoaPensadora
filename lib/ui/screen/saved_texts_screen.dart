@@ -220,6 +220,7 @@ class _SavedTextTileState extends State<_SavedTextTile> {
               ),
               onTap: () {
                 Get.toNamed(Routes.readTextScreen, arguments: {
+                  "id": widget.text.id,
                   "categoryTitle": widget.text.category.title,
                   "title": widget.text.title,
                   "content": widget.text.content,

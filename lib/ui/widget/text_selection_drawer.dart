@@ -6,9 +6,9 @@ import 'package:pessoa_pensadora/model/pessoa_category.dart';
 import 'package:pessoa_pensadora/model/pessoa_text.dart';
 import 'package:pessoa_pensadora/repository/read_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/ui/widget/bug_report_button.dart';
+import 'package:pessoa_pensadora/ui/widget/button/bug_report_button.dart';
 import 'package:pessoa_pensadora/ui/widget/drawer_list_view.dart';
-import 'package:pessoa_pensadora/ui/widget/reading_type_button.dart';
+import 'package:pessoa_pensadora/ui/widget/button/reading_type_button.dart';
 import 'package:pessoa_pensadora/util/generic_extensions.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
 

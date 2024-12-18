@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_pensadora/ui/widget/share_text_button.dart';
-import 'package:pessoa_pensadora/ui/widget/text_reader.dart';
+import 'package:pessoa_pensadora/ui/widget/button/share_text_button.dart';
+import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
+
+import '../widget/button/arquivo_pessoa_button.dart';
 
 class TextReaderScreen extends StatelessWidget {
   const TextReaderScreen({
@@ -10,12 +12,14 @@ class TextReaderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final int id = Get.arguments['id'];
     final String text = Get.arguments['content'];
     final String author = Get.arguments['author'];
 
     return Scaffold(
       appBar: AppBar(
         actions: [
+          ArquivoPessoaButton(textId: id),
           ShareTextButton(
               text: text, author: author)
         ],
