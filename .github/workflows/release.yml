@@ -16,6 +16,10 @@ on:
         description: What's new text for Play Store (supports escape chars)
         # Don't shame me, this is in case I really have nothing new to write :)
         default: Nova versão com melhorias funcionais.
+      force-release:
+        type: boolean
+        description: Release even if there's no new version
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}
@@ -56,7 +60,7 @@ jobs:
     name: Build App
     runs-on: ubuntu-latest
     needs: [version]
-    if: needs.version.outputs.has-new-version == 'true'
+    if: needs.version.outputs.has-new-version == 'true' || ${{ inputs.force-release }}
     steps:
       - uses: actions/checkout@v4
 
@@ -83,7 +87,7 @@ jobs:
       - name: 🔧 - Prepare release
         run: |
           versionCode=$(date '+%y%m%d%H')
-          sed -i -e "s/version: .*/version: ${{ needs.version.outputs.new-version }}+$versionCode/g" pubspec.yaml 
+          sed -i -e "s/version: .*/version: ${{ needs.version.outputs.new-version != '' && needs.version.outputs.new-version || needs.version.outputs.last-version }}+$versionCode/g" pubspec.yaml 
 
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && echo && flutter pub get
@@ -117,6 +121,7 @@ jobs:
     name: Release
     needs: [build]
     runs-on: ubuntu-latest
+    if: success() && github.ref == 'refs/heads/main'
     permissions:
       contents: write
       issues: write
