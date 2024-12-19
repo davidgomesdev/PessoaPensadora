@@ -3,6 +3,11 @@ name: Release App
 on:
   # Only publishes on main (by semantic release)
   workflow_dispatch:
+    inputs:
+      track:
+        type: environment
+        description: Release environment (e.g. test, production)
+        default: test
 
 concurrency:
   group: ${{ github.workflow }}
@@ -147,5 +152,5 @@ jobs:
           serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
           packageName: me.l3n.pessoapensadora.pessoa_pensadora
           releaseFiles: artifacts/PessoaPensadora.aab
-          track: alpha
+          track: ${{ vars.RELEASE_TRACK }}
           status: draft
