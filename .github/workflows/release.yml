@@ -18,7 +18,7 @@ jobs:
       has-new-version: ${{ steps.semantic-release.outputs.new_release_published }}
       new-version: ${{ steps.semantic-release.outputs.new_release_version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: 🚚 - Semantic Release
         uses: cycjimmy/semantic-release-action@v4
@@ -36,7 +36,7 @@ jobs:
     needs: [version]
     if: needs.version.outputs.has-new-version == 'true'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: 📩 - Retrieve the build signature secrets
         env:
@@ -118,3 +118,34 @@ jobs:
             semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-to-google-play:
+    name: Publish to Google Play
+    needs: [version, release]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: 'actions/checkout@v4'
+
+      - name: 📦 - Copy server artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+          merge-multiple: true
+
+      - id: auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: projects/${{ vars.GCP_PROJECT_ID }}/locations/global/workloadIdentityPools/${{ vars.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
+          packageName: me.l3n.pessoapensadora.pessoa_pensadora
+          releaseFiles: artifacts/PessoaPensadora.aab
+          track: alpha
+          status: draft
