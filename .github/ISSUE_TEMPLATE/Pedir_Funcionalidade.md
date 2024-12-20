@@ -9,7 +9,7 @@ assignees: ''
 
 ## Pedir funcionalidade
 
-**O seu pedido de funcionalidade está relacionado a um problema? Por favor, descreva.**  
+**O teu pedido de funcionalidade está relacionado a um problema? Por favor, descreva.**  
 Uma descrição clara e concisa do que é o problema. Ex. Tenho um problema quando [...]
 
 **Descreve a solução que gostarias.**  
