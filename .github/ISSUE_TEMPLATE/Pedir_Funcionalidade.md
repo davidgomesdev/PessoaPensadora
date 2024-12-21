@@ -1,6 +1,6 @@
 ---
 name: "\U0001F680 Pedido de Funcionalidade"
-about: "Tenho uma sugestão!"
+about: "Tens alguma sugestão?"
 title: ''
 labels: 'i: melhoria, i: precisa de triagem'
 assignees: ''
