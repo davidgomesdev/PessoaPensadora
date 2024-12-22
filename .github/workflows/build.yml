@@ -3,6 +3,7 @@ name: Build
 on:
   pull_request:
     paths:
+      - .github/workflows/
       - android/
       - assets/
       - lib/
