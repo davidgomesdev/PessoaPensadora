@@ -3,11 +3,11 @@ name: Build
 on:
   pull_request:
     paths:
-      - .github/workflows/
-      - android/
-      - assets/
-      - lib/
-      - tests/
+      - .github/workflows/**
+      - android/**
+      - assets/**
+      - lib/**
+      - tests/**
       - pubspec.yaml
       - pubspec.lock
 
