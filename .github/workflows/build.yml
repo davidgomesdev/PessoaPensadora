@@ -2,6 +2,13 @@ name: Build
 
 on:
   pull_request:
+    paths:
+      - android/
+      - assets/
+      - lib/
+      - tests/
+      - pubspec.yaml
+      - pubspec.lock
 
 permissions:
   contents: read # for checkout

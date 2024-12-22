@@ -10,18 +10,31 @@ on:
         options:
           - alpha
           - production
-        default: alpha
+        default: production
       whats-new:
         type: string
         description: What's new text for Play Store (supports escape chars)
         # Don't shame me, this is in case I really have nothing new to write :)
         default: Nova versão com melhorias funcionais.
+  push:
+    branches:
+      - main
+    paths:
+      - android/
+      - assets/
+      - lib/
+      - .releaserc
+      - pubspec.yaml
+      - pubspec.lock
 
 concurrency:
   group: ${{ github.workflow }}
 
 permissions:
   contents: write
+
+env:
+  RELEASE_TRACK: ${{ github.event_name == "push" && 'alpha' || inputs.release-track }}
 
 jobs:
   version:
@@ -34,11 +47,7 @@ jobs:
     steps:
       - name: Ensure release is not for production on regular branch
         run: exit 1
-        if: ${{ inputs.release-track == 'production' && github.ref != 'refs/heads/main' }}
-
-      - name: Ensure release is not for alpha test on main branch
-        run: exit 1
-        if: ${{ inputs.release-track == 'alpha' && github.ref == 'refs/heads/main' }}
+        if: ${{ env.RELEASE_TRACK == 'production' && github.ref != 'refs/heads/main' }}
 
       - uses: actions/checkout@v4
 
@@ -174,5 +183,5 @@ jobs:
           serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
           packageName: me.l3n.pessoapensadora.pessoa_pensadora
           releaseFiles: artifacts/PessoaPensadora.aab
-          track: ${{ inputs.release-track }}
+          track: ${{ env.RELEASE_TRACK }}
           whatsNewDirectory: releaseNotes/
