@@ -35,7 +35,7 @@ permissions:
   contents: write
 
 env:
-  RELEASE_TRACK: ${{ github.event_name == "push" && 'alpha' || inputs.release-track }}
+  RELEASE_TRACK: ${{ github.event_name == 'push' && 'alpha' || inputs.release-track }}
 
 jobs:
   version:
@@ -93,7 +93,7 @@ jobs:
       - name: 🔧 - Prepare release
         run: |
           versionCode=$(date '+%y%m%d%H')
-          sed -i -e "s/version: .*/version: ${{ env.RELEASE_TRACK == "alpha" && needs.version.outputs.new-version+"-alpha" || needs.version.outputs.new-version }}+$versionCode/g" pubspec.yaml 
+          sed -i -e "s/version: .*/version: ${{ env.RELEASE_TRACK == 'alpha' && needs.version.outputs.new-version+'-alpha' || needs.version.outputs.new-version }}+$versionCode/g" pubspec.yaml 
 
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && echo && flutter pub get
