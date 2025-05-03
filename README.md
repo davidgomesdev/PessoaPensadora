@@ -16,11 +16,11 @@ Criada para serem lidos numa interface mais moderna e de fácil leitura no telem
 
   <img alt="Textos guardados" src="images/phone/saved-texts.jpg" width="200px" hspace="20"/> <img alt="Histórico" src="images/phone/history.jpg" width="200px" hspace="20"/>
 
-## Textos removidos
+## Textos principais
 
 A aplicação começou por ser desenvolvida com o objetivo de eu próprio ler a poesia de Fernando Pessoa, pelo que apenas incluí as categorias que me interessavam. (os que se podem ver acima no Índice)
 
-Dado que agora reconheço a utilidade da aplicação para fins académicos e até mesmo para outros entusiastas de Fernando Pessoa, no futuro irei colocar uma opção para ler a sua obra na íntegra.
+Dado que agora reconheço a utilidade da aplicação para fins académicos e até mesmo a outros entusiastas de Fernando Pessoa, exite a opção de ler a sua obra na íntegra.
 
 ## Reportar problemas
 
