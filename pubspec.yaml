@@ -67,6 +67,6 @@ flutter:
     - assets/fonts/Roboto/Roboto-ThinItalic.ttf
 
 flutter_icons:
-  image_path: "assets/icon/icon.jpeg"
-  android: true
-  ios: false
+  android: false
+  ios: true
+  image_path_ios: "assets/icon/ios.jpeg"
