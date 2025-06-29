@@ -261,7 +261,6 @@ class _SavedTextTileState extends State<_SavedTextTile> {
 }
 
 class CategoryTileData {
-  final controller = ExpansionTileController();
   final List<BoxPessoaText> texts;
 
   CategoryTileData(this.texts);
