@@ -6,7 +6,8 @@ Criada para serem lidos numa interface mais moderna e de fácil leitura no telem
 
 > **Nota**: esta aplicação não possui qualquer afiliação ao website [Arquivo Pessoa](http://arquivopessoa.net/info/ficha), exceto a extração dos textos do mesmo.
 > 
-<img alt="Paga-me um chá" src="images/other/buy-me-a-coffee-qr.png" width="120px"/>
+
+  <img alt="Paga-me um chá" src="images/other/buy-me-a-coffee-qr.png" width="120px"/>
 
 ## Imagens
 
