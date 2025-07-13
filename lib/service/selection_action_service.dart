@@ -12,14 +12,14 @@ class SelectionActionService {
   }
 
   void shareQuote(String text, String author) {
-    Share.share('"$text" - $author');
+    SharePlus.instance.share(ShareParams(text: '"$text" - $author'));
   }
 
   void shareText(String text, String author) {
-    Share.share("""
+    SharePlus.instance.share(ShareParams(text: """
 $text
 
             $author
-    """.trim());
+    """.trim()));
   }
 }

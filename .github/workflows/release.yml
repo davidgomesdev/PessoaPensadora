@@ -87,7 +87,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
-          java-version: '17'
+          java-version: '21'
 
       # Google Play requires version code (int) to increment on every release
       - name: 🔧 - Prepare release
