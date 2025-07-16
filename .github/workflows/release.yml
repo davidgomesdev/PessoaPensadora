@@ -154,7 +154,7 @@ jobs:
 
   publish-to-google-play:
     name: Publish to Google Play
-    needs: [version, release]
+    needs: [version]
     runs-on: ubuntu-latest
     if: success() || failure()
     permissions:
