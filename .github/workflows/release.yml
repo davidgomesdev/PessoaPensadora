@@ -8,6 +8,7 @@ on:
         type: choice
         description: Release environment
         options:
+          - internal
           - alpha
           - production
         default: production
@@ -155,6 +156,7 @@ jobs:
     name: Publish to Google Play
     needs: [version, release]
     runs-on: ubuntu-latest
+    if: success() || failure()
     permissions:
       contents: read
       id-token: write
