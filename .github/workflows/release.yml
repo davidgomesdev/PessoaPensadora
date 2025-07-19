@@ -124,8 +124,9 @@ jobs:
     name: Release
     needs: [build]
     runs-on: ubuntu-latest
-    # GitHub releases are meant only for main
-    if: github.ref == 'refs/heads/main'
+    # GitHub releases are meant only for production releases,
+    # otherwise I would need to delete the release made in the internal track to release to prod
+    if: ${{ github.ref == 'refs/heads/main' && env.RELEASE_TRACK == 'production' }}
     permissions:
       contents: write
       issues: write
