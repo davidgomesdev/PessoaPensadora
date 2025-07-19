@@ -1,22 +1,7 @@
-name: Release App
+name: Create Release
 
 on:
-  # Only publishes on main (by semantic release)
   workflow_dispatch:
-    inputs:
-      release-track:
-        type: choice
-        description: Release environment
-        options:
-          - internal
-          - alpha
-          - production
-        default: production
-      whats-new:
-        type: string
-        description: What's new text for Play Store (supports escape chars)
-        # Don't shame me, this is in case I really have nothing new to write :)
-        default: Nova versão com melhorias funcionais.
   push:
     branches:
       - main
@@ -35,9 +20,6 @@ concurrency:
 permissions:
   contents: write
 
-env:
-  RELEASE_TRACK: ${{ github.event_name == 'push' && 'alpha' || inputs.release-track }}
-
 jobs:
   version:
     name: Get new version
@@ -47,10 +29,6 @@ jobs:
       new-version: ${{ steps.semantic-release.outputs.new_release_version }}
       last-version: ${{ steps.semantic-release.outputs.last_release_version }}
     steps:
-      - name: Ensure release is not for production on regular branch
-        run: exit 1
-        if: ${{ env.RELEASE_TRACK == 'production' && github.ref != 'refs/heads/main' }}
-
       - uses: actions/checkout@v4
 
       - name: 🚚 - Semantic Release
@@ -94,7 +72,7 @@ jobs:
       - name: 🔧 - Prepare release
         run: |
           versionCode=$(date '+%y%m%d%H')
-          sed -i -e "s/version: .*/version: ${{ env.RELEASE_TRACK == 'alpha' && format('{0}-alpha', needs.version.outputs.new-version) || needs.version.outputs.new-version }}+$versionCode/g" pubspec.yaml 
+          sed -i -e "s/version: .*/version: ${{ needs.version.outputs.new-version }}+$versionCode/g" pubspec.yaml 
 
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && echo && flutter pub get
@@ -151,40 +129,3 @@ jobs:
             semantic-release-replace-plugin
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publish-to-google-play:
-    name: Publish to Google Play
-    needs: [version]
-    runs-on: ubuntu-latest
-    if: success() || failure()
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: 'actions/checkout@v4'
-
-      - name: 📦 - Copy server artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts/
-          merge-multiple: true
-
-      - id: auth
-        uses: 'google-github-actions/auth@v2'
-        with:
-          workload_identity_provider: projects/${{ vars.GCP_PROJECT_ID }}/locations/global/workloadIdentityPools/${{ vars.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
-
-      - name: 🔧 - Print release notes
-        run: |
-          mkdir releaseNotes/
-          echo -ne "${{ inputs.whats-new }}" > releaseNotes/whatsnew-pt-PT
-
-      - name: 🚀 - Upload to Google Play
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJson: ${{ steps.auth.outputs.credentials_file_path }}
-          packageName: me.l3n.pessoapensadora.pessoa_pensadora
-          releaseFiles: artifacts/PessoaPensadora.aab
-          track: ${{ env.RELEASE_TRACK }}
-          whatsNewDirectory: releaseNotes/
