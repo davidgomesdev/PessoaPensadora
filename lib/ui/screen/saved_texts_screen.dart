@@ -120,7 +120,6 @@ class _CategoryGroupTileState extends State<_CategoryGroupTile> {
             ? Icons.arrow_drop_down_circle_rounded
             : Icons.arrow_drop_down_circle_outlined,
       ),
-      collapsedIconColor: bonitoTheme.primaryColor,
       initiallyExpanded: !isCollapsed,
       key: UniqueKey(),
       onExpansionChanged: (newStatus) {

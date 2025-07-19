@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+final defaultDarkTheme = ThemeData.dark();
 final bonitoTextTheme = GoogleFonts.robotoTextTheme(
-  ThemeData.dark().textTheme.copyWith(
+  defaultDarkTheme.textTheme.copyWith(
         displayMedium:
             const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
         displaySmall:
@@ -25,12 +26,13 @@ final bonitoTextTheme = GoogleFonts.robotoTextTheme(
         ),
       ),
 );
-final bonitoTheme = ThemeData.dark().copyWith(
-  primaryColor: Colors.amber,
+final bonitoTheme = defaultDarkTheme.copyWith(
+  primaryColor: Colors.white70,
   textTheme: bonitoTextTheme.apply(bodyColor: Colors.white),
-  focusColor: Colors.amberAccent,
+  textButtonTheme: TextButtonThemeData(style: ButtonStyle(overlayColor: ButtonStyleButton.allOrNull(Colors.white), foregroundColor: ButtonStyleButton.allOrNull(Colors.white70))),
+  focusColor: Colors.white,
   colorScheme:
-      ThemeData.dark().colorScheme.copyWith(primary: Colors.amberAccent),
+      defaultDarkTheme.colorScheme.copyWith(primary: Colors.white),
   dividerColor: Colors.white70,
   listTileTheme: const ListTileThemeData(
     selectedColor: Colors.white,
@@ -42,10 +44,10 @@ final bonitoTheme = ThemeData.dark().copyWith(
       color: Colors.amber,
     ),
     labelStyle: TextStyle(
-      color: Colors.amberAccent,
+      color: Colors.white,
     ),
     focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(style: BorderStyle.solid, color: Colors.amber),
+      borderSide: BorderSide(style: BorderStyle.solid, color: Colors.white),
     ),
   )
 );
