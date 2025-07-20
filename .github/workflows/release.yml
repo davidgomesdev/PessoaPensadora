@@ -40,6 +40,7 @@ env:
 jobs:
   debug:
     runs-on: ubuntu-latest
+    if: ${{ env.RELEASE_TRACK == 'production' && github.ref == 'refs/heads/main' }}
     steps:
       - name: Show input values
         env:
