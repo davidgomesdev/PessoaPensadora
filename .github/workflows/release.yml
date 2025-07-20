@@ -40,7 +40,7 @@ env:
 jobs:
   debug:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && github.event-name == 'workflow_dispatch' && github.event.inputs.release-track == 'production' }}
+    if: ${{ github.event.inputs.release-track == 'production' }}
     steps:
       - name: Show input values
         env:
