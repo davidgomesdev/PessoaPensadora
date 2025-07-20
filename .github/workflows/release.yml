@@ -41,17 +41,14 @@ jobs:
   debug:
     runs-on: ubuntu-latest
     name: Show input values
-    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release-track == 'production' }}
     steps:
       - name: Show input values
         env:
           EVENT_NAME: ${{ github.event_name }}
-          INPUT: ${{ toJSON(inputs) }}
-          EVENT_INPUT: ${{ toJSON(github.event.inputs) }}
+          INPUTS: ${{ toJSON(inputs) }}
         run: |
           echo "event-name: $EVENT_NAME"
-          echo "event.inputs: $EVENT_INPUT"
-          echo "inputs: $INPUT"
+          echo "inputs: $INPUTS"
 
   version:
     name: Get new version
@@ -133,7 +130,7 @@ jobs:
     runs-on: ubuntu-latest
     # GitHub releases are meant only for production releases,
     # otherwise I would need to delete the release made in the internal track to release to prod
-    if: ${{ github.ref == 'refs/heads/main' && github.event-name == 'workflow_dispatch' && github.event.inputs.release-track == 'production' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release-track == 'production' }}
     permissions:
       contents: write
       issues: write
