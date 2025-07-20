@@ -33,7 +33,7 @@ kotlin {
 }
 
 android {
-    namespace = "me.l3n.pessoapensadora"
+    namespace = "me.l3n.pessoapensadora.pessoa_pensadora"
     compileSdkVersion 36
 
     compileOptions {
