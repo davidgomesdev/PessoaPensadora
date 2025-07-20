@@ -53,7 +53,6 @@ jobs:
   version:
     name: Get new version
     runs-on: ubuntu-latest
-    if: false
     outputs:
       new-version: ${{ steps.semantic-release.outputs.new_release_version }}
     steps:
