@@ -40,7 +40,7 @@ env:
 jobs:
   debug:
     runs-on: ubuntu-latest
-    if: ${{ env.RELEASE_TRACK == 'production' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.event-name == 'workflow_dispatch' && github.event.inputs.release-track == 'production' }}
     steps:
       - name: Show input values
         env:
@@ -53,6 +53,7 @@ jobs:
   version:
     name: Get new version
     runs-on: ubuntu-latest
+    if: false
     outputs:
       new-version: ${{ steps.semantic-release.outputs.new_release_version }}
     steps:
