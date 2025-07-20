@@ -117,7 +117,7 @@ jobs:
     runs-on: ubuntu-latest
     # GitHub releases are meant only for production releases,
     # otherwise I would need to delete the release made in the internal track to release to prod
-    if: ${{ github.ref == 'refs/heads/main' && github.event-name == 'workflow_dispatch' && inputs.release-track == 'production' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.event-name == 'workflow_dispatch' && github.event.inputs.release-track == 'production' }}
     permissions:
       contents: write
       issues: write
