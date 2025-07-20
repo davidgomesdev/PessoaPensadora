@@ -38,6 +38,17 @@ env:
   RELEASE_TRACK: ${{ github.event_name == 'push' && 'internal' || inputs.release-track }}
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show input values
+        env:
+          INPUT: ${{ toJSON(inputs) }}
+          EVENT_INPUT: ${{ toJSON(github.event.inputs) }}
+        run: |
+          echo "event.inputs: $EVENT_INPUT"
+          echo "inputs: $INPUT"
+
   version:
     name: Get new version
     runs-on: ubuntu-latest
