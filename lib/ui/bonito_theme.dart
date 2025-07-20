@@ -29,7 +29,6 @@ final bonitoTextTheme = GoogleFonts.robotoTextTheme(
 final bonitoTheme = defaultDarkTheme.copyWith(
   primaryColor: Colors.white70,
   textTheme: bonitoTextTheme.apply(bodyColor: Colors.white),
-  textButtonTheme: TextButtonThemeData(style: ButtonStyle(overlayColor: ButtonStyleButton.allOrNull(Colors.white), foregroundColor: ButtonStyleButton.allOrNull(Colors.white70))),
   focusColor: Colors.white,
   colorScheme:
       defaultDarkTheme.colorScheme.copyWith(primary: Colors.white),

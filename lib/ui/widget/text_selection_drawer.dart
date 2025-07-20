@@ -158,7 +158,10 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
               },
             )),
           ),
-          if (!category.isIndex) buildBackTile(category),
+          if (category.isIndex)
+            buildGlobalSearchButton()
+          else
+            buildBackTile(category),
         ],
       ),
     );
@@ -206,6 +209,26 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         ],
       ),
     );
+  }
+
+  Padding buildGlobalSearchButton() {
+    return Padding(
+        padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
+        child: TextButton(
+            onPressed: () {},
+            child: Row(
+              children: [
+                Flexible(child: Icon(Icons.search_rounded, size: 24.0)),
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    'Pesquisar',
+                    textAlign: TextAlign.left,
+                  ),
+                )),
+              ],
+            )));
   }
 
   Padding buildFilters(
@@ -305,6 +328,23 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
   }
 
   ListTile buildBackTile(PessoaCategory category) {
+    return DrawerTileButton();
+  }
+}
+
+// TODO: make this usable in both the back and global search buttons :)
+class DrawerTileButton extends StatefulWidget {
+  const DrawerTileButton({
+    super.key,
+  });
+
+  @override
+  State<DrawerTileButton> createState() => _DrawerTileButtonState();
+}
+
+class _DrawerTileButtonState extends State<DrawerTileButton> {
+  @override
+  Widget build(BuildContext context) {
     return ListTile(
         horizontalTitleGap: 8.0,
         minLeadingWidth: 0.0,
@@ -321,11 +361,11 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
             if (previousCategory!.isIndex) {
               categoryStream.add(null);
-              log.i("Backing to index ${(widget.isFullReading) ? "(Full)" : "(Main)"}");
+              log.i(
+                  "Backing to index ${(widget.isFullReading) ? "(Full)" : "(Main)"}");
             } else {
               categoryStream.add(previousCategory);
-              log.i(
-                  'Backing to previous category "${previousCategory.title}"');
+              log.i('Backing to previous category "${previousCategory.title}"');
             }
           });
         });
