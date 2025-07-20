@@ -95,23 +95,14 @@ jobs:
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && echo && flutter pub get
 
-      - name: 🔨 - Build
+      - name: 🔨 - Build app bundle
         run: |
-          flutter build apk --release --flavor prod
           flutter build appbundle --release --flavor prod
 
       - name: 🧹 - Cleanup
         run: |
           rm android/pessoa-pensadora.jks android/key.properties
-          mv build/app/outputs/flutter-apk/app-prod-release.apk PessoaPensadora.apk
           mv build/app/outputs/bundle/prodRelease/app-prod-release.aab PessoaPensadora.aab
-
-      - name: 📦 - Copy APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: PessoaPensadora.apk
-          path: PessoaPensadora.apk
-          if-no-files-found: error
 
       - name: 📦 - Copy App Bundle
         uses: actions/upload-artifact@v4
