@@ -39,15 +39,16 @@ env:
 
 jobs:
   debug:
-    name: Debug event ${{ github.event-name }}
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && github.event-name == 'workflow_dispatch' && inputs.release-track == 'production' }}
+#    if: ${{ github.ref == 'refs/heads/main' && github.event-name == 'workflow_dispatch' && inputs.release-track == 'production' }}
     steps:
       - name: Show input values
         env:
+          EVENT_NAME: ${{ github.event-name }}
           INPUT: ${{ toJSON(inputs) }}
           EVENT_INPUT: ${{ toJSON(github.event.inputs) }}
         run: |
+          echo "event-name: $EVENT_NAME"
           echo "event.inputs: $EVENT_INPUT"
           echo "inputs: $INPUT"
 
