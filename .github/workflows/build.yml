@@ -46,4 +46,4 @@ jobs:
         run: flutter test
 
       - name: 🔨 - Build app
-        run: flutter build apk --flavor dev --debug
+        run: flutter build appbundle --flavor dev --debug
