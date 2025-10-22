@@ -21,7 +21,7 @@ Criada para serem lidos numa interface mais moderna e de fácil leitura no telem
 
 A aplicação começou por ser desenvolvida com o objetivo de eu próprio ler a poesia de Fernando Pessoa, pelo que apenas incluí as categorias que me interessavam. (os que se podem ver acima no Índice)
 
-Dado que agora reconheço a utilidade da aplicação para fins académicos e até mesmo a outros entusiastas de Fernando Pessoa, exite a opção de ler a sua obra na íntegra.
+Dado que agora reconheço a utilidade da aplicação para fins académicos e até mesmo a outros entusiastas de Fernando Pessoa, existe a opção de ler a sua obra na íntegra.
 
 ## Reportar problemas
 
