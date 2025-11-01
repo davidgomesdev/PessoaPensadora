@@ -195,14 +195,12 @@ jobs:
 
   publish-to-github-pages:
     name: Publish to GitHub Actions
-    needs: [build, release]
+    needs: [version]
     runs-on: ubuntu-latest
-    # Publishing to GitHub Pages even with no GitHub Release
-    # for internal releases (prod check is done in the `version` job)
-    if: ${{ !cancelled() && needs.build.result == 'success' }}
     permissions:
       contents: read
       id-token: write
+      pages: write
     steps:
       - uses: actions/checkout@v4
 
