@@ -30,6 +30,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -201,6 +202,9 @@ jobs:
       contents: read
       id-token: write
       pages: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -226,5 +230,5 @@ jobs:
           path: 'build/web'
 
       - name: 🚀 - Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
-
