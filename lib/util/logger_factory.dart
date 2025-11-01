@@ -10,8 +10,8 @@ final log = Logger(
   output: SavedConsoleOutput(),
   filter: ProductionFilter(),
   printer: PrettyPrinter(
-    methodCount: 1,
-    errorMethodCount: 5,
+    methodCount: kIsWeb ? 0 : 1,
+    errorMethodCount: kIsWeb ? 0 : 5,
     lineLength: 120,
     colors: true,
     printEmojis: true,
