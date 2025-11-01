@@ -8,6 +8,7 @@ import 'package:pessoa_pensadora/repository/saved_store.dart';
 import 'package:pessoa_pensadora/service/selection_action_service.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/routes.dart';
+import 'package:pessoa_pensadora/ui/screen/base_screen.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 import 'splash_screen.dart';
@@ -54,8 +55,9 @@ class _BootScreenState extends State<BootScreen> {
 
     log.i("Running version '$version'");
 
-    Duration durationSinceStart =
-    DateTime.timestamp().difference(startedAt);
+    finishedAt =
+    DateTime.timestamp();
+    var durationSinceStart = finishedAt!.difference(startedAt);
 
     log.d("Took ${durationSinceStart.inMilliseconds}ms "
         "to load dependencies.");

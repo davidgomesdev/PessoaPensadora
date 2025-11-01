@@ -6,8 +6,12 @@ import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/home_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/saved_text_reader_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/splash_screen.dart';
 
 import 'boot_screen.dart';
+
+var startedAt = DateTime.timestamp();
+DateTime? finishedAt;
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -24,16 +28,24 @@ class App extends StatelessWidget {
   List<GetPage<dynamic>> buildAppPages() {
     return [
       GetPage(name: Routes.bootScreen, page: () => const BootScreen()),
-      GetPage(name: Routes.homeScreen, page: () => const HomeScreen()),
-      GetPage(name: Routes.savedScreen, page: () => const SavedTextsScreen()),
-      GetPage(
-        name: Routes.readTextScreen,
-        page: () => const TextReaderScreen(),
-      ),
-      GetPage(
-        name: Routes.historyScreen,
-        page: () => const HistoryScreen(),
-      )
+      buildPage(Routes.homeScreen, const HomeScreen()),
+      buildPage(Routes.savedScreen, const SavedTextsScreen()),
+      buildPage(Routes.readTextScreen, const TextReaderScreen()),
+      buildPage(Routes.historyScreen, const HistoryScreen()),
     ];
+  }
+
+  GetPage buildPage(String route, Widget screen) {
+    return GetPage(
+        name: route,
+        page: () {
+          if (finishedAt == null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Get.offNamed(Routes.bootScreen);
+            });
+            return SplashScreen();
+          }
+          return screen;
+        });
   }
 }
