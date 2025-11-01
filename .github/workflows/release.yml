@@ -159,7 +159,7 @@ jobs:
     needs: [build, release]
     runs-on: ubuntu-latest
     # Publishing to Play Store even with no GitHub Release
-    # for internal releases (prod check is done in `version`)
+    # for internal releases (prod check is done in the `version` job)
     if: ${{ !cancelled() && needs.build.result == 'success' }}
     permissions:
       contents: read
@@ -192,3 +192,41 @@ jobs:
           releaseFiles: artifacts/PessoaPensadora.aab
           track: ${{ env.RELEASE_TRACK }}
           whatsNewDirectory: releaseNotes/
+
+  publish-to-github-pages:
+    name: Publish to GitHub Actions
+    needs: [build, release]
+    runs-on: ubuntu-latest
+    # Publishing to GitHub Pages even with no GitHub Release
+    # for internal releases (prod check is done in the `version` job)
+    if: ${{ !cancelled() && needs.build.result == 'success' }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 💎 - Install Flutter
+        uses: subosito/flutter-action@v2.10.0
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+
+      - name: 🌱 - Get dependencies
+        run: cat pubspec.yaml && echo && flutter pub get
+
+      - name: 🔨 - Build web
+        run: |
+          flutter build web --release
+
+      - name: 🔧- Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: 📦 - Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'build/web'
+
+      - name: 🚀 - Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+

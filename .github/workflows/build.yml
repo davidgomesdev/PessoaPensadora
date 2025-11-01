@@ -45,5 +45,8 @@ jobs:
       - name: 🐛 - Run tests
         run: flutter test
 
-      - name: 🔨 - Build app
+      - name: 🔨 - Build Android app
         run: flutter build appbundle --flavor dev --debug
+
+      - name: 🔨 - Build Web
+        run: flutter build web --debug
