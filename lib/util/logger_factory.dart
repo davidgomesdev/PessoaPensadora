@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
 final logStore = StringBuffer();
@@ -23,7 +24,7 @@ class SavedConsoleOutput implements LogOutput {
 
   @override
   void output(OutputEvent event) {
-    logStore.writeAll(event.lines, Platform.lineTerminator);
+    logStore.writeAll(event.lines, kIsWeb ? "\n" : Platform.lineTerminator);
     _consoleOutput.output(event);
   }
 
