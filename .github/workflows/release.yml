@@ -194,7 +194,7 @@ jobs:
           whatsNewDirectory: releaseNotes/
 
   publish-to-github-pages:
-    name: Publish to GitHub Actions
+    name: Publish to GitHub Pages
     needs: [version]
     runs-on: ubuntu-latest
     permissions:
