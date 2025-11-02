@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pessoa_pensadora/service/selection_action_service.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/util/widget_extensions.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class TextReader extends StatelessWidget {
   final ScrollController _scrollController;
@@ -23,6 +24,8 @@ class TextReader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WakelockPlus.enable();
+
     return ScrollConfiguration(
       behavior: const ScrollBehavior().copyWith(overscroll: false),
       child: SingleChildScrollView(
