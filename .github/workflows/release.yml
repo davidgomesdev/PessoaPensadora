@@ -201,6 +201,7 @@ jobs:
     name: 📄 Publish to GitHub Pages (unused)
     needs: [version]
     runs-on: ubuntu-latest
+    if: ${{ !cancelled() && inputs.release-track == 'production' }}
     permissions:
       contents: read
       id-token: write
