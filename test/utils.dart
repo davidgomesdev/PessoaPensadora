@@ -44,6 +44,7 @@ Future<void> openDrawer(WidgetTester tester) async {
 }
 
 Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
+  finishedAt = DateTime.timestamp();
   final randomPath = "./temp-tests/${DateTime.timestamp()}";
   const MethodChannel channel =
       MethodChannel('plugins.flutter.io/path_provider');

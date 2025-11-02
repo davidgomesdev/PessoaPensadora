@@ -33,6 +33,7 @@ jobs:
           channel: stable
 
       - uses: actions/setup-java@v4
+        name: ☕ - Install Java
         with:
           distribution: corretto
           java-version: 21
@@ -46,8 +47,8 @@ jobs:
       - name: 🐛 - Run tests
         run: flutter test
 
-      - name: 🔨 - Build Android app
+      - name: 🔨📱 - Build Android app
         run: flutter build appbundle --flavor dev --debug
 
-      - name: 🔨 - Build Web
+      - name: 🔨🌐 - Build Web
         run: flutter build web --debug
