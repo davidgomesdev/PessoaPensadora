@@ -57,7 +57,7 @@ jobs:
     outputs:
       new-version: ${{ steps.semantic-release.outputs.new_release_version }}
     steps:
-      - name: Ensure release is not for production on regular branch
+      - name: 💂- Ensure release is not for production on regular branch
         run: exit 1
         if: ${{ env.RELEASE_TRACK == 'production' && github.ref != 'refs/heads/main' }}
 
@@ -96,6 +96,7 @@ jobs:
           channel: stable
 
       - uses: actions/setup-java@v4
+        name: ☕ - Install Java
         with:
           distribution: corretto
           java-version: 21
@@ -104,7 +105,7 @@ jobs:
       - name: 🔧 - Prepare release
         run: |
           versionCode=$(date '+%y%m%d%H')
-          sed -i -e "s/version: .*/version: ${{ needs.version.outputs.new-version }}+$versionCode/g" pubspec.yaml 
+          sed -i -e "s/version: (.*)/version: ${{ needs.version.outputs.new-version || '$1' }}+$versionCode/g" pubspec.yaml 
 
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && echo "---------" && flutter pub get
@@ -176,6 +177,7 @@ jobs:
           merge-multiple: true
 
       - id: auth
+        name: 🔑 - Login to GCP
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: projects/${{ vars.GCP_PROJECT_ID }}/locations/global/workloadIdentityPools/${{ vars.GCP_WORKLOAD_IDENTITY_POOL }}/providers/${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
@@ -214,8 +216,8 @@ jobs:
         uses: subosito/flutter-action@fd55f4c5af5b953cc57a2be44cb082c8f6635e8e # v2.21.0
         with:
           cache: true
-          flutter-version: '3.x'
-          channel: 'stable'
+          flutter-version: 3.x
+          channel: stable
 
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && echo "---------" && flutter pub get
@@ -224,13 +226,13 @@ jobs:
         run: |
           flutter build web --release
 
-      - name: 🔧- Setup Pages
+      - name: 🔧 - Setup Pages
         uses: actions/configure-pages@v5
 
       - name: 📦 - Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'build/web'
+          path: build/web
 
       - name: 🚀 - Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
@@ -250,8 +252,8 @@ jobs:
         uses: subosito/flutter-action@fd55f4c5af5b953cc57a2be44cb082c8f6635e8e # v2.21.0
         with:
           cache: true
-          flutter-version: '3.x'
-          channel: 'stable'
+          flutter-version: 3.x
+          channel: stable
 
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && echo "---------" && flutter pub get
