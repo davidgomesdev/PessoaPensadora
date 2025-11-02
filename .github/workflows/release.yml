@@ -105,7 +105,7 @@ jobs:
       - name: 🔧 - Prepare release
         run: |
           versionCode=$(date '+%y%m%d%H')
-          sed -i -e "s/version: (.*)/version: ${{ needs.version.outputs.new-version || '$1' }}+$versionCode/g" pubspec.yaml 
+          sed -i -E "s/^version: (.*)\$/version: ${{ needs.version.outputs.new-version || '\1' }}+$versionCode/gm" pubspec.yaml 
 
       - name: 🌱 - Get dependencies
         run: cat pubspec.yaml && echo "---------" && flutter pub get
