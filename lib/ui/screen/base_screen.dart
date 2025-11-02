@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/routes.dart';
@@ -19,6 +20,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) {
+      BrowserContextMenu.disableContextMenu();
+    }
+
     return GetMaterialApp(
       title: kIsWeb ? "Pessoa Pensadora - Toda a obra de Fernando Pessoa" : "Pessoa Pensadora",
       theme: bonitoTheme,
