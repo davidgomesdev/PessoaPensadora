@@ -6,7 +6,7 @@
      ["semantic-release-replace-plugin", {
        "replacements": [{
          "files": ["pubspec.yaml"],
-         "from": ["^version = \".*\"$"],
+         "from": ["^version = .*$"],
          "to": ["version = \"${nextRelease.version}\""],
          "results": [{
            "file": "pubspec.yaml",
