@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_pensadora/model/pessoa_category.dart';
@@ -179,7 +180,9 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           ),
           Row(
             children: [
-              if (category.isIndex)
+              // The FlutterFileDialog dialog isn't available on Web,
+              // need to swap for FilePicker
+              if (category.isIndex && !kIsWeb)
                 BugReportButton(
                   scaffoldKey: widget.scaffoldKey,
                 ),
