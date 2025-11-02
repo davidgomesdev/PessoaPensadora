@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_pensadora/ui/widget/button/share_text_button.dart';
 import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../widget/button/arquivo_pessoa_button.dart';
 

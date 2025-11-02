@@ -25,7 +25,9 @@ class App extends StatelessWidget {
     }
 
     return GetMaterialApp(
-      title: kIsWeb ? "Pessoa Pensadora - Toda a obra de Fernando Pessoa" : "Pessoa Pensadora",
+      title: kIsWeb
+          ? "Pessoa Pensadora - Toda a obra de Fernando Pessoa"
+          : "Pessoa Pensadora",
       theme: bonitoTheme,
       initialRoute: Routes.bootScreen,
       getPages: buildAppPages(),
