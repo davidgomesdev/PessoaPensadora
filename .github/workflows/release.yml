@@ -16,6 +16,10 @@ on:
         description: What's new text for Play Store (supports escape chars)
         # Don't shame me, this is in case I really have nothing new to write :)
         default: Nova versão com melhorias funcionais.
+      skip-mobile-deploy:
+        type: boolean
+        description: Skips deploy to mobile (useful since it takes long)
+        default: false
   push:
     branches:
       - main
@@ -77,6 +81,7 @@ jobs:
     name: 📦 Build App
     runs-on: ubuntu-latest
     needs: [version]
+    if: ${{ inputs.skip-mobile-deploy != 'true' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -104,7 +109,10 @@ jobs:
       # Google Play requires version code (int) to increment on every release
       - name: 🔧 - Prepare release
         run: |
-          versionCode=$(date '+%y%m%d%H%M')
+          currentDate=$(date '+%y%m%d%H%M')
+          # Trims last character to prevent being larger than max int
+          versionCode="${currentDate%?}"
+          
           sed -i -E "s/^version: (.*)\$/version: ${{ needs.version.outputs.new-version || '\1' }}+$versionCode/gm" pubspec.yaml 
 
       - name: 🌱 - Get dependencies
