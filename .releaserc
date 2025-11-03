@@ -7,7 +7,7 @@
        "replacements": [{
          "files": ["pubspec.yaml"],
          "from": ["^version = .*$"],
-         "to": ["version = \"${nextRelease.version}\""],
+         "to": ["version = ${nextRelease.version}"],
          "results": [{
            "file": "pubspec.yaml",
            "hasChanged": true,
