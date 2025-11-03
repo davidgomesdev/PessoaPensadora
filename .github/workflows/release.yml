@@ -80,8 +80,8 @@ jobs:
   build:
     name: 📦 Build App
     runs-on: ubuntu-latest
-    needs: [version]
-    if: ${{ inputs.skip-mobile-deploy != 'true' }}
+    needs: [ version ]
+    if: ${{ !cancelled() && inputs.skip-mobile-deploy != 'true' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -136,11 +136,12 @@ jobs:
 
   release:
     name: 🚢 Release
-    needs: [build]
+    needs: [ build ]
     runs-on: ubuntu-latest
     # GitHub releases are meant only for production releases,
     # otherwise I would need to delete the release made in the internal track to release to prod
-    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.release-track == 'production' }}
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && 
+            inputs.release-track == 'production' && needs.build.result == 'success' }}
     permissions:
       contents: write
       issues: write
@@ -167,11 +168,11 @@ jobs:
 
   publish-to-google-play:
     name: 📱 Publish to Google Play
-    needs: [build, release]
+    needs: [ build, release ]
     runs-on: ubuntu-latest
     # Publishing to Play Store even with no GitHub Release
     # for internal releases (prod check is done in the `version` job)
-    if: ${{ !cancelled() && needs.build.result == 'success' }}
+    if: ${{ !cancelled() && needs.build.result == 'success' && needs.release.result != 'failure' }}
     permissions:
       contents: read
       id-token: write
@@ -207,7 +208,7 @@ jobs:
 
   publish-to-github-pages:
     name: 📄 Publish to GitHub Pages (unused)
-    needs: [version]
+    needs: [ version ]
     runs-on: ubuntu-latest
     if: ${{ !cancelled() && inputs.release-track == 'production' }}
     permissions:
@@ -249,7 +250,7 @@ jobs:
 
   publish-to-cloudflare-pages:
     name: 🌐 Publish to Cloudflare Pages
-    needs: [version]
+    needs: [ version ]
     runs-on: ubuntu-latest
     permissions:
       contents: read
