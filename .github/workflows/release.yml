@@ -104,7 +104,7 @@ jobs:
       # Google Play requires version code (int) to increment on every release
       - name: 🔧 - Prepare release
         run: |
-          versionCode=$(date '+%y%m%d%H')
+          versionCode=$(date '+%y%m%d%H%M')
           sed -i -E "s/^version: (.*)\$/version: ${{ needs.version.outputs.new-version || '\1' }}+$versionCode/gm" pubspec.yaml 
 
       - name: 🌱 - Get dependencies
