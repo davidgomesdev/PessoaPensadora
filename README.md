@@ -1,8 +1,12 @@
 # Pessoa Pensadora
 
-Uma aplicação para ler os textos de [Fernando Pessoa](https://pt.wikipedia.org/wiki/Fernando_Pessoa), provenientes de [Arquivo Pessoa](http://arquivopessoa.net/).
+A primeira aplicação para ler toda a obra de [Fernando Pessoa](https://pt.wikipedia.org/wiki/Fernando_Pessoa), provenientes de [Arquivo Pessoa](http://arquivopessoa.net/).
 
 Criada para serem lidos numa interface mais moderna e de fácil leitura no telemóvel.
+
+Disponível na [Play Store](https://play.google.com/store/apps/details?id=me.l3n.pessoapensadora.pessoa_pensadora) para Android.
+
+Também disponível em versão Web: https://pessoa.davidgomes.blog.
 
 > **Nota**: esta aplicação não possui qualquer afiliação ao website [Arquivo Pessoa](http://arquivopessoa.net/info/ficha), exceto a extração dos textos do mesmo.
 > 
