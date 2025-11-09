@@ -18,8 +18,20 @@
 
   <title>Pessoa Pensadora - Toda a obra de Fernando Pessoa</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    html, body {
+      overscroll-behavior-x: none;
+    }
+  </style>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    document.addEventListener('touchstart', (startEvent) => {
+      if (startEvent.touches.length > 1) return;
+      startEvent.preventDefault();
+    }, { passive: false } );
+  </script>
 </body>
 </html>
