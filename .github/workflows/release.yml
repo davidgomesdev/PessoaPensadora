@@ -18,7 +18,7 @@ on:
         default: Nova versão com melhorias funcionais.
       skip-mobile-deploy:
         type: boolean
-        description: Skips deploy to mobile (useful since it takes long)
+        description: Skip deploy to mobile (useful since it takes long)
         default: false
   push:
     branches:
