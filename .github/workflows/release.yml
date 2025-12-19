@@ -206,48 +206,6 @@ jobs:
           track: ${{ env.RELEASE_TRACK }}
           whatsNewDirectory: releaseNotes/
 
-  publish-to-github-pages:
-    name: 📄 Publish to GitHub Pages (unused)
-    needs: [ version ]
-    runs-on: ubuntu-latest
-    if: ${{ !cancelled() && inputs.release-track == 'production' }}
-    permissions:
-      contents: read
-      id-token: write
-      pages: write
-      deployments: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: 💎 - Install Flutter
-        uses: subosito/flutter-action@fd55f4c5af5b953cc57a2be44cb082c8f6635e8e # v2.21.0
-        with:
-          cache: true
-          flutter-version: 3.x
-          channel: stable
-
-      - name: 🌱 - Get dependencies
-        run: cat pubspec.yaml && echo "---------" && flutter pub get
-
-      - name: 🔨 - Build web
-        run: |
-          flutter build web --release
-
-      - name: 🔧 - Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: 📦 - Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: build/web
-
-      - name: 🚀 - Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
-        id: deployment
-
   publish-to-cloudflare-pages:
     name: 🌐 Publish to Cloudflare Pages
     needs: [ version ]
