@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 );
               }),
-              leadingWidth: 120,
+              leadingWidth: 200,
               actions: (text == null)
                   ? []
                   : [
