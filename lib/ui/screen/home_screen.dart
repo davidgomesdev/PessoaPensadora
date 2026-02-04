@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen>
   final ScrollController readerScrollController =
       ScrollController(keepScrollOffset: false);
   final ScrollController drawerScrollController = ScrollController();
-  final StreamController<PessoaText> _streamController =
+  final StreamController<PessoaText> _currentTextStreamController =
       StreamController.broadcast();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool isFullReading = false;
@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen>
     final TextStoreService storeService = Get.find();
 
     return StreamBuilder<PessoaText>(
-        stream: _streamController.stream,
+        stream: _currentTextStreamController.stream,
         builder: (ctx, snapshot) {
           final text = snapshot.data;
 
@@ -59,26 +59,24 @@ class _HomeScreenState extends State<HomeScreen>
           return Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
-              leading: Builder(
-                builder: (context) {
-                  return GestureDetector(
-                    onTap: () => Scaffold.of(context).openDrawer(),
-                    child: const Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: Row(
-                        children: [
-                          Icon(Icons.menu),
-                          SizedBox(width: 8),
-                          Text(
-                            "Índice",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ],
-                      ),
+              leading: Builder(builder: (context) {
+                return GestureDetector(
+                  onTap: () => Scaffold.of(context).openDrawer(),
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Row(
+                      children: [
+                        Icon(Icons.menu),
+                        SizedBox(width: 8),
+                        Text(
+                          "Índice",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ],
                     ),
-                  );
-                }
-              ),
+                  ),
+                );
+              }),
               leadingWidth: 120,
               actions: (text == null)
                   ? []
@@ -94,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen>
             drawer: TextSelectionDrawer(
               mainIndex: storeService.mainIndex,
               fullIndex: storeService.fullIndex,
-              selectionSink: _streamController.sink,
+              selectionSink: _currentTextStreamController.sink,
               scrollController: drawerScrollController,
               selectedText: text,
               scaffoldKey: _scaffoldKey,
@@ -105,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             body: HomeScreenBody(
                 text: text,
-                streamController: _streamController,
+                streamController: _currentTextStreamController,
                 scrollController: readerScrollController),
           );
         });
@@ -115,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen>
   void dispose() {
     super.dispose();
 
-    _streamController.close();
+    _currentTextStreamController.close();
   }
 }
 
@@ -162,28 +160,36 @@ class TextReaderArea extends StatelessWidget {
   Widget build(BuildContext context) {
     final category = currentText.category!;
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints.expand(),
-      child: NavigationWidget(
-        child: TextReader(
-          categoryTitle: currentText.category!.title,
-          title: currentText.title,
-          content: currentText.content,
-          author: currentText.author,
-          scrollController: scrollController,
-        ),
-        onNext: () {
-          final newText = category.texts.getNext(currentText);
+    return StreamBuilder(
+        stream: streamController.stream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            _scrollToTop();
+          }
 
-          _handleNavigation(newText);
-        },
-        onPrevious: () {
-          final newText = category.texts.getPrevious(currentText);
+          return ConstrainedBox(
+            constraints: const BoxConstraints.expand(),
+            child: NavigationWidget(
+              child: TextReader(
+                categoryTitle: currentText.category!.title,
+                title: currentText.title,
+                content: currentText.content,
+                author: currentText.author,
+                scrollController: scrollController,
+              ),
+              onNext: () {
+                final newText = category.texts.getNext(currentText);
 
-          _handleNavigation(newText);
-        },
-      ),
-    );
+                _handleNavigation(newText);
+              },
+              onPrevious: () {
+                final newText = category.texts.getPrevious(currentText);
+
+                _handleNavigation(newText);
+              },
+            ),
+          );
+        });
   }
 
   void _handleNavigation(PessoaText? newText) {
@@ -195,12 +201,12 @@ class TextReaderArea extends StatelessWidget {
     log.i("Swipe to ${newText.title}");
     streamController.add(newText);
 
+    _scrollToTop();
+  }
+
+  void _scrollToTop() {
     if (scrollController.hasClients) {
-      scrollController.animateTo(
-        0.0,
-        duration: const Duration(milliseconds: 1000),
-        curve: Curves.easeOutQuart,
-      );
+      scrollController.jumpTo(0.0);
     }
   }
 }
