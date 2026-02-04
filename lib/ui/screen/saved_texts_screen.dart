@@ -41,9 +41,9 @@ class _SavedTextsScreenState extends State<SavedTextsScreen> {
               children: [
                 Text("Textos marcados", style: bonitoTextTheme.displaySmall),
                 IconButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      await collapsableRepository.toggleAllStatus();
                       setState(() {
-                        collapsableRepository.toggleAllStatus();
                       });
                     },
                     icon: Obx(
