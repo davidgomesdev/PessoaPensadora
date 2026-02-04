@@ -50,5 +50,6 @@ jobs:
       - name: 🔨📱 - Build Android app
         run: flutter build appbundle --flavor dev --debug
 
+
       - name: 🔨🌐 - Build Web
         run: flutter build web --debug
