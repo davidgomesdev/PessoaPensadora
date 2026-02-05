@@ -3,7 +3,7 @@ description: Beautify ArquivoPessoa.net
 
 publish_to: 'none'
 
-version: 1.7.0
+version: 1.7.1
 
 environment:
   sdk: ">=3.0.0"
