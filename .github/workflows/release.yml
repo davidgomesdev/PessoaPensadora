@@ -10,7 +10,7 @@ on:
           - internal
           - alpha
           - production
-        default: production
+        default: internal
       whats-new:
         type: string
         description: What's new text for Play Store (supports escape chars)
