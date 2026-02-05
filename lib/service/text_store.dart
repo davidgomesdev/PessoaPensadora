@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
+import 'package:numerus/numerus.dart';
 import 'package:pessoa_pensadora/dto/box/box_person_category.dart';
 import 'package:pessoa_pensadora/model/pessoa_category.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 import '../dto/box/box_person_text.dart';
+import '../util/string_utils.dart';
 
 const indexID = 0;
 
@@ -108,6 +110,46 @@ void _fillTexts(Map<int, BoxPessoaText> texts, PessoaCategory category) {
     }
 
     text.category = category;
+  }
+
+  if (category.texts.every(
+      (text) => substringBefore(text.title, '.').isValidRomanNumeralValue())) {
+    category.texts.sort((prev, next) {
+      // Should never be null, but just in case, we consider it/**/ as 0
+      return (substringBefore(prev.title, '.').toRomanNumeralValue() ?? 0)
+          .compareTo(
+              substringBefore(next.title, '.').toRomanNumeralValue() ?? 0);
+    });
+
+    return;
+  }
+
+  // Special case for "O GUARDADOR DE REBANHOS",
+  // which is the only one that has a mix of roman numeral and
+  // non-roman numeral titles. In this case,
+  // we want to sort the roman numeral titles first,
+  // followed by the non-roman numeral titles, both sorted alphabetically.
+  if (category.id == 2) {
+    final romanNumeralTitledTexts = category.texts.where((text) =>
+        substringBefore(text.title, " - ").isValidRomanNumeralValue());
+    final nonRomanNumeralTitledTexts =
+        category.texts.where((text) => !romanNumeralTitledTexts.contains(text));
+
+    final sortedRomanNumeralTitledTexts = romanNumeralTitledTexts.toList()
+      ..sort((prev, next) {
+        return (substringBefore(prev.title, " - ").toRomanNumeralValue() ?? 0)
+            .compareTo(
+                substringBefore(next.title, " - ").toRomanNumeralValue() ?? 0);
+      });
+    final sortedNonRomanNumeralTitledTexts = nonRomanNumeralTitledTexts.toList()
+      ..sort((prev, next) => prev.title.compareTo(next.title));
+
+    category.texts
+      ..clear()
+      ..addAll(sortedRomanNumeralTitledTexts)
+      ..addAll(sortedNonRomanNumeralTitledTexts);
+
+    return;
   }
 
   _sortByTitleAlphabetically(category);
