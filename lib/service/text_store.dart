@@ -152,9 +152,59 @@ void _fillTexts(Map<int, BoxPessoaText> texts, PessoaCategory category) {
     return;
   }
 
+  if (category.texts.every((text) =>
+      substringBefore(text.title, ':').toPortugueseNumeralValue() != -1)) {
+    _sortByPortugueseNumerals(category);
+    return;
+  }
+
   _sortByTitleAlphabetically(category);
 }
 
 void _sortByTitleAlphabetically(PessoaCategory category) {
   category.texts.sort((prev, next) => prev.title.compareTo(next.title));
+}
+
+void _sortByPortugueseNumerals(PessoaCategory category) {
+  category.texts.sort((prev, next) {
+    final prevNumeralValue =
+        substringBefore(prev.title, ':').toPortugueseNumeralValue();
+    final nextNumeralValue =
+        substringBefore(next.title, ':').toPortugueseNumeralValue();
+
+    return prevNumeralValue.compareTo(nextNumeralValue);
+  });
+}
+
+extension on String {
+  int toPortugueseNumeralValue() {
+    switch (this) {
+      case "Primeiro":
+        return 1;
+      case "Segundo":
+        return 2;
+      case "Terceiro":
+        return 3;
+      case "Quarto":
+        return 4;
+      case "Quinto":
+        return 5;
+      case "Sexto":
+        return 6;
+      case "Sétimo":
+        return 7;
+      case "Sétimo (I)":
+        return 8;
+      case "Sétimo (II)":
+        return 9;
+      case "Oitavo":
+        return 10;
+      case "Nono":
+        return 11;
+      case "Décimo":
+        return 12;
+      default:
+        return -1; // Not a valid Portuguese numeral
+    }
+  }
 }
