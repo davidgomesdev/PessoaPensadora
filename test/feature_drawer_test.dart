@@ -1,5 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pessoa_pensadora/ui/widget/drawer_list_view.dart';
 import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
 import 'package:pessoa_pensadora/ui/widget/text_selection_drawer.dart';
 
@@ -484,4 +486,97 @@ void main() {
           find.byIcon(Icons.subdirectory_arrow_right_rounded), findsExactly(3));
     });
   });
+
+  group('Sorting', () {
+    testWidgets(
+        'When entering on a category with no special sorting, the texts should be sorted alphabetically',
+        (tester) async {
+      await startApp(tester);
+      await openDrawer(tester);
+
+      await tester.tap(find.text('Livro do Desassossego'));
+      await tester.pumpAndSettle();
+
+      List<String?> texts = getDrawerTexts();
+
+      final order = [
+        texts.indexOf("... e do alto da majestade de todos os sonhos, "
+            "ajudante de guarda-livros..."),
+        texts.indexOf("... e tudo é uma doença incurável."),
+        texts.indexOf("A DIVINA INVEJA"),
+        texts.indexOf('A SOCIEDADE EM QUE EU VIVO')
+      ];
+
+      expect(order.sorted((a, b) => a.compareTo(b)), order);
+    });
+
+    testWidgets(
+        'When entering on a category with roman numeral sorting, the texts should be sorted by their roman numeral order',
+        (tester) async {
+      await startApp(tester);
+      await openDrawer(tester);
+
+      await tester.tap(find.text('MENSAGEM'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Segunda parte: MAR PORTUGUÊS'));
+      await tester.pumpAndSettle();
+
+      List<String?> texts = getDrawerTexts();
+
+      List<int> order = [
+        texts.indexOf("I. O INFANTE"),
+        texts.indexOf("II. HORIZONTE"),
+        texts.indexOf("III. PADRÃO"),
+        texts.indexOf("IV. O MOSTRENGO"),
+        texts.indexOf("V. EPITÁFIO DE BARTOLOMEU DIAS"),
+        texts.indexOf("VI. OS COLOMBOS"),
+        texts.indexOf("VII. OCIDENTE"),
+        texts.indexOf("VIII. FERNÃO DE MAGALHÃES"),
+        texts.indexOf("IX. ASCENSÃO DE VASCO DA GAMA"),
+        texts.indexOf("X. MAR PORTUGUÊS"),
+        texts.indexOf("XI. A ÚLTIMA NAU"),
+        texts.indexOf("XII. PRECE"),
+      ];
+
+      expect(order.sorted((a, b) => a.compareTo(b)), order);
+    });
+
+    testWidgets(
+        'When entering on a category with both roman numeral sorting and alphabetical, the texts should be sorted first by their roman numeral order then alphabetically',
+        (tester) async {
+      await startApp(tester);
+      await openDrawer(tester);
+
+      await tester.tap(find.text('Poemas de Alberto Caeiro'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('O GUARDADOR DE REBANHOS'));
+      await tester.pumpAndSettle();
+
+      List<String?> texts = getDrawerTexts();
+
+      // not bothering to check for the alphabetical order
+      List<int> order = [
+        texts.indexOf("I - Eu nunca guardei rebanhos,"),
+        texts.indexOf("II - O meu olhar é nítido como um girassol."),
+        texts.indexOf("VI - Pensar em Deus é desobedecer a Deus,"),
+        texts.indexOf("IX - Sou um guardador de rebanhos."),
+      ];
+
+      expect(order.sorted((a, b) => a.compareTo(b)), order);
+    });
+  });
+}
+
+List<String?> getDrawerTexts() {
+  final texts = find
+      .descendant(
+          of: find.byType(DrawerTextTile, skipOffstage: false),
+          matching: find.byType(Text, skipOffstage: false),
+          skipOffstage: false)
+      .evaluate()
+      .map((text) => (text.widget as Text).data)
+      .toList();
+  return texts;
 }
