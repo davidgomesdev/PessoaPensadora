@@ -566,6 +566,37 @@ void main() {
 
       expect(order.sorted((a, b) => a.compareTo(b)), order);
     });
+
+    testWidgets(
+        'When entering on a category with Portuguese numeral sorting and alphabetical, the texts should be sorted first by their Portuguese numeral order then alphabetically',
+        (tester) async {
+      await startApp(tester);
+      await openDrawer(tester);
+
+      await tester.tap(find.text('MENSAGEM'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Primeira parte: BRASÃO'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('II - OS CASTELOS'));
+      await tester.pumpAndSettle();
+
+      List<String?> texts = getDrawerTexts();
+
+      // not bothering to check for the alphabetical order
+      List<int> order = [
+        texts.indexOf("Primeiro: ULISSES"),
+        texts.indexOf("Segundo: VIRIATO"),
+        texts.indexOf("Terceiro: O CONDE D. HENRIQUE"),
+        texts.indexOf("Quarto: D. TAREJA"),
+        texts.indexOf("Quinto: D. AFONSO HENRIQUES"),
+        texts.indexOf("Sétimo (I): D. JOÃO O PRIMEIRO"),
+        texts.indexOf("Sétimo (II): D. FILIPA DE LENCASTRE"),
+      ];
+
+      expect(order.sorted((a, b) => a.compareTo(b)), order);
+    });
   });
 }
 
