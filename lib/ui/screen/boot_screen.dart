@@ -51,14 +51,12 @@ class _BootScreenState extends State<BootScreen> {
     Get.put(await ReadRepository.initialize(), permanent: true);
     Get.put(await HistoryRepository.initialize(), permanent: true);
     Get.put(await CollapsableRepository.initialize(), permanent: true);
-    Get.put(await ReaderPreferenceStore.initialize(), permanent: true);
 
     final version = (await PackageInfo.fromPlatform()).version;
 
     log.i("Running version '$version'");
 
-    finishedAt =
-    DateTime.timestamp();
+    finishedAt = DateTime.timestamp();
     var durationSinceStart = finishedAt!.difference(startedAt);
 
     log.d("Took ${durationSinceStart.inMilliseconds}ms "

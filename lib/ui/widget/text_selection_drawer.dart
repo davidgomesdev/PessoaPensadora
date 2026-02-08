@@ -177,7 +177,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         children: [
           Flexible(
             child: Text(
-              category.title,
+              category.isIndex ? 'index'.tr : category.title,
               style: bonitoTextTheme.displaySmall,
             ),
           ),

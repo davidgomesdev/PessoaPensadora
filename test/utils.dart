@@ -27,7 +27,9 @@ Future<void> startApp(WidgetTester tester) async {
   await initializeDependencies(tester);
 
   await tester.runAsync(() async {
-    await tester.pumpWidget(const App());
+    await tester.pumpWidget(App(
+      initialLocale: Locale('pt'),
+    ));
     await tester.pumpAndSettle();
   });
 

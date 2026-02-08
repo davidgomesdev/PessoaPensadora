@@ -10,6 +10,7 @@ class Labels extends Translations {
               'Textos de Fernando Pessoa, provenientes de Arquivo Pessoa',
           'main_menu_subtitle_note': '(sem qualquer afiliação)',
           'view_on_arquivo_pessoa': 'Ver no Arquivo Pessoa',
+          'change_language': 'Mudar idioma',
           /// Also in history screen
           'history': 'Histórico',
           // TextReader Context Menu
@@ -54,6 +55,7 @@ class Labels extends Translations {
           'main_menu_subtitle': "Fernando Pessoa's texts, sourced from Arquivo Pessoa",
           'main_menu_subtitle_note': '(without affiliation)',
           'view_on_arquivo_pessoa': 'View on Arquivo Pessoa',
+          'change_language': 'Change language',
           /// Also in history screen
           'history': 'History',
           // TextReader Context Menu

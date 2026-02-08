@@ -123,11 +123,12 @@ class HomeScreenBody extends StatelessWidget {
   final StreamController<PessoaText> streamController;
   final ScrollController scrollController;
 
-  const HomeScreenBody(
-      {super.key,
-      required this.text,
-      required this.streamController,
-      required this.scrollController});
+  const HomeScreenBody({
+    super.key,
+    required this.text,
+    required this.streamController,
+    required this.scrollController,
+  });
 
   @override
   Widget build(BuildContext context) {

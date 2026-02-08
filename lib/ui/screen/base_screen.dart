@@ -17,7 +17,9 @@ var startedAt = DateTime.timestamp();
 DateTime? finishedAt;
 
 class App extends StatelessWidget {
-  const App({super.key});
+  final Locale initialLocale;
+
+  const App({super.key, required this.initialLocale});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class App extends StatelessWidget {
       theme: bonitoTheme,
       initialRoute: Routes.bootScreen,
       translations: Labels(),
-      locale: Locale('pt'),
+      locale: initialLocale,
       getPages: buildAppPages(),
     );
   }
