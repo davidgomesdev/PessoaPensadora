@@ -1,4 +1,3 @@
-
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +29,7 @@ class _SavedTextsScreenState extends State<SavedTextsScreen> {
       savedTexts,
       (text) => text.rootCategory,
     ).map((cat, texts) => MapEntry(cat, CategoryTileData(texts)));
+    var isAllCollapsed = collapsableRepository.isAllCollapsed.value;
 
     return Scaffold(
       body: CustomScrollView(
@@ -39,18 +39,22 @@ class _SavedTextsScreenState extends State<SavedTextsScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Textos marcados", style: bonitoTextTheme.displaySmall),
+                Text('bookmarked_texts'.tr,
+                    style: bonitoTextTheme.displaySmall),
                 IconButton(
-                    onPressed: () async {
-                      await collapsableRepository.toggleAllStatus();
-                      setState(() {
-                      });
-                    },
-                    icon: Obx(
-                      () => Icon(collapsableRepository.isAllCollapsed.value
+                  onPressed: () async {
+                    await collapsableRepository.toggleAllStatus();
+                    setState(() {});
+                  },
+                  icon: Obx(
+                    () {
+                      return Icon(isAllCollapsed
                           ? Icons.arrow_drop_down_circle_rounded
-                          : Icons.arrow_drop_down_circle_outlined),
-                    ))
+                          : Icons.arrow_drop_down_circle_outlined);
+                    },
+                  ),
+                  tooltip: (isAllCollapsed ? 'collapse_all' : 'expand_all').tr,
+                )
               ],
             ),
             pinned: true,
@@ -179,7 +183,7 @@ class _SavedTextTileState extends State<_SavedTextTile> {
             backgroundColor: Colors.amber,
             foregroundColor: Colors.white,
             icon: Icons.delete,
-            label: 'Apagar',
+            label: 'delete'.tr,
           ),
         ],
       ),
@@ -238,9 +242,9 @@ class _SavedTextTileState extends State<_SavedTextTile> {
     messenger.clearSnackBars();
 
     final snackBar = SnackBar(
-      content: const Text('Removido dos textos marcados'),
+      content: Text('removed_from_bookmarks_texts'.tr),
       action: SnackBarAction(
-          label: 'Cancelar',
+          label: 'cancel'.tr,
           onPressed: () {
             log.i('Snackbar undo bookmarked text pressed.');
           }),

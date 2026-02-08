@@ -16,6 +16,7 @@ class ShareTextButton extends StatelessWidget {
         service.shareText(text, author);
       },
       icon: const Icon(Icons.ios_share_rounded),
+      tooltip: 'share'.tr,
     );
   }
 }

@@ -120,6 +120,6 @@ Future<void> enterBookmarkScreen(WidgetTester tester) async {
 }
 
 Future<void> hitBackDrawerButton(WidgetTester tester) async {
-  await tester.tap(find.text('Voltar'));
+  await tester.tap(find.text('back'.tr));
   await tester.pumpAndSettle();
 }

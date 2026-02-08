@@ -10,6 +10,7 @@ import 'package:pessoa_pensadora/ui/screen/saved_text_reader_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/splash_screen.dart';
 
+import '../../internalization/labels.dart';
 import 'boot_screen.dart';
 
 var startedAt = DateTime.timestamp();
@@ -30,6 +31,8 @@ class App extends StatelessWidget {
           : "Pessoa Pensadora",
       theme: bonitoTheme,
       initialRoute: Routes.bootScreen,
+      translations: Labels(),
+      locale: Locale('pt'),
       getPages: buildAppPages(),
     );
   }

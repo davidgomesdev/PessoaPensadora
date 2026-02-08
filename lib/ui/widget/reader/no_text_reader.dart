@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 
 class NoTextReader extends StatelessWidget {
@@ -20,14 +21,15 @@ class NoTextReader extends StatelessWidget {
           DefaultTextStyle(
             style: bonitoTextTheme.labelSmall!
                 .copyWith(fontStyle: FontStyle.italic),
-            child: const Column(
+            child: Column(
               children: [
                 Text(
-                    "Textos de Fernando Pessoa, provenientes de Arquivo Pessoa"),
+                    'main_menu_subtitle'.tr
+                ),
                 SizedBox(
                   height: 8,
                 ),
-                Text("(sem qualquer afiliação)")
+                Text('main_menu_subtitle_note'.tr)
               ],
             ),
           ),

@@ -63,14 +63,14 @@ class _HomeScreenState extends State<HomeScreen>
               leading: Builder(builder: (context) {
                 return GestureDetector(
                   onTap: () => Scaffold.of(context).openDrawer(),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.only(left: 8),
                     child: Row(
                       children: [
                         Icon(Icons.menu),
                         SizedBox(width: 8),
                         Text(
-                          "Índice",
+                          'index'.tr,
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ],

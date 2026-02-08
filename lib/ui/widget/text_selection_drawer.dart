@@ -29,9 +29,9 @@ class SearchFilter {
 }
 
 enum SearchReadFilter {
-  all('Todos', Icons.book),
-  unread('Apenas não lidos', Icons.chrome_reader_mode_outlined),
-  read('Apenas lidos', Icons.chrome_reader_mode);
+  all('search_read_filter_all', Icons.book),
+  unread('search_read_filter_read', Icons.chrome_reader_mode_outlined),
+  read('search_read_filter_unread', Icons.chrome_reader_mode);
 
   final String label;
   final IconData icon;
@@ -196,13 +196,13 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                       widget.onFullReadingChange(isFullReading),
                 ),
               IconButton(
-                  tooltip: 'Textos marcados',
+                  tooltip: 'bookmarked_texts'.tr,
                   icon: const Icon(Icons.bookmarks),
                   onPressed: () {
                     Get.toNamed(Routes.savedScreen);
                   }),
               IconButton(
-                  tooltip: 'Histórico',
+                  tooltip: 'history'.tr,
                   icon: const Icon(Icons.history),
                   onPressed: () {
                     Get.toNamed(Routes.historyScreen);
@@ -259,7 +259,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
           ),
           Flexible(
             child: IconButton(
-              tooltip: currentFilter.readFilter.label,
+              tooltip: currentFilter.readFilter.label.tr,
               icon: Icon(currentFilter.readFilter.icon),
               onPressed: () {
                 searchFilterStream.add(currentFilter
@@ -315,7 +315,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         horizontalTitleGap: 8.0,
         minLeadingWidth: 0.0,
         leading: const Icon(Icons.arrow_back_rounded),
-        title: Text("Voltar", style: bonitoTextTheme.headlineMedium),
+        title: Text('back'.tr, style: bonitoTextTheme.headlineMedium),
         tileColor: Colors.black26,
         onTap: () {
           setState(() {

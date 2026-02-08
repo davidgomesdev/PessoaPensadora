@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 const arquivoPessoaTextUrl = 'http://arquivopessoa.net/textos';
@@ -19,7 +20,8 @@ class _ArquivoPessoaButtonState extends State<ArquivoPessoaButton> {
         onPressed: () async {
           await launchUrlString('$arquivoPessoaTextUrl/${widget.textId}');
         },
-        icon: const Icon(Icons.open_in_new)
+        icon: const Icon(Icons.open_in_new),
+        tooltip: 'view_on_arquivo_pessoa'.tr
     );
   }
 }

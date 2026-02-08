@@ -133,7 +133,7 @@ class ReaderContentText extends StatelessWidget {
 
   ContextMenuButtonItem buildDefinitionButton(String selectedWord) {
     return ContextMenuButtonItem(
-        label: '📖 Definir',
+        label: 'define'.tr,
         onPressed: () {
           ContextMenuController.removeAny();
           _actionService.defineWord(selectedWord);
@@ -142,7 +142,7 @@ class ReaderContentText extends StatelessWidget {
 
   ContextMenuButtonItem buildSearchButton(String selectedText) {
     return ContextMenuButtonItem(
-        label: '🔍 Pesquisar',
+        label: 'search'.tr,
         onPressed: () {
           ContextMenuController.removeAny();
           _actionService.searchOnline(selectedText);
@@ -151,7 +151,7 @@ class ReaderContentText extends StatelessWidget {
 
   ContextMenuButtonItem buildShareButton(String selectedText) {
     return ContextMenuButtonItem(
-      label: '📤 Partilhar',
+      label: 'share'.tr,
       onPressed: () {
         ContextMenuController.removeAny();
         _actionService.shareQuote(selectedText, author);

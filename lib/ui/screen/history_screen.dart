@@ -36,7 +36,7 @@ class HistoryScreen extends StatelessWidget {
                   const ScrollBehavior().copyWith(overscroll: false),
               slivers: [
                 SliverAppBar(
-                  title: Text("Histórico", style: bonitoTextTheme.displaySmall),
+                  title: Text('history'.tr, style: bonitoTextTheme.displaySmall),
                   pinned: true,
                 ),
                 SliverPadding(

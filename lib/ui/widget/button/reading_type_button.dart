@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ReadingTypeButton extends StatelessWidget {
   final bool isFullReading;
@@ -10,7 +11,7 @@ class ReadingTypeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        tooltip: (isFullReading) ? 'Leitura poética' : 'Leitura integral',
+        tooltip: (isFullReading) ? 'full_reading_mode'.tr : 'main_reading_mode'.tr,
         icon: isFullReading
             ? const Icon(Icons.unfold_less_double_rounded)
             : const Icon(Icons.read_more_rounded),

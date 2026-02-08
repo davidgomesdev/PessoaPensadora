@@ -24,19 +24,21 @@ class _SaveTextButtonState extends State<SaveTextButton> {
     final ReadRepository readRepository = Get.find();
 
     return IconButton(
-        onPressed: () {
-          setState(() {
-            if (repository.isTextSaved(textId)) {
-              repository.deleteText(textId);
-            } else {
-              readRepository.markAsRead(textId);
-              repository.saveText(widget.text);
-              ActionFeedback.lightHaptic();
-            }
-          });
-        },
-        icon: Icon(repository.isTextSaved(textId)
-            ? Icons.bookmark_outlined
-            : Icons.bookmark_outline_outlined));
+      onPressed: () {
+        setState(() {
+          if (repository.isTextSaved(textId)) {
+            repository.deleteText(textId);
+          } else {
+            readRepository.markAsRead(textId);
+            repository.saveText(widget.text);
+            ActionFeedback.lightHaptic();
+          }
+        });
+      },
+      icon: Icon(repository.isTextSaved(textId)
+          ? Icons.bookmark_outlined
+          : Icons.bookmark_outline_outlined),
+      tooltip: 'bookmark'.tr,
+    );
   }
 }

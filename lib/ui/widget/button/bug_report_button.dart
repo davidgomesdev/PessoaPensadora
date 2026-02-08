@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:get/get.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,7 +16,7 @@ class BugReportButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        tooltip: 'Reportar problema',
+        tooltip: 'report_a_problem'.tr,
         icon: const Icon(Icons.report_problem),
         onPressed: () async {
           if (scaffoldKey.currentState?.isDrawerOpen == true) {
@@ -26,10 +27,9 @@ class BugReportButton extends StatelessWidget {
           final name = '$_bugReportNamePrefix-${time.toIso8601String()}.txt';
 
           var snackBar = SnackBar(
-            content: const Text(
-                'Escolhe onde pretendes guardar o registo do problema.\nDepois anexa-o no e-mail. ⚠️'),
+            content: Text('choose_where_to_save'.tr),
             action: SnackBarAction(
-                label: 'Ok',
+                label: 'ok'.tr,
                 onPressed: () async {
                   final params = SaveFileDialogParams(
                       fileName: name,
@@ -37,21 +37,15 @@ class BugReportButton extends StatelessWidget {
                   final path = await FlutterFileDialog.saveFile(params: params);
 
                   if (path == null && context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text(
-                            "É necessário guardares o registo para reportar problemas.")));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('report_a_problem_desc'.tr)));
                     return;
                   }
 
-                  await launchUrl(Uri.parse(
-                      'mailto:problemas-app@davidgomes.blog?'
-                          'subject=RESUME-O-PROBLEMA-AQUI&'
-                          'body=Descreve aqui detalhadamente o problema.\n\n'
-                          'Escreve como aconteceu.\n\n'
-                          'E inclui screenshots ou '
-                          'um video mostrando o que fizeste para o problema surgir, '
-                          'para que eu consiga replicar do meu lado.\n\n'
-                          "⚠️ Anexa também o ficheiro que guardaste (o nome começa por '0-Pessoa-Pensadora-Registo-de-Problemas')."));
+                  await launchUrl(
+                      Uri.parse('mailto:problemas-app@davidgomes.blog?'
+                          'subject=${'report_a_problem_email_subject'.tr}&'
+                          'body=${'report_a_problem_email_body'.tr}'));
                 }),
             duration: const Duration(seconds: 15),
           );
