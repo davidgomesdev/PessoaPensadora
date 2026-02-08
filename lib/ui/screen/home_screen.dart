@@ -16,6 +16,7 @@ import 'package:pessoa_pensadora/util/generic_extensions.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 import '../../repository/history_store.dart';
+import '../../repository/reader_preference_store.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen>
   final StreamController<PessoaText> _currentTextStreamController =
       StreamController.broadcast();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  bool isFullReading = false;
 
   _HomeScreenState() : super();
 
@@ -48,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final TextStoreService storeService = Get.find();
+    final ReaderPreferenceStore readerPreferenceStore = Get.find();
 
     return StreamBuilder<PessoaText>(
         stream: _currentTextStreamController.stream,
@@ -96,9 +97,9 @@ class _HomeScreenState extends State<HomeScreen>
               scrollController: drawerScrollController,
               selectedText: text,
               scaffoldKey: _scaffoldKey,
-              isFullReading: isFullReading,
+              readerPreferenceStore: readerPreferenceStore,
               onFullReadingChange: (newValue) => setState(() {
-                isFullReading = newValue;
+                readerPreferenceStore.swapReadingMode();
               }),
             ),
             body: HomeScreenBody(

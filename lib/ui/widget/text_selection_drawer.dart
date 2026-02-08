@@ -6,9 +6,10 @@ import 'package:get/get.dart';
 import 'package:pessoa_pensadora/model/pessoa_category.dart';
 import 'package:pessoa_pensadora/model/pessoa_text.dart';
 import 'package:pessoa_pensadora/repository/read_store.dart';
+import 'package:pessoa_pensadora/repository/reader_preference_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/widget/button/bug_report_button.dart';
-import 'package:pessoa_pensadora/ui/widget/drawer_list_view.dart';
+import 'package:pessoa_pensadora/ui/widget/text_selection_drawer_list_view.dart';
 import 'package:pessoa_pensadora/ui/widget/button/reading_type_button.dart';
 import 'package:pessoa_pensadora/util/generic_extensions.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
@@ -47,7 +48,7 @@ class TextSelectionDrawer extends StatefulWidget {
   final Sink<PessoaText> selectionSink;
   final ScrollController scrollController;
   final GlobalKey<ScaffoldState> scaffoldKey;
-  final bool isFullReading;
+  final ReaderPreferenceStore readerPreferenceStore;
   final void Function(bool) onFullReadingChange;
 
   const TextSelectionDrawer({
@@ -58,7 +59,7 @@ class TextSelectionDrawer extends StatefulWidget {
     required this.selectedText,
     required this.scrollController,
     required this.scaffoldKey,
-    required this.isFullReading,
+    required this.readerPreferenceStore,
     required this.onFullReadingChange,
   });
 
@@ -92,7 +93,9 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
         stream: categoryStream.stream,
         builder: (ctx, snapshot) {
           final category = snapshot.data ??
-              ((widget.isFullReading) ? widget.fullIndex : widget.mainIndex);
+              ((widget.readerPreferenceStore.isFullReadingMode)
+                  ? widget.fullIndex
+                  : widget.mainIndex);
 
           searchFilterStream.add(SearchFilter(SearchReadFilter.all));
           textEditingController.text = '';
@@ -188,7 +191,7 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                 ),
               if (category.isIndex)
                 ReadingTypeButton(
-                  isFullReading: widget.isFullReading,
+                  isFullReading: widget.readerPreferenceStore.isFullReadingMode,
                   onPress: (isFullReading) =>
                       widget.onFullReadingChange(isFullReading),
                 ),
@@ -324,11 +327,11 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
 
             if (previousCategory!.isIndex) {
               categoryStream.add(null);
-              log.i("Backing to index ${(widget.isFullReading) ? "(Full)" : "(Main)"}");
+              log.i(
+                  "Backing to index ${(widget.readerPreferenceStore.isFullReadingMode) ? "(Full)" : "(Main)"}");
             } else {
               categoryStream.add(previousCategory);
-              log.i(
-                  'Backing to previous category "${previousCategory.title}"');
+              log.i('Backing to previous category "${previousCategory.title}"');
             }
           });
         });
