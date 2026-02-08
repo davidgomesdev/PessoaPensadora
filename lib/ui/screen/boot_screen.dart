@@ -4,6 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pessoa_pensadora/repository/collapsable_store.dart';
 import 'package:pessoa_pensadora/repository/history_store.dart';
 import 'package:pessoa_pensadora/repository/read_store.dart';
+import 'package:pessoa_pensadora/repository/reader_preference_store.dart';
 import 'package:pessoa_pensadora/repository/saved_store.dart';
 import 'package:pessoa_pensadora/service/selection_action_service.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
@@ -50,6 +51,7 @@ class _BootScreenState extends State<BootScreen> {
     Get.put(await ReadRepository.initialize(), permanent: true);
     Get.put(await HistoryRepository.initialize(), permanent: true);
     Get.put(await CollapsableRepository.initialize(), permanent: true);
+    Get.put(await ReaderPreferenceStore.initialize(), permanent: true);
 
     final version = (await PackageInfo.fromPlatform()).version;
 

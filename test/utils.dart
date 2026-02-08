@@ -14,6 +14,7 @@ import 'package:pessoa_pensadora/model/saved_text.dart';
 import 'package:pessoa_pensadora/repository/collapsable_store.dart';
 import 'package:pessoa_pensadora/repository/history_store.dart';
 import 'package:pessoa_pensadora/repository/read_store.dart';
+import 'package:pessoa_pensadora/repository/reader_preference_store.dart';
 import 'package:pessoa_pensadora/repository/saved_store.dart';
 import 'package:pessoa_pensadora/service/selection_action_service.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
@@ -87,6 +88,7 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
     Get.put(await ReadRepository.initialize(), permanent: true);
     Get.put(await HistoryRepository.initialize(), permanent: true);
     Get.put(await CollapsableRepository.initialize(), permanent: true);
+    Get.put(await ReaderPreferenceStore.initialize(), permanent: true);
     Get.put(SelectionActionService(), permanent: true);
   });
 
