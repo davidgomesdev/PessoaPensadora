@@ -88,8 +88,11 @@ class CategoryScreen extends StatelessWidget {
                     final sub = subs[i];
                     return CollItemWidget(
                       category: sub,
-                      onTap: () =>
-                          Get.toNamed(Routes.categoryScreen, arguments: sub),
+                      onTap: () => Get.toNamed(
+                        Routes.categoryScreen,
+                        arguments: sub,
+                        preventDuplicates: false,
+                      ),
                     );
                   } else {
                     final text = texts[i - subs.length];

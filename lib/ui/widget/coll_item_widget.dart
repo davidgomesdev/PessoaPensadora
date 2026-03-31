@@ -18,66 +18,74 @@ class CollItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final readCtrl = Get.find<ReadController>();
+    final totalCount = _getAllTextIds(category).length;
 
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: BonitoTheme.borderCol, width: 1),
-          ),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    category.title,
-                    style: GoogleFonts.inter(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: BonitoTheme.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Obx(() {
-                    final allTextIds = _getAllTextIds(category);
-                    final totalCount = allTextIds.length;
-                    final readCount =
-                        allTextIds.where((id) => readCtrl.isRead(id)).length;
-
-                    return Text(
-                      '$readCount/$totalCount lidos',
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: BonitoTheme.bgSecondary,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: BonitoTheme.borderCol),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
+          child: Row(
+            children: [
+              // coll-info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // coll-name
+                    Text(
+                      category.title,
                       style: GoogleFonts.inter(
-                        fontSize: 12,
-                        color: BonitoTheme.textMuted,
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w500,
+                        color: BonitoTheme.textPrimary,
+                        letterSpacing: 0.15,
                       ),
-                    );
-                  }),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: BonitoTheme.bgSecondary,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: BonitoTheme.borderMid),
-              ),
-              child: Text(
-                '${_getAllTextIds(category).length} textos',
-                style: GoogleFonts.inter(
-                  fontSize: 11,
-                  color: BonitoTheme.textMuted,
+                    ),
+                    const SizedBox(height: 3),
+                    // coll-meta: readCnt/total lidos
+                    Obx(() {
+                      final allTextIds = _getAllTextIds(category);
+                      final readCount = allTextIds
+                          .where((id) => readCtrl.isRead(id))
+                          .length;
+                      return Text(
+                        '$readCount/$totalCount lidos',
+                        style: GoogleFonts.inter(
+                          fontSize: 11,
+                          color: BonitoTheme.textMuted,
+                        ),
+                      );
+                    }),
+                  ],
                 ),
               ),
-            ),
-            const SizedBox(width: 8),
-            const Icon(Icons.chevron_right, color: BonitoTheme.textMuted, size: 18),
-          ],
+              const SizedBox(width: 14),
+              // coll-count chip: bgHover, radius 3
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: BonitoTheme.bgHover,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+                child: Text(
+                  '$totalCount textos',
+                  style: GoogleFonts.inter(
+                    fontSize: 11,
+                    color: BonitoTheme.textMuted,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -91,4 +99,3 @@ class CollItemWidget extends StatelessWidget {
     return ids;
   }
 }
-
