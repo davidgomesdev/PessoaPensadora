@@ -4,11 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/routes.dart';
+import 'package:pessoa_pensadora/ui/screen/category_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/home_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/saved_text_reader_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/search_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/splash_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/texts_list_screen.dart';
 
 import 'boot_screen.dart';
 
@@ -28,7 +31,27 @@ class App extends StatelessWidget {
       title: kIsWeb
           ? "Pessoa Pensadora - Toda a obra de Fernando Pessoa"
           : "Pessoa Pensadora",
-      theme: bonitoTheme,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: BonitoTheme.bgPrimary,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: BonitoTheme.bgSecondary,
+          elevation: 0,
+        ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: BonitoTheme.bgSecondary,
+          selectedItemColor: BonitoTheme.gold,
+          unselectedItemColor: BonitoTheme.textMuted,
+          type: BottomNavigationBarType.fixed,
+          elevation: 0,
+        ),
+        colorScheme: const ColorScheme.dark(
+          primary: BonitoTheme.gold,
+          surface: BonitoTheme.bgPrimary,
+        ),
+        textTheme: bonitoTextTheme.apply(bodyColor: BonitoTheme.textPrimary),
+        dividerColor: BonitoTheme.borderMid,
+      ),
       initialRoute: Routes.bootScreen,
       getPages: buildAppPages(),
     );
@@ -41,6 +64,9 @@ class App extends StatelessWidget {
       buildPage(Routes.savedScreen, const SavedTextsScreen()),
       buildPage(Routes.readTextScreen, const TextReaderScreen()),
       buildPage(Routes.historyScreen, const HistoryScreen()),
+      buildPage(Routes.searchScreen, const SearchScreen()),
+      buildPage(Routes.categoryScreen, const CategoryScreen()),
+      buildPage(Routes.textsListScreen, const TextsListScreen()),
     ];
   }
 
