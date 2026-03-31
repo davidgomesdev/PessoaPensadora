@@ -1,213 +1,161 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_pensadora/model/pessoa_text.dart';
-import 'package:pessoa_pensadora/model/saved_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
-import 'package:pessoa_pensadora/ui/widget/button/arquivo_pessoa_button.dart';
-import 'package:pessoa_pensadora/ui/widget/navigation_widget.dart';
-import 'package:pessoa_pensadora/ui/widget/reader/no_text_reader.dart';
-import 'package:pessoa_pensadora/ui/widget/button/save_text_button.dart';
-import 'package:pessoa_pensadora/ui/widget/button/share_text_button.dart';
-import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
-import 'package:pessoa_pensadora/ui/widget/text_selection_drawer.dart';
-import 'package:pessoa_pensadora/util/generic_extensions.dart';
-import 'package:pessoa_pensadora/util/logger_factory.dart';
+import 'package:pessoa_pensadora/ui/bonito_theme.dart';
+import 'package:pessoa_pensadora/ui/routes.dart';
+import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
+import 'package:pessoa_pensadora/ui/widget/bottom_nav_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/het_card_widget.dart';
 
-import '../../repository/history_store.dart';
-import '../../repository/reader_preference_store.dart';
-
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
-  final ScrollController readerScrollController =
-      ScrollController(keepScrollOffset: false);
-  final ScrollController drawerScrollController = ScrollController();
-  final StreamController<PessoaText> _currentTextStreamController =
-      StreamController.broadcast();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
-  _HomeScreenState() : super();
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scaffoldKey.currentState?.openDrawer();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final TextStoreService storeService = Get.find();
-    final ReaderPreferenceStore readerPreferenceStore = Get.find();
+    final currentTab = 0.obs;
+    final searchController = TextEditingController();
 
-    return StreamBuilder<PessoaText>(
-        stream: _currentTextStreamController.stream,
-        builder: (ctx, snapshot) {
-          final text = snapshot.data;
-
-          if (text != null) Get.find<HistoryRepository>().saveVisit(text.id);
-
-          return Scaffold(
-            key: _scaffoldKey,
-            appBar: AppBar(
-              leading: Builder(builder: (context) {
-                return GestureDetector(
-                  onTap: () => Scaffold.of(context).openDrawer(),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Row(
-                      children: [
-                        Icon(Icons.menu),
-                        SizedBox(width: 8),
-                        Text(
-                          "Índice",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+    return Obx(() => Scaffold(
+          backgroundColor: BonitoTheme.bgPrimary,
+          appBar: AppBar(
+            backgroundColor: BonitoTheme.bgSecondary,
+            elevation: 0,
+            titleSpacing: 16,
+            title: Row(
+              children: [
+                Text(
+                  'Pessoa',
+                  style: GoogleFonts.inter(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: BonitoTheme.textPrimary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: SizedBox(
+                    height: 34,
+                    child: TextField(
+                      controller: searchController,
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        color: BonitoTheme.textPrimary,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Pesquisar…',
+                        hintStyle: GoogleFonts.inter(
+                          fontSize: 13,
+                          color: BonitoTheme.textMuted,
                         ),
-                      ],
+                        filled: true,
+                        fillColor: BonitoTheme.bgElevated,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(6),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: const Icon(Icons.search,
+                            size: 16, color: BonitoTheme.textMuted),
+                      ),
+                      onSubmitted: (q) {
+                        if (q.trim().isNotEmpty) {
+                          searchController.clear();
+                          Get.toNamed(Routes.searchScreen,
+                              parameters: {'q': q.trim()});
+                        }
+                      },
                     ),
                   ),
-                );
-              }),
-              leadingWidth: 200,
-              actions: (text == null)
-                  ? []
-                  : [
-                      SaveTextButton(text: SavedText.fromText(text)),
-                      ArquivoPessoaButton(textId: text.id),
-                      ShareTextButton(
-                        text: text.content,
-                        author: text.author,
-                      )
-                    ],
+                ),
+              ],
             ),
-            drawer: TextSelectionDrawer(
-              mainIndex: storeService.mainIndex,
-              fullIndex: storeService.fullIndex,
-              selectionSink: _currentTextStreamController.sink,
-              scrollController: drawerScrollController,
-              selectedText: text,
-              scaffoldKey: _scaffoldKey,
-              readerPreferenceStore: readerPreferenceStore,
-              onFullReadingChange: (newValue) => setState(() {
-                readerPreferenceStore.swapReadingMode();
-              }),
+          ),
+          bottomNavigationBar: SafeArea(
+            child: BottomNavWidget(
+              currentIndex: currentTab.value,
+              onTap: (i) => currentTab.value = i,
             ),
-            body: HomeScreenBody(
-                text: text,
-                streamController: _currentTextStreamController,
-                scrollController: readerScrollController),
-          );
-        });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _currentTextStreamController.close();
+          ),
+          body: IndexedStack(
+            index: currentTab.value,
+            children: const [
+              BrowseTab(),
+              SavedTextsScreen(),
+              HistoryScreen(),
+            ],
+          ),
+        ));
   }
 }
 
-class HomeScreenBody extends StatelessWidget {
-  final PessoaText? text;
-  final StreamController<PessoaText> streamController;
-  final ScrollController scrollController;
+// ─── Browse Tab ──────────────────────────────────────────────────────────────
 
-  const HomeScreenBody(
-      {super.key,
-      required this.text,
-      required this.streamController,
-      required this.scrollController});
+class BrowseTab extends StatelessWidget {
+  const BrowseTab({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final currentText = text;
+    final TextStoreService store = Get.find();
+    final mainCats = store.mainIndex.subcategories;
 
-    return SafeArea(
-      child: (currentText == null)
-          ? const NoTextReader()
-          : TextReaderArea(
-              currentText: currentText,
-              scrollController: scrollController,
-              streamController: streamController,
+    final Map<int, String> subtitles = {
+      26: 'Mestre dos Heterónimos',
+      23: 'O Engenheiro Sensacionista',
+      25: 'Ode ao Classicismo',
+      27: 'Ortónimo de Fernando Pessoa',
+      33: 'Bernardo Soares',
+      24: 'A epopeia da nação',
+      67: 'Outros heterónimos',
+      139: 'Textos publicados em vida',
+      10000: 'Rubaiyat',
+    };
+    final Map<int, String> descriptions = {
+      26: 'Pensa com sensações',
+      23: 'Sente com pensamentos',
+      25: 'A regra como beleza',
+      27: 'O eu sem heterónimo',
+      33: 'O devaneio como método',
+      24: 'Portugal como destino',
+      67: 'Vozes da sombra',
+      139: 'Da vida para a página',
+      10000: 'Do persa ao português',
+    };
+
+    return ListView(
+      padding: const EdgeInsets.only(top: 16, bottom: 24),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            'A Obra de Fernando Pessoa',
+            style: GoogleFonts.inter(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: BonitoTheme.textPrimary,
             ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          child: Text(
+            'Cinco heterónimos · Uma vida de escrita',
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              color: BonitoTheme.textMuted,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        ...mainCats.map((cat) => HetCardWidget(
+              category: cat,
+              subtitle: subtitles[cat.id] ?? '',
+              description: descriptions[cat.id] ?? '',
+              onTap: () => Get.toNamed(Routes.categoryScreen, arguments: cat),
+            )),
+      ],
     );
-  }
-}
-
-class TextReaderArea extends StatelessWidget {
-  final PessoaText currentText;
-  final StreamController<PessoaText> streamController;
-  final ScrollController scrollController;
-
-  const TextReaderArea({
-    super.key,
-    required this.currentText,
-    required this.scrollController,
-    required this.streamController,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final category = currentText.category!;
-
-    return StreamBuilder(
-        stream: streamController.stream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            _scrollToTop();
-          }
-
-          return ConstrainedBox(
-            constraints: const BoxConstraints.expand(),
-            child: NavigationWidget(
-              child: TextReader(
-                categoryTitle: currentText.category!.title,
-                title: currentText.title,
-                content: currentText.content,
-                author: currentText.author,
-                scrollController: scrollController,
-              ),
-              onNext: () {
-                final newText = category.texts.getNext(currentText);
-
-                _handleNavigation(newText);
-              },
-              onPrevious: () {
-                final newText = category.texts.getPrevious(currentText);
-
-                _handleNavigation(newText);
-              },
-            ),
-          );
-        });
-  }
-
-  void _handleNavigation(PessoaText? newText) {
-    if (newText == null) {
-      log.i("Swipe no-op");
-      return;
-    }
-
-    log.i("Swipe to ${newText.title}");
-    streamController.add(newText);
-
-    _scrollToTop();
-  }
-
-  void _scrollToTop() {
-    if (scrollController.hasClients) {
-      scrollController.jumpTo(0.0);
-    }
   }
 }

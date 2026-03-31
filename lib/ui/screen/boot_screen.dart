@@ -6,6 +6,8 @@ import 'package:pessoa_pensadora/repository/history_store.dart';
 import 'package:pessoa_pensadora/repository/read_store.dart';
 import 'package:pessoa_pensadora/repository/reader_preference_store.dart';
 import 'package:pessoa_pensadora/repository/saved_store.dart';
+import 'package:pessoa_pensadora/service/read_controller.dart';
+import 'package:pessoa_pensadora/service/saved_controller.dart';
 import 'package:pessoa_pensadora/service/selection_action_service.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/routes.dart';
@@ -47,11 +49,17 @@ class _BootScreenState extends State<BootScreen> {
     Get.put(await TextStoreService.initialize(assetBundle), permanent: true);
     Get.put(SelectionActionService(), permanent: true);
 
-    Get.put(await SaveRepository.initialize(), permanent: true);
-    Get.put(await ReadRepository.initialize(), permanent: true);
+    final saveRepo = await SaveRepository.initialize();
+    final readRepo = await ReadRepository.initialize();
+
+    Get.put(saveRepo, permanent: true);
+    Get.put(readRepo, permanent: true);
     Get.put(await HistoryRepository.initialize(), permanent: true);
     Get.put(await CollapsableRepository.initialize(), permanent: true);
     Get.put(await ReaderPreferenceStore.initialize(), permanent: true);
+
+    Get.put(ReadController(readRepo), permanent: true);
+    Get.put(SavedController(saveRepo), permanent: true);
 
     final version = (await PackageInfo.fromPlatform()).version;
 

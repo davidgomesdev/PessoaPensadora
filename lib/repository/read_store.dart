@@ -37,4 +37,6 @@ class ReadRepository {
   }
 
   bool isTextRead(int id) => _box.get(id) == true;
+
+  Set<int> getAllReadIds() => _box.keys.cast<int>().toSet();
 }

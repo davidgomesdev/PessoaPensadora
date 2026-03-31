@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pessoa_pensadora/dto/box/box_person_text.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/repository/history_store.dart';
+import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
+import 'package:pessoa_pensadora/ui/routes.dart';
+import 'package:pessoa_pensadora/ui/widget/s_item_widget.dart';
 import 'package:pessoa_pensadora/ui/screen/splash_screen.dart';
-
-import '../../service/text_store.dart';
-import '../routes.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -16,7 +16,9 @@ class HistoryScreen extends StatelessWidget {
     final TextStoreService store = Get.find();
     final HistoryRepository repository = Get.find();
 
-    return FutureBuilder(
+    return Scaffold(
+      backgroundColor: BonitoTheme.bgPrimary,
+      body: FutureBuilder(
         future: repository.getHistory(),
         builder: (ctx, snapshot) {
           if (snapshot.hasError) {
@@ -28,97 +30,55 @@ class HistoryScreen extends StatelessWidget {
             return const SplashScreen();
           }
 
-          final texts = snapshot.data!.map((id) => store.texts[id]).nonNulls;
+          final ids = snapshot.data!.toList();
+          final texts = ids
+              .map((id) => store.texts[id])
+              .whereType<dynamic>()
+              .where((t) => t != null)
+              .toList();
 
-          return Scaffold(
-            body: CustomScrollView(
-              scrollBehavior:
-                  const ScrollBehavior().copyWith(overscroll: false),
-              slivers: [
-                SliverAppBar(
-                  title: Text("Histórico", style: bonitoTextTheme.displaySmall),
-                  pinned: true,
+          return CustomScrollView(
+            slivers: [
+              if (texts.isEmpty)
+                SliverFillRemaining(
+                  child: Center(
+                    child: Text(
+                      // TODO: add something like "Fernando Pessoa tem tantos textos incríveis, vá lê alguns deles!"
+                      'Nenhum texto visitado',
+                      style: GoogleFonts.inter(
+                          fontSize: 14, color: BonitoTheme.textMuted),
+                    ),
+                  ),
+                )
+              else
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (ctx, i) {
+                      final boxText = store.texts[ids[i]];
+                      if (boxText == null) return const SizedBox.shrink();
+                      return SItemWidget(
+                        title: boxText.title,
+                        subtitle: boxText.category.title,
+                        trailing: '',
+                        onTap: () => Get.toNamed(
+                          Routes.readTextScreen,
+                          arguments: {
+                            'id': boxText.id,
+                            'categoryTitle': boxText.category.title,
+                            'title': boxText.title,
+                            'content': boxText.content,
+                            'author': boxText.author,
+                          },
+                        ),
+                      );
+                    },
+                    childCount: ids.length,
+                  ),
                 ),
-                SliverPadding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    sliver: _HistoryTextsSliverList(
-                      texts: texts,
-                    )),
-              ],
-            ),
+            ],
           );
-        });
-  }
-}
-
-class _HistoryTextsSliverList extends StatelessWidget {
-  final Iterable<BoxPessoaText> texts;
-
-  const _HistoryTextsSliverList({required this.texts});
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverList.builder(
-      itemBuilder: (context, index) {
-        final text = texts.elementAt(index);
-
-        return _HistoryTextTile(text);
-      },
-      itemCount: texts.length,
-    );
-  }
-}
-
-class _HistoryTextTile extends StatelessWidget {
-  final BoxPessoaText text;
-
-  const _HistoryTextTile(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    var textCondensed = text.content.replaceAll("\n\n", "\n").trim();
-
-    return ListTile(
-      enableFeedback: true,
-      title: Text(
-        text.title,
-        style:
-            bonitoTextTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
+        },
       ),
-      subtitle: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              textCondensed,
-              style: bonitoTextTheme.bodySmall,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  text.author,
-                  textAlign: TextAlign.right,
-                  style: bonitoTextTheme.labelSmall,
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-      onTap: () {
-        Get.toNamed(Routes.readTextScreen, arguments: {
-          "id": text.id,
-          "categoryTitle": text.category.title,
-          "title": text.title,
-          "content": text.content,
-          "author": text.author,
-        });
-      },
     );
   }
 }
