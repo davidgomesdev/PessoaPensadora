@@ -8,14 +8,12 @@ import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 class HetCardWidget extends StatelessWidget {
   final PessoaCategory category;
   final String subtitle;
-  final String description;
   final VoidCallback onTap;
 
   const HetCardWidget({
     super.key,
     required this.category,
     required this.subtitle,
-    required this.description,
     required this.onTap,
   });
 
@@ -57,16 +55,6 @@ class HetCardWidget extends StatelessWidget {
                 style: GoogleFonts.inter(
                   fontSize: 12,
                   color: BonitoTheme.textDim,
-                ),
-              ),
-              const SizedBox(height: 10),
-              // card-desc
-              Text(
-                description,
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  color: BonitoTheme.textMuted,
-                  height: 1.6,
                 ),
               ),
               const SizedBox(height: 13),

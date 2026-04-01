@@ -7,7 +7,6 @@ import 'package:pessoa_pensadora/service/read_controller.dart';
 import 'package:pessoa_pensadora/service/saved_controller.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/ui/routes.dart';
 import 'package:pessoa_pensadora/ui/widget/button/arquivo_pessoa_button.dart';
 import 'package:pessoa_pensadora/ui/widget/button/share_text_button.dart';
 import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
@@ -51,8 +50,10 @@ class TextReaderScreen extends StatelessWidget {
             : null;
 
     void navigateTo(BoxPessoaText boxText) {
-      Get.toNamed(
-        Routes.readTextScreen,
+      // Replace the current reader on the stack with no animation,
+      // so back always returns to the category list.
+      Get.off(
+        () => const TextReaderScreen(),
         arguments: {
           'id': boxText.id,
           'categoryTitle': boxText.category.title,
@@ -60,7 +61,7 @@ class TextReaderScreen extends StatelessWidget {
           'content': boxText.content,
           'author': boxText.author,
         },
-        preventDuplicates: false,
+        transition: Transition.noTransition,
       );
     }
 

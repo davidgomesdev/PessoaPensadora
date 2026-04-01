@@ -30,7 +30,14 @@ class SaveRepository {
   }
 
   Future<void> saveText(SavedText text) async {
-    await _box.put(text.id, text);
+    await _box.put(text.id, text).timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        log.w('Hive.put() timed out! Proceeding anyway.');
+      },
+    ).catchError((e) {
+      log.e('Error during Hive.put(). Proceeding anyway.', error: e);
+    });
 
     final rootCategoryId = service.getTextRootCategory(text.id).id;
     final isFirstOfRootCategory = _box.values
@@ -40,14 +47,27 @@ class SaveRepository {
     if (isFirstOfRootCategory) {
       final CollapsableRepository collapsableStore = Get.find();
 
-      await collapsableStore.addCategory(rootCategoryId);
+      try {
+        await collapsableStore.addCategory(rootCategoryId);
+      } catch (e) {
+        log.w('Error adding category: $e');
+      }
     }
 
     log.i('Saved text ${text.id}');
   }
 
   Future<void> deleteText(int id) async {
-    await _box.delete(id);
+    log.e('got here!!!');
+    await _box.delete(id).timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        log.w('Hive.put() timed out! Proceeding anyway.');
+      },
+    ).catchError((e) {
+      log.e('Error during Hive.put(): $e. Proceeding anyway.', error: e);
+    });
+    log.e('got here!!! 2');
 
     final rootCategoryId = service.getTextRootCategory(id).id;
     final isLastOfRootCategory = _box.values
@@ -58,6 +78,7 @@ class SaveRepository {
       final CollapsableRepository collapsableStore = Get.find();
 
       await collapsableStore.removeCategory(rootCategoryId);
+      log.e('got here!!! 3');
     }
 
     log.i('Deleted saved text $id');
