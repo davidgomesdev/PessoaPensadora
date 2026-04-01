@@ -136,6 +136,8 @@ class BrowseTab extends StatelessWidget {
     final TextStoreService store = Get.find();
     final mainCats = store.mainIndex.subcategories;
 
+    // TODO: extract to assets or something, to avoid hardcoding these in the UI code
+    // todo: also make this a map of category id to subtitle and name
     final Map<int, String> subtitles = {
       26: 'Mestre dos Heterónimos',
       23: 'O Engenheiro Sensacionista',
@@ -145,19 +147,10 @@ class BrowseTab extends StatelessWidget {
       24: 'A epopeia da nação',
       67: 'Outros heterónimos',
       139: 'Textos publicados em vida',
-      10000: 'Rubaiyat',
-    };
-    final Map<int, String> descriptions = {
-      26: 'Pensa com sensações',
-      23: 'Sente com pensamentos',
-      25: 'A regra como beleza',
-      27: 'O eu sem heterónimo',
-      33: 'O devaneio como método',
-      24: 'Portugal como destino',
-      67: 'Vozes da sombra',
-      139: 'Da vida para a página',
       10000: 'Do persa ao português',
     };
+
+    // todo: extract every string in the app to a single file or something, to make it easier to manage and translate later on. maybe even create a simple i18n system for it, if we want to support multiple languages in the future
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -182,6 +175,7 @@ class BrowseTab extends StatelessWidget {
               ),
               const SizedBox(height: 3),
               Text(
+                // todo: consider a different text
                 'Cinco hetónimos · Uma vida de máscaras',
                 style: GoogleFonts.inter(
                   fontSize: 13,
@@ -199,7 +193,6 @@ class BrowseTab extends StatelessWidget {
                 .map((cat) => HetCardWidget(
                       category: cat,
                       subtitle: subtitles[cat.id] ?? '',
-                      description: descriptions[cat.id] ?? '',
                       onTap: () =>
                           Get.toNamed(Routes.categoryScreen, arguments: cat),
                     ))

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pessoa_pensadora/dto/box/box_person_category.dart';
@@ -16,10 +17,14 @@ import 'package:pessoa_pensadora/repository/history_store.dart';
 import 'package:pessoa_pensadora/repository/read_store.dart';
 import 'package:pessoa_pensadora/repository/reader_preference_store.dart';
 import 'package:pessoa_pensadora/repository/saved_store.dart';
+import 'package:pessoa_pensadora/service/read_controller.dart';
+import 'package:pessoa_pensadora/service/saved_controller.dart';
 import 'package:pessoa_pensadora/service/selection_action_service.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/routes.dart';
 import 'package:pessoa_pensadora/ui/screen/base_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/home_screen.dart';
+import 'package:pessoa_pensadora/ui/widget/text_row_widget.dart';
 
 import 'boot_service_test.mocks.dart';
 
@@ -36,15 +41,8 @@ Future<void> startApp(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> openDrawer(WidgetTester tester) async {
-  final ScaffoldState state = tester.firstState(find.byType(Scaffold));
-
-  state.openDrawer();
-
-  await tester.pumpAndSettle();
-}
-
 Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
+  GoogleFonts.config.allowRuntimeFetching = false;
   finishedAt = DateTime.timestamp();
   final randomPath = "./temp-tests/${DateTime.timestamp()}";
   const MethodChannel channel =
@@ -62,7 +60,7 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
     try {
       await Hive.close().timeout(const Duration(seconds: 1));
     } on TimeoutException catch (_) {
-      // ignored: The Hive dependency has a deadlock issue in this method, the 5th test run was hanging here
+      // ignored: The Hive dependency has a deadlock issue in this method
     }
 
     await Hive.initFlutter(".");
@@ -84,42 +82,133 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
 
     Get.put(service);
 
-    Get.put(await SaveRepository.initialize(), permanent: true);
-    Get.put(await ReadRepository.initialize(), permanent: true);
+    var savedRepository = await SaveRepository.initialize();
+    var readRepository = await ReadRepository.initialize();
+
+    Get.put(savedRepository, permanent: true);
+    Get.put(readRepository, permanent: true);
     Get.put(await HistoryRepository.initialize(), permanent: true);
     Get.put(await CollapsableRepository.initialize(), permanent: true);
     Get.put(await ReaderPreferenceStore.initialize(), permanent: true);
+    Get.put(SavedController(savedRepository), permanent: true);
+    Get.put(ReadController(readRepository), permanent: true);
     Get.put(SelectionActionService(), permanent: true);
   });
 
   return Get.find<TextStoreService>();
 }
 
-Future<void> dragDrawerUntilVisible(WidgetTester tester, Finder finder,
-    {int maxIterations = 50}) async {
-  await tester.dragUntilVisible(
-      finder,
-      find.byKey(const PageStorageKey("drawer-list-view")),
-      const Offset(0, -200),
-      maxIteration: maxIterations);
-}
+// ── Bottom-nav tab helpers ────────────────────────────────────────────────────
 
-Future<void> switchReadingTypeToMain(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.unfold_less_double_rounded));
+/// Tap the "GUARDADOS" bottom-nav tab.
+Future<void> switchToSavedTab(WidgetTester tester) async {
+  await tester.tap(find.text('GUARDADOS'));
   await tester.pumpAndSettle();
 }
 
-Future<void> switchReadingTypeToFull(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.read_more_rounded));
+/// Tap the "HISTÓRICO" bottom-nav tab.
+Future<void> switchToHistoryTab(WidgetTester tester) async {
+  await tester.tap(find.text('HISTÓRICO'));
   await tester.pumpAndSettle();
 }
 
-Future<void> enterBookmarkScreen(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.bookmark_outline_outlined));
+/// Tap the "EXPLORAR" bottom-nav tab.
+Future<void> switchToBrowseTab(WidgetTester tester) async {
+  await tester.tap(find.text('EXPLORAR'));
   await tester.pumpAndSettle();
 }
 
-Future<void> hitBackDrawerButton(WidgetTester tester) async {
-  await tester.tap(find.text('Voltar'));
-  await tester.pumpAndSettle();
+// ── Reader helpers ────────────────────────────────────────────────────────────
+
+/// While inside TextReaderScreen, tap the save button.
+Future<void> saveCurrentText(WidgetTester tester) async {
+  var saveButton = find.text('♡  Guardar');
+  expect(saveButton, findsOne);
+  await tester.tap(saveButton);
+
+  // Extended pump to handle Hive async operations
+  await expectEventuallyWithPump(tester, () {
+    expect(find.text('♥  Guardado'), findsOne);
+  });
+}
+
+// ── Browse tab helpers ───────────────────────────────────────────────────────
+
+/// Scroll until [finder] is visible within the Browse tab scrollable.
+Future<void> scrollUntilVisibleInBrowse(
+  WidgetTester tester,
+  Finder finder, {
+  double scrollDelta = 200,
+}) async {
+  final scrollable = find.descendant(
+    of: find.byType(BrowseTab),
+    matching: find.byType(Scrollable),
+  );
+  expect(scrollable, findsOne);
+  await tester.scrollUntilVisible(
+    finder,
+    scrollDelta,
+    scrollable: scrollable.first
+  );
+}
+
+Future<void> scrollUntilVisibleInCategory(
+  WidgetTester tester,
+  Finder finder, {
+  double scrollDelta = 50,
+}) async {
+  final scrollable = find.descendant(
+    of: find.byType(ListView),
+    matching: find.byType(Scrollable),
+  );
+  expect(scrollable, findsOne);
+  await tester.scrollUntilVisible(
+    finder,
+    scrollDelta,
+    scrollable: scrollable.first,
+    maxScrolls: 1000
+  );
+}
+
+/// Pump and retry expect statements until they pass or timeout.
+/// This helps avoid false negatives due to async delays in Hive operations.
+Future<void> expectEventuallyWithPump(
+    WidgetTester tester,
+    void Function() testFn, {
+      Duration timeout = const Duration(seconds: 5),
+      Duration pumpInterval = const Duration(milliseconds: 100),
+    }) async {
+  final stopwatch = Stopwatch()..start();
+  TestFailure? lastFailure;
+
+  while (stopwatch.elapsed < timeout) {
+    try {
+      testFn();
+      return; // Success
+    } on TestFailure catch (e) {
+      lastFailure = e;
+      await tester.pump(pumpInterval);
+    }
+  }
+
+  // Timeout reached, throw the last failure
+  if (lastFailure != null) {
+    throw lastFailure;
+  }
+}
+
+// ── Category-screen helpers ───────────────────────────────────────────────
+
+/// Returns text titles of all visible [TextRowWidget] items (in tree order).
+List<String?> getCategoryScreenTexts() {
+  return find
+      .descendant(
+          of: find.byType(TextRowWidget, skipOffstage: false),
+          matching: find.byWidgetPredicate(
+              (w) => w is Text && (w.data?.isNotEmpty ?? false),
+              skipOffstage: false),
+          skipOffstage: false)
+      .evaluate()
+      .map((e) => (e.widget as Text).data)
+      .toList();
 }

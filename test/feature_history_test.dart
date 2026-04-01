@@ -1,87 +1,83 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pessoa_pensadora/ui/widget/s_item_widget.dart';
 
 import 'utils.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets(
-      'Click on a text in the drawer should make it appear in the history',
+  testWidgets('History tab is initially empty', (tester) async {
+    await startApp(tester);
+    await switchToHistoryTab(tester);
+
+    expect(find.text('Nenhum texto visitado'), findsOne);
+    expect(find.byType(SItemWidget), findsNothing);
+  });
+
+  testWidgets('Opening a text makes it appear in the History tab',
       (tester) async {
     await startApp(tester);
-    await openDrawer(tester);
 
-    await tester.tap(find.byIcon(Icons.history));
+    // Open a text
+    await tester.tap(find.text('Odes de Ricardo Reis'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(ListTile), findsNothing);
-
-    await tester.pageBack();
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('Rubaiyat'));
-    await tester.pumpAndSettle();
-
-    var textFinder = find.text('A vida é terra e o vivê-la é lodo.');
+    final textFinder = find.text('A flor que és, não a que dás, eu quero. [2]');
+    expect(textFinder, findsOne);
     await tester.tap(textFinder);
     await tester.pumpAndSettle();
 
-    await openDrawer(tester);
-
-    await tester.tap(find.byIcon(Icons.history));
+    // Go back to home
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.pageBack();
     await tester.pumpAndSettle();
 
-    expect(find.descendant(of: find.byType(ListTile), matching: textFinder),
+    await switchToHistoryTab(tester);
+
+    // this is failing
+    expect(
+        find.descendant(of: find.byType(SItemWidget), matching: textFinder),
         findsOne);
   });
 
-  testWidgets(
-      'When switching to reading type main after clicking on a text in the drawer, the text should appear in the history',
+  testWidgets('Most recently read text appears first in History',
       (tester) async {
     await startApp(tester);
-    await openDrawer(tester);
 
-    await tester.tap(find.byIcon(Icons.history));
+    // Open first text
+    await tester.tap(find.text('Odes de Ricardo Reis'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(ListTile), findsNothing);
-
+    var firstText = 'A flor que és, não a que dás, eu quero. [2]';
+    final firstTextFinder = find.text(firstText);
+    expect(firstTextFinder, findsOne);
+    await tester.tap(firstTextFinder);
+    await tester.pumpAndSettle();
     await tester.pageBack();
     await tester.pumpAndSettle();
 
-    await openDrawer(tester);
-
-    await switchReadingTypeToFull(tester);
-
-    final rootCategoryFinder =
-        find.widgetWithText(ListTile, "Textos Filosóficos");
-
-    await dragDrawerUntilVisible(tester, rootCategoryFinder);
+    // Open second text (same category screen still open)
+    var secondText = 'A cada qual, como a estatura, é dada';
+    final secondTextFinder = find.text(secondText);
+    expect(secondTextFinder, findsOne);
+    await tester.tap(secondTextFinder);
+    await tester.pumpAndSettle();
+    await tester.pageBack();
     await tester.pumpAndSettle();
 
-    await tester.tap(rootCategoryFinder);
+    // Back to home
+    await tester.pageBack();
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Filósofos'));
-    await tester.pumpAndSettle();
+    await switchToHistoryTab(tester);
 
-    final textFinder = find.text('CHANGE');
+    final items = tester.widgetList<SItemWidget>(find.byType(SItemWidget)).toList();
+    expect(items.length, greaterThanOrEqualTo(2));
 
-    await tester.tap(textFinder);
-    await tester.pumpAndSettle();
-
-    await openDrawer(tester);
-
-    await hitBackDrawerButton(tester);
-    await hitBackDrawerButton(tester);
-
-    await switchReadingTypeToMain(tester);
-
-    await tester.tap(find.byIcon(Icons.history));
-    await tester.pumpAndSettle();
-
-    expect(find.descendant(of: find.byType(ListTile), matching: textFinder),
-        findsOne);
+    // Most recently opened should be first
+    expect(items.first.title, equals(secondText));
+    expect(items[1].title, equals(firstText));
   });
 }

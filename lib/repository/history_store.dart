@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
 import '../util/logger_factory.dart';
@@ -6,8 +7,12 @@ const _historyBoxName = 'history';
 
 class HistoryRepository {
   final Box<int> _box;
-  
-  HistoryRepository._(this._box);
+
+  final historyIds = <int>[].obs;
+
+  HistoryRepository._(this._box) {
+    historyIds.assignAll(_box.values.toList().reversed);
+  }
 
   static Future<HistoryRepository> initialize() async {
     final box = await _getHistoryBox();
@@ -23,18 +28,11 @@ class HistoryRepository {
   }
 
   Future<void> saveVisit(int id) async {
+    historyIds.assignAll([id, ..._box.values.toList().reversed]);
     await _box.add(id);
 
     log.i("Appended text '$id' to history");
   }
 
-  Future<Iterable<int>> getHistory() async {
-    final ids = List<int>.empty(growable: true);
-
-    _box.values.toList().reversed.forEach((id) {
-      if (!ids.contains(id)) ids.add(id);
-    });
-
-    return ids;
-  }
+  Future<Iterable<int>> getHistory() async => _box.values.toList().reversed;
 }

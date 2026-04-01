@@ -69,7 +69,14 @@ class CollapsableRepository {
   }
 
   Future<void> removeCategory(int categoryId) async {
-    await _box.delete(categoryId);
+    await _box.delete(categoryId).timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        log.w('Hive.delete() timed out! Proceeding anyway.');
+      },
+    ).catchError((e) {
+      log.e('Error during Hive.delete(). Proceeding anyway.', error: e);
+    });
     log.i('Removed category $categoryId from collapsable store');
   }
 
