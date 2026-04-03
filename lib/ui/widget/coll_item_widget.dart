@@ -34,12 +34,12 @@ class CollItemWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
           child: Row(
             children: [
-              // coll-info
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // coll-name
+
                     Text(
                       category.title,
                       style: GoogleFonts.inter(
@@ -50,7 +50,7 @@ class CollItemWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 3),
-                    // coll-meta: readCnt/total lidos
+
                     Obx(() {
                       final allTextIds = _getAllTextIds(category);
                       final readCount = allTextIds
@@ -68,7 +68,7 @@ class CollItemWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 14),
-              // coll-count chip: bgHover, radius 3
+
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 3),

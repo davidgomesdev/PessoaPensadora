@@ -115,7 +115,7 @@ void _fillTexts(Map<int, BoxPessoaText> texts, PessoaCategory category) {
   if (category.texts.every(
       (text) => substringBefore(text.title, '.').isValidRomanNumeralValue())) {
     category.texts.sort((prev, next) {
-      // Should never be null, but just in case, we consider it/**/ as 0
+      // Should never be null, but just in case, we consider it as 0
       return (substringBefore(prev.title, '.').toRomanNumeralValue() ?? 0)
           .compareTo(
               substringBefore(next.title, '.').toRomanNumeralValue() ?? 0);

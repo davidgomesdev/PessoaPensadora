@@ -58,7 +58,7 @@ class _NavBtn extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // Icon + label — centered in the full tab area
+
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,7 +79,7 @@ class _NavBtn extends StatelessWidget {
                 ),
               ],
             ),
-            // Active indicator — 60 % wide, pinned to top
+
             if (isActive)
               Align(
                 alignment: Alignment.topCenter,

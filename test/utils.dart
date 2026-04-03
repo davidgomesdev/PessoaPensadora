@@ -98,43 +98,31 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
   return Get.find<TextStoreService>();
 }
 
-// ── Bottom-nav tab helpers ────────────────────────────────────────────────────
-
-/// Tap the "GUARDADOS" bottom-nav tab.
 Future<void> switchToSavedTab(WidgetTester tester) async {
   await tester.tap(find.text('GUARDADOS'));
   await tester.pumpAndSettle();
 }
 
-/// Tap the "HISTÓRICO" bottom-nav tab.
 Future<void> switchToHistoryTab(WidgetTester tester) async {
   await tester.tap(find.text('HISTÓRICO'));
   await tester.pumpAndSettle();
 }
 
-/// Tap the "EXPLORAR" bottom-nav tab.
 Future<void> switchToBrowseTab(WidgetTester tester) async {
   await tester.tap(find.text('EXPLORAR'));
   await tester.pumpAndSettle();
 }
 
-// ── Reader helpers ────────────────────────────────────────────────────────────
-
-/// While inside TextReaderScreen, tap the save button.
 Future<void> saveCurrentText(WidgetTester tester) async {
   var saveButton = find.text('♡  Guardar');
   expect(saveButton, findsOne);
   await tester.tap(saveButton);
 
-  // Extended pump to handle Hive async operations
   await expectEventuallyWithPump(tester, () {
     expect(find.text('♥  Guardado'), findsOne);
   });
 }
 
-// ── Browse tab helpers ───────────────────────────────────────────────────────
-
-/// Scroll until [finder] is visible within the Browse tab scrollable.
 Future<void> scrollUntilVisibleInBrowse(
   WidgetTester tester,
   Finder finder, {
@@ -186,22 +174,18 @@ Future<void> expectEventuallyWithPump(
   while (stopwatch.elapsed < timeout) {
     try {
       testFn();
-      return; // Success
+      return;
     } on TestFailure catch (e) {
       lastFailure = e;
       await tester.pump(pumpInterval);
     }
   }
 
-  // Timeout reached, throw the last failure
   if (lastFailure != null) {
     throw lastFailure;
   }
 }
 
-// ── Category-screen helpers ───────────────────────────────────────────────
-
-/// Returns text titles of all visible [TextRowWidget] items (in tree order).
 List<String?> getCategoryScreenTexts() {
   return find
       .descendant(

@@ -126,8 +126,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// ─── Browse Tab ──────────────────────────────────────────────────────────────
-
 class BrowseTab extends StatefulWidget {
   const BrowseTab({super.key});
 
@@ -164,7 +162,7 @@ class _BrowseTabState extends State<BrowseTab> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // content-header
+
         Container(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
           decoration: const BoxDecoration(
@@ -207,7 +205,7 @@ class _BrowseTabState extends State<BrowseTab> {
             ],
           ),
         ),
-        // content-scroll
+
         Expanded(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(14, 16, 14, 24),
@@ -225,8 +223,6 @@ class _BrowseTabState extends State<BrowseTab> {
     );
   }
 }
-
-// ─── Index toggle ─────────────────────────────────────────────────────────────
 
 class _IndexToggle extends StatelessWidget {
   final bool showFull;
@@ -306,4 +302,3 @@ class _ToggleSegment extends StatelessWidget {
     );
   }
 }
-

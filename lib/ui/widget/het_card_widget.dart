@@ -38,7 +38,7 @@ class HetCardWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // card-name
+
               Text(
                 category.title,
                 style: GoogleFonts.inter(
@@ -49,7 +49,7 @@ class HetCardWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 3),
-              // card-sub
+
               Text(
                 subtitle,
                 style: GoogleFonts.inter(
@@ -58,7 +58,7 @@ class HetCardWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 13),
-              // card-stats: plain text with goldDim numbers
+
               Row(
                 children: [
                   Text.rich(

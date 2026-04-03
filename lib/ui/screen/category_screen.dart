@@ -107,4 +107,3 @@ class CategoryScreen extends StatelessWidget {
     );
   }
 }
-

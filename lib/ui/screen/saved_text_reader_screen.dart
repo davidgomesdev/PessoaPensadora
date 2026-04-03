@@ -25,7 +25,6 @@ class TextReaderScreen extends StatelessWidget {
     final String categoryTitle = args['categoryTitle'];
     final String title = args['title'];
 
-    // Mark as read when opened
     WidgetsBinding.instance.addPostFrameCallback((_) {
       try {
         Get.find<ReadController>().markRead(id);
@@ -52,8 +51,7 @@ class TextReaderScreen extends StatelessWidget {
             : null;
 
     void navigateTo(BoxPessoaText boxText) {
-      // Replace the current reader on the stack with no animation,
-      // so back always returns to the category list.
+
       Get.off(
         () => const TextReaderScreen(),
         arguments: {
@@ -68,7 +66,6 @@ class TextReaderScreen extends StatelessWidget {
       );
     }
 
-    // Action buttons (read / save) — reactive
     final actionsWidget = Obx(() {
       final isRead = readCtrl.isRead(id);
       final isSaved = savedCtrl.isSaved(id);
@@ -94,11 +91,11 @@ class TextReaderScreen extends StatelessWidget {
       );
     });
 
-    // Prev / next navigation row
+    // todo: extract widget
     final navWidget = siblings.isNotEmpty
         ? Row(
             children: [
-              // prev button — left-aligned, max 42 % of row
+
               Expanded(
                 flex: 42,
                 child: Align(
@@ -110,7 +107,7 @@ class TextReaderScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              // position indicator — centred
+
               Expanded(
                 flex: 16,
                 child: Center(
@@ -125,7 +122,7 @@ class TextReaderScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              // next button — right-aligned, max 42 % of row
+
               Expanded(
                 flex: 42,
                 child: Align(
@@ -172,8 +169,6 @@ class TextReaderScreen extends StatelessWidget {
   }
 }
 
-// ── _ReaderBtn ────────────────────────────────────────────────────────────────
-
 class _ReaderBtn extends StatelessWidget {
   final String label;
   final bool isActive;
@@ -214,8 +209,6 @@ class _ReaderBtn extends StatelessWidget {
     );
   }
 }
-
-// ── _NavBtn ───────────────────────────────────────────────────────────────────
 
 class _NavBtn extends StatelessWidget {
   final String label;

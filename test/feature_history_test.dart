@@ -19,7 +19,6 @@ void main() {
       (tester) async {
     await startApp(tester);
 
-    // Open a text
     await tester.tap(find.text('Odes de Ricardo Reis'));
     await tester.pumpAndSettle();
 
@@ -28,7 +27,6 @@ void main() {
     await tester.tap(textFinder);
     await tester.pumpAndSettle();
 
-    // Go back to home
     await tester.pageBack();
     await tester.pumpAndSettle();
     await tester.pageBack();
@@ -36,7 +34,6 @@ void main() {
 
     await switchToHistoryTab(tester);
 
-    // this is failing
     expect(
         find.descendant(of: find.byType(SItemWidget), matching: textFinder),
         findsOne);
@@ -46,7 +43,6 @@ void main() {
       (tester) async {
     await startApp(tester);
 
-    // Open first text
     await tester.tap(find.text('Odes de Ricardo Reis'));
     await tester.pumpAndSettle();
 
@@ -58,7 +54,6 @@ void main() {
     await tester.pageBack();
     await tester.pumpAndSettle();
 
-    // Open second text (same category screen still open)
     var secondText = 'A cada qual, como a estatura, é dada';
     final secondTextFinder = find.text(secondText);
     expect(secondTextFinder, findsOne);
@@ -67,7 +62,6 @@ void main() {
     await tester.pageBack();
     await tester.pumpAndSettle();
 
-    // Back to home
     await tester.pageBack();
     await tester.pumpAndSettle();
 

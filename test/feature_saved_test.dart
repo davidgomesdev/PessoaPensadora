@@ -9,10 +9,6 @@ import 'utils.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // ── helpers ──────────────────────────────────────────────────────────────
-
-  /// Navigate from the home Browse tab into [category] → [text] and open the
-  /// reader.  Returns the Finder for the text title.
   Future<Finder> openText(WidgetTester tester, {
     required String category,
     String? subcategory,
@@ -30,15 +26,12 @@ void main() {
     return textFinder;
   }
 
-  /// Press back [n] times to unwind [n] routes.
   Future<void> goBack(WidgetTester tester, [int n = 1]) async {
     for (var i = 0; i < n; i++) {
       await tester.pageBack();
       await tester.pumpAndSettle();
     }
   }
-
-  // ── tests ─────────────────────────────────────────────────────────────────
 
   testWidgets('Saved tab with no saved texts shows empty message',
           (tester) async {
@@ -61,7 +54,6 @@ void main() {
 
         await saveCurrentText(tester);
 
-        // Go back to home (1 CategoryScreen + reader = 2 pops)
         await goBack(tester, 2);
         await switchToSavedTab(tester);
 
@@ -86,7 +78,6 @@ void main() {
         await goBack(tester, 3);
         await switchToSavedTab(tester);
 
-        // Header for root category (toUpperCase)
         expect(
             find.descendant(
                 of: find.byType(GroupHeaderWidget),
@@ -119,8 +110,6 @@ void main() {
             of: find.byType(SItemWidget), matching: find.byIcon(Icons.close)));
         await tester.pumpAndSettle();
 
-        // Verify the text was removed, retrying with pump until it succeeds or times out.
-        // This handles async Hive operations that may take time to complete.
         await expectEventuallyWithPump(
           tester,
           () {
@@ -180,18 +169,17 @@ void main() {
           text: 'A flor que és, não a que dás, eu quero. [2]',
         );
         await saveCurrentText(tester);
-        await goBack(tester, 1); // back to CategoryScreen
+        await goBack(tester, 1);
 
         final secondTextFinder = find.text(
             'A cada qual, como a estatura, é dada');
         await tester.tap(secondTextFinder);
         await tester.pumpAndSettle();
         await saveCurrentText(tester);
-        await goBack(tester, 2); // back to home
+        await goBack(tester, 2);
 
         await switchToSavedTab(tester);
 
-        // Exactly one group header (Odes de Ricardo Reis)
         expect(find.byType(GroupHeaderWidget), findsOne);
         expect(
             find.descendant(
@@ -213,7 +201,6 @@ void main() {
           (tester) async {
         await startApp(tester);
 
-        // Save first text from Odes de Ricardo Reis
         final firstTextFinder = await openText(
           tester,
           category: 'Odes de Ricardo Reis',
@@ -240,7 +227,6 @@ void main() {
 
         await switchToSavedTab(tester);
 
-        // Two group headers
         expect(find.byType(GroupHeaderWidget), findsNWidgets(2));
         expect(
             find.descendant(

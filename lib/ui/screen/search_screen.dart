@@ -143,4 +143,3 @@ class SearchScreen extends StatelessWidget {
     return snippet;
   }
 }
-

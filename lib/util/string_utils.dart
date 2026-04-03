@@ -13,4 +13,3 @@ String timeFmt(int ts) {
   if (d < 86400000) return 'há ${d ~/ 3600000}h';
   return 'há ${d ~/ 86400000}d';
 }
-

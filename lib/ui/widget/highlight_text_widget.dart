@@ -56,4 +56,3 @@ class HighlightTextWidget extends StatelessWidget {
     );
   }
 }
-

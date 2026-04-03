@@ -6,7 +6,7 @@ class SelectionActionService {
   void defineWord(String word) {
     launchUrl(Uri.https("dicionario.priberam.org", '/$word'));
   }
-  
+
   void searchOnline(String text) {
     launchUrl(Uri.https("google.pt", '/search', {'q': text}));
   }

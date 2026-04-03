@@ -12,9 +12,9 @@ class TextReader extends StatelessWidget {
   final String title;
   final String content;
   final String author;
-  /// Optional row of action buttons rendered inside the reader-top section.
+
   final Widget? actions;
-  /// Optional prev/next navigation row rendered at the bottom of the scroll.
+
   final Widget? readerNav;
 
   TextReader({
@@ -37,14 +37,12 @@ class TextReader extends StatelessWidget {
       behavior: const ScrollBehavior().copyWith(overscroll: false),
       child: SingleChildScrollView(
         controller: _scrollController,
-        // matches .content-scroll padding (16 top, 14 sides) + .reader padding-bottom 40
+
         padding: const EdgeInsets.fromLTRB(14, 16, 14, 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // ── reader-top ──────────────────────────────────────────
-            // text-align: center; padding-bottom: 24px; margin-bottom: 30px;
-            // border-bottom: 1px solid var(--border)
+
             Container(
               padding: const EdgeInsets.only(bottom: 24),
               margin: const EdgeInsets.only(bottom: 30),
@@ -56,7 +54,7 @@ class TextReader extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // reader-het: author name — 10 px, uppercase, wide spacing, muted
+
                   Text(
                     author.toUpperCase(),
                     textAlign: TextAlign.center,
@@ -67,7 +65,7 @@ class TextReader extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  // reader-title: 21 px, bold, centred
+
                   Text(
                     title,
                     textAlign: TextAlign.center,
@@ -78,28 +76,24 @@ class TextReader extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // gold-line: 36 px wide, 1 px tall
+
                   Container(
                     width: 36,
                     height: 1,
                     color: BonitoTheme.goldDim,
                   ),
                   const SizedBox(height: 16),
-                  // reader-actions
+
                   if (actions != null) actions!,
                 ],
               ),
             ),
 
-            // ── reader-body ─────────────────────────────────────────
-            // font: Lora, 17 px, line-height 1.95; padding 0 12px extra
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: ReaderContentText(author, content),
             ),
 
-            // ── reader-nav ──────────────────────────────────────────
-            // border-top, padding-top 22px
             if (readerNav != null) ...[
               Container(
                 margin: const EdgeInsets.only(top: 22),
@@ -116,8 +110,6 @@ class TextReader extends StatelessWidget {
     );
   }
 }
-
-// ── ReaderContentText ────────────────────────────────────────────────────────
 
 class ReaderContentText extends StatelessWidget {
   final SelectionActionService _actionService = Get.find();
@@ -191,8 +183,6 @@ class ReaderContentText extends StatelessWidget {
     );
   }
 }
-
-// ── Legacy helpers kept for backwards-compat (used by tests via widget tree) ─
 
 class ReaderCategoryText extends StatelessWidget {
   final String category;
