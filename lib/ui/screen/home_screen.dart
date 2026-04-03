@@ -128,29 +128,38 @@ class HomeScreen extends StatelessWidget {
 
 // ─── Browse Tab ──────────────────────────────────────────────────────────────
 
-class BrowseTab extends StatelessWidget {
+class BrowseTab extends StatefulWidget {
   const BrowseTab({super.key});
+
+  @override
+  State<BrowseTab> createState() => _BrowseTabState();
+}
+
+class _BrowseTabState extends State<BrowseTab> {
+  bool _showFullIndex = false;
+
+  // TODO: extract to assets or something, to avoid hardcoding these in the UI code
+  // todo: also make this a map of category id to subtitle and name
+  static const Map<int, String> _subtitles = {
+    26: 'Mestre dos Heterónimos',
+    23: 'O Engenheiro Sensacionista',
+    25: 'Ode ao Classicismo',
+    27: 'Ortónimo de Fernando Pessoa',
+    33: 'Bernardo Soares',
+    24: 'A epopeia da nação',
+    67: 'Outros heterónimos',
+    139: 'Textos publicados em vida',
+    10000: 'Do persa ao português',
+  };
+
+  // todo: extract every string in the app to a single file or something, to make it easier to manage and translate later on. maybe even create a simple i18n system for it, if we want to support multiple languages in the future
 
   @override
   Widget build(BuildContext context) {
     final TextStoreService store = Get.find();
-    final mainCats = store.mainIndex.subcategories;
-
-    // TODO: extract to assets or something, to avoid hardcoding these in the UI code
-    // todo: also make this a map of category id to subtitle and name
-    final Map<int, String> subtitles = {
-      26: 'Mestre dos Heterónimos',
-      23: 'O Engenheiro Sensacionista',
-      25: 'Ode ao Classicismo',
-      27: 'Ortónimo de Fernando Pessoa',
-      33: 'Bernardo Soares',
-      24: 'A epopeia da nação',
-      67: 'Outros heterónimos',
-      139: 'Textos publicados em vida',
-      10000: 'Do persa ao português',
-    };
-
-    // todo: extract every string in the app to a single file or something, to make it easier to manage and translate later on. maybe even create a simple i18n system for it, if we want to support multiple languages in the future
+    final cats = _showFullIndex
+        ? store.fullIndex.subcategories
+        : store.mainIndex.subcategories;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -159,28 +168,41 @@ class BrowseTab extends StatelessWidget {
         Container(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
           decoration: const BoxDecoration(
-            border:
-                Border(bottom: BorderSide(color: BonitoTheme.borderCol)),
+            border: Border(bottom: BorderSide(color: BonitoTheme.borderCol)),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                'A Obra de Fernando Pessoa',
-                style: GoogleFonts.inter(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: BonitoTheme.textPrimary,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'A Obra de Fernando Pessoa',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: BonitoTheme.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      // todo: consider a different text
+                      _showFullIndex
+                          ? 'Índice completo'
+                          : 'Cinco hetónimos · Uma vida de máscaras',
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        color: BonitoTheme.textDim,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 3),
-              Text(
-                // todo: consider a different text
-                'Cinco hetónimos · Uma vida de máscaras',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  color: BonitoTheme.textDim,
-                ),
+              const SizedBox(width: 12),
+              _IndexToggle(
+                showFull: _showFullIndex,
+                onChanged: (v) => setState(() => _showFullIndex = v),
               ),
             ],
           ),
@@ -189,10 +211,10 @@ class BrowseTab extends StatelessWidget {
         Expanded(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(14, 16, 14, 24),
-            children: mainCats
+            children: cats
                 .map((cat) => HetCardWidget(
                       category: cat,
-                      subtitle: subtitles[cat.id] ?? '',
+                      subtitle: _subtitles[cat.id] ?? '',
                       onTap: () =>
                           Get.toNamed(Routes.categoryScreen, arguments: cat),
                     ))
@@ -203,3 +225,85 @@ class BrowseTab extends StatelessWidget {
     );
   }
 }
+
+// ─── Index toggle ─────────────────────────────────────────────────────────────
+
+class _IndexToggle extends StatelessWidget {
+  final bool showFull;
+  final ValueChanged<bool> onChanged;
+
+  const _IndexToggle({required this.showFull, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 28,
+      decoration: BoxDecoration(
+        color: BonitoTheme.bgElevated,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: BonitoTheme.borderMid),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _ToggleSegment(
+            label: 'Principal',
+            active: !showFull,
+            isFirst: true,
+            onTap: () => onChanged(false),
+          ),
+          Container(width: 1, color: BonitoTheme.borderMid),
+          _ToggleSegment(
+            label: 'Completo',
+            active: showFull,
+            isFirst: false,
+            onTap: () => onChanged(true),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ToggleSegment extends StatelessWidget {
+  final String label;
+  final bool active;
+  final bool isFirst;
+  final VoidCallback onTap;
+
+  const _ToggleSegment({
+    required this.label,
+    required this.active,
+    required this.isFirst,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: active ? BonitoTheme.bgHover : Colors.transparent,
+          borderRadius: BorderRadius.horizontal(
+            left: isFirst ? const Radius.circular(3) : Radius.zero,
+            right: isFirst ? Radius.zero : const Radius.circular(3),
+          ),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 10,
+            letterSpacing: 0.4,
+            fontWeight: active ? FontWeight.w600 : FontWeight.normal,
+            color: active ? BonitoTheme.textPrimary : BonitoTheme.textMuted,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
