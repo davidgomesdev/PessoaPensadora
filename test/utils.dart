@@ -150,6 +150,7 @@ Future<void> scrollUntilVisibleInBrowse(
     scrollDelta,
     scrollable: scrollable.first
   );
+  await tester.pumpAndSettle();
 }
 
 Future<void> scrollUntilVisibleInCategory(
@@ -168,6 +169,7 @@ Future<void> scrollUntilVisibleInCategory(
     scrollable: scrollable.first,
     maxScrolls: 1000
   );
+  await tester.pumpAndSettle();
 }
 
 /// Pump and retry expect statements until they pass or timeout.
