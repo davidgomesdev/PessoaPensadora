@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:pessoa_pensadora/repository/saved_store.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';

@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pessoa_pensadora/dto/box/box_person_category.dart';
 import 'package:pessoa_pensadora/dto/box/box_person_text.dart';

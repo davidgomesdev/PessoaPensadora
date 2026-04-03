@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:pessoa_pensadora/model/saved_text.dart';
 import 'package:pessoa_pensadora/repository/collapsable_store.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
@@ -58,7 +58,6 @@ class SaveRepository {
   }
 
   Future<void> deleteText(int id) async {
-    log.e('got here!!!');
     await _box.delete(id).timeout(
       const Duration(seconds: 5),
       onTimeout: () {
@@ -67,7 +66,6 @@ class SaveRepository {
     ).catchError((e) {
       log.e('Error during Hive.put(): $e. Proceeding anyway.', error: e);
     });
-    log.e('got here!!! 2');
 
     final rootCategoryId = service.getTextRootCategory(id).id;
     final isLastOfRootCategory = _box.values
@@ -78,7 +76,6 @@ class SaveRepository {
       final CollapsableRepository collapsableStore = Get.find();
 
       await collapsableStore.removeCategory(rootCategoryId);
-      log.e('got here!!! 3');
     }
 
     log.i('Deleted saved text $id');
