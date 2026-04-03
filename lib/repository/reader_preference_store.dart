@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 const _readerPreferenceBoxName = 'reader_preference';

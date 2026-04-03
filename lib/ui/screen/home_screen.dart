@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pessoa_pensadora/repository/reader_preference_store.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/routes.dart';
@@ -134,8 +135,6 @@ class BrowseTab extends StatefulWidget {
 }
 
 class _BrowseTabState extends State<BrowseTab> {
-  bool _showFullIndex = false;
-
   // TODO: extract to assets or something, to avoid hardcoding these in the UI code
   // todo: also make this a map of category id to subtitle and name
   static const Map<int, String> _subtitles = {
@@ -155,7 +154,9 @@ class _BrowseTabState extends State<BrowseTab> {
   @override
   Widget build(BuildContext context) {
     final TextStoreService store = Get.find();
-    final cats = _showFullIndex
+    final ReaderPreferenceStore prefStore = Get.find();
+    final showFullIndex = prefStore.isFullReadingMode;
+    final cats = showFullIndex
         ? store.fullIndex.subcategories
         : store.mainIndex.subcategories;
 
@@ -186,7 +187,7 @@ class _BrowseTabState extends State<BrowseTab> {
                     const SizedBox(height: 3),
                     Text(
                       // todo: consider a different text
-                      _showFullIndex
+                      showFullIndex
                           ? 'Índice completo'
                           : 'Cinco hetónimos · Uma vida de máscaras',
                       style: GoogleFonts.inter(
@@ -199,8 +200,10 @@ class _BrowseTabState extends State<BrowseTab> {
               ),
               const SizedBox(width: 12),
               _IndexToggle(
-                showFull: _showFullIndex,
-                onChanged: (v) => setState(() => _showFullIndex = v),
+                showFull: showFullIndex,
+                onChanged: (v) => setState(() {
+                  prefStore.swapReadingMode();
+                }),
               ),
             ],
           ),

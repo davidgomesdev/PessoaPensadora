@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:pessoa_pensadora/model/pessoa_category.dart';
 
 part 'box_person_category.g.dart';

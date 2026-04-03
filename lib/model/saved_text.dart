@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:pessoa_pensadora/dto/box/box_person_text.dart';
 import 'package:pessoa_pensadora/model/pessoa_text.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
