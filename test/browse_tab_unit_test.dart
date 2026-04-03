@@ -2,21 +2,19 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('TextStoreService Index Management', () {
-    // Note: These are unit tests that can run without the full app context.
-    // They verify the data structure setup for mainIndex vs fullIndex.
 
     test('mainIndex has 9 curated categories', () {
-      // This test validates the constants defined in text_store.dart
+
       const mainCategories = [
-        26, // 1. Poemas de Alberto Caeiro
-        23, // 2. Poesia de Álvaro de Campos
-        25, // 3. Odes de Ricardo Reis
-        27, // 4. Poesia Ortónima de Fernando Pessoa
-        33, // 5. Livro do Desassossego
-        24, // 6. MENSAGEM
-        67, // 8. Textos Heterónimos
-        139, // 17. Textos Publicados em vida
-        10000, // Rubaiyat
+        26,
+        23,
+        25,
+        27,
+        33,
+        24,
+        67,
+        139,
+        10000,
       ];
 
       expect(mainCategories.length, equals(9));
@@ -28,15 +26,15 @@ void main() {
         26, 23, 25, 27, 33, 24, 67, 139, 10000,
       ];
 
-      expect(mainCategories, contains(26)); // Caeiro
-      expect(mainCategories, contains(23)); // Campos
-      expect(mainCategories, contains(25)); // Reis
-      expect(mainCategories, contains(27)); // Pessoa Ortónimo
-      expect(mainCategories, contains(33)); // Bernardo Soares
-      expect(mainCategories, contains(24)); // MENSAGEM
-      expect(mainCategories, contains(67)); // Heterónimos
-      expect(mainCategories, contains(139)); // Textos em vida
-      expect(mainCategories, contains(10000)); // Rubaiyat
+      expect(mainCategories, contains(26));
+      expect(mainCategories, contains(23));
+      expect(mainCategories, contains(25));
+      expect(mainCategories, contains(27));
+      expect(mainCategories, contains(33));
+      expect(mainCategories, contains(24));
+      expect(mainCategories, contains(67));
+      expect(mainCategories, contains(139));
+      expect(mainCategories, contains(10000));
     });
 
     test('Subtitles map contains entries for all main categories', () {
@@ -52,7 +50,6 @@ void main() {
         10000: 'Do persa ao português',
       };
 
-      // All main categories should have a subtitle
       const mainCategories = [
         26, 23, 25, 27, 33, 24, 67, 139, 10000,
       ];
@@ -87,7 +84,7 @@ void main() {
 
   group('BrowseTab State Management', () {
     test('Toggle state should default to false (Principal/Main index)', () {
-      // This test documents expected behavior of _showFullIndex state variable
+
       bool _showFullIndex = false;
 
       expect(_showFullIndex, equals(false));
@@ -152,8 +149,6 @@ void main() {
         23: 'O Engenheiro Sensacionista',
       };
 
-      // When a category ID is not in the map, the null coalescing operator
-      // should return an empty string
       final subtitle = subtitles[999] ?? '';
 
       expect(subtitle, equals(''));
@@ -191,7 +186,6 @@ void main() {
         26: 'Mestre dos Heterónimos',
       };
 
-      // Simulate an extra category ID from fullIndex that's not in the map
       final extraCategoryId = 999;
       final subtitle = subtitles[extraCategoryId] ?? '';
 
@@ -199,9 +193,3 @@ void main() {
     });
   });
 }
-
-
-
-
-
-

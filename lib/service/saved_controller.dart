@@ -39,4 +39,3 @@ class SavedController extends GetxController {
 
   bool isSaved(int id) => savedIds.contains(id);
 }
-

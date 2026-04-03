@@ -30,4 +30,3 @@ class ReadController extends GetxController {
 
   bool isRead(int id) => readIds.contains(id);
 }
-

@@ -12,8 +12,6 @@ import 'utils.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // ── Browse tab / home screen ──────────────────────────────────────────────
-
   testWidgets('Home Browse tab shows the 9 root category cards',
       (tester) async {
     await startApp(tester);
@@ -40,14 +38,12 @@ void main() {
       (tester) async {
     await startApp(tester);
 
-    // Scroll to make Rubaiyat visible (it's the last card)
     final rubaiyatFinder = find.text('Rubaiyat');
 
     await scrollUntilVisibleInBrowse(tester, rubaiyatFinder);
     await tester.tap(rubaiyatFinder.first);
     await tester.pumpAndSettle();
 
-    // CategoryScreen is now shown — at least the first text is visible
     expect(find.text('A vida é terra e o vivê-la é lodo.'), findsOne);
   });
 
@@ -59,7 +55,6 @@ void main() {
     await tester.tap(find.text('Poemas de Alberto Caeiro'));
     await tester.pumpAndSettle();
 
-    // Should show subcategory CollItemWidget items
     expect(find.byType(CollItemWidget), findsAtLeast(1));
   });
 
@@ -73,7 +68,6 @@ void main() {
     await tester.tap(find.text('O GUARDADOR DE REBANHOS'));
     await tester.pumpAndSettle();
 
-    // Texts of "O GUARDADOR DE REBANHOS" are now visible
     expect(find.byType(TextRowWidget), findsAtLeast(1));
     expect(find.text('I - Eu nunca guardei rebanhos,'), findsOne);
   });
@@ -82,7 +76,6 @@ void main() {
       (tester) async {
     await startApp(tester);
 
-    // Scroll to make Rubaiyat visible (it's the last card)
     final rubaiyatFinder = find.text('Rubaiyat');
     await scrollUntilVisibleInBrowse(tester, rubaiyatFinder);
     await tester.tap(rubaiyatFinder.first);
@@ -103,8 +96,6 @@ void main() {
             matching: find.textContaining('Em tudo quanto faças sê só tu,')),
         findsOne);
   });
-
-  // ── Category text filter ──────────────────────────────────────────────────
 
   group('Text filter', () {
     final exampleTextFinder = find.text('A DIVINA INVEJA');
@@ -157,8 +148,6 @@ void main() {
       expect(find.byType(TextRowWidget), findsNothing);
     });
   });
-
-  // ── Sorting ───────────────────────────────────────────────────────────────
 
   group('Sorting', () {
     testWidgets(
@@ -265,4 +254,3 @@ void main() {
     });
   });
 }
-
