@@ -85,22 +85,22 @@ void main() {
   group('BrowseTab State Management', () {
     test('Toggle state should default to false (Principal/Main index)', () {
 
-      bool _showFullIndex = false;
+      bool showFullIndex = false;
 
-      expect(_showFullIndex, equals(false));
-      expect(_showFullIndex, isFalse);
+      expect(showFullIndex, equals(false));
+      expect(showFullIndex, isFalse);
     });
 
     test('Toggle state can switch between true and false', () {
-      bool _showFullIndex = false;
+      bool showFullIndex = false;
 
-      expect(_showFullIndex, isFalse);
+      expect(showFullIndex, isFalse);
 
-      _showFullIndex = true;
-      expect(_showFullIndex, isTrue);
+      showFullIndex = true;
+      expect(showFullIndex, isTrue);
 
-      _showFullIndex = false;
-      expect(_showFullIndex, isFalse);
+      showFullIndex = false;
+      expect(showFullIndex, isFalse);
     });
   });
 

@@ -10,7 +10,6 @@ import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/widget/button/arquivo_pessoa_button.dart';
 import 'package:pessoa_pensadora/ui/widget/button/share_text_button.dart';
 import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
-import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 // TODO: rename the file lol
 class TextReaderScreen extends StatelessWidget {
