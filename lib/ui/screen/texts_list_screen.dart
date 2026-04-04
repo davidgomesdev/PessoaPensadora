@@ -18,6 +18,7 @@ class TextsListScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: BonitoTheme.bgSecondary,
         elevation: 0,
+        scrolledUnderElevation: 0,
         title: Text(
           category.title,
           style: GoogleFonts.inter(

@@ -142,6 +142,7 @@ class TextReaderScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: BonitoTheme.bgSecondary,
         elevation: 0,
+        scrolledUnderElevation: 0,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1.0),
           child: Container(color: BonitoTheme.borderCol, height: 1.0),

@@ -29,7 +29,6 @@ class _BootScreenState extends State<BootScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: FutureBuilder(
           future: initializeDependencies(context),
           builder: (context, snapshot) {
