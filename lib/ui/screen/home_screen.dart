@@ -184,17 +184,6 @@ class _BrowseTabState extends State<BrowseTab> {
                         color: BonitoTheme.textPrimary,
                       ),
                     ),
-                    const SizedBox(height: 3),
-                    Text(
-                      // todo: consider a different text
-                      showFullIndex
-                          ? 'Índice completo'
-                          : 'Cinco hetónimos · Uma vida de máscaras',
-                      style: GoogleFonts.inter(
-                        fontSize: 13,
-                        color: BonitoTheme.textDim,
-                      ),
-                    ),
                   ],
                 ),
               ),

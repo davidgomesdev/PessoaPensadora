@@ -9,7 +9,6 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('BrowseTab Index Toggle', () {
-
     testWidgets('Toggle appears in the header of the Browse tab', (tester) async {
       await startApp(tester);
 
@@ -35,22 +34,7 @@ void main() {
     testWidgets('Principal tab shows the 9 curated main categories', (tester) async {
       await startApp(tester);
 
-      const curatedCategories = [
-        'Poemas de Alberto Caeiro',
-        'Poesia de Álvaro de Campos',
-        'Odes de Ricardo Reis',
-        'Poesia Ortónima de Fernando Pessoa',
-        'Livro do Desassossego',
-        'MENSAGEM',
-        'Textos Heterónimos',
-        'Textos Publicados em vida',
-        'Rubaiyat',
-      ];
-
-      for (var name in curatedCategories) {
-        await scrollUntilVisibleInBrowse(tester, find.text(name));
-        expect(find.text(name), findsOne);
-      }
+      await expectAllMainCategories(tester);
     });
 
     testWidgets(
@@ -58,29 +42,14 @@ void main() {
         (tester) async {
       await startApp(tester);
 
-      int principalCardCount = find.byType(HetCardWidget).evaluate().length;
-      expect(principalCardCount, equals(9));
-
       await tester.tap(find.text('Completo'));
       await tester.pumpAndSettle();
 
-      int completoCardCount = find.byType(HetCardWidget).evaluate().length;
-      expect(completoCardCount, greaterThan(principalCardCount));
-    });
+      await expectAllMainCategories(tester);
 
-    testWidgets(
-        'Header subtitle changes when switching to full index',
-        (tester) async {
-      await startApp(tester);
-
-      expect(find.text('Cinco hetónimos · Uma vida de máscaras'), findsOne);
-      expect(find.text('Índice completo'), findsNothing);
-
-      await tester.tap(find.text('Completo'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Índice completo'), findsOne);
-      expect(find.text('Cinco hetónimos · Uma vida de máscaras'), findsNothing);
+      var text = find.text('Textos Filosóficos');
+      await scrollUntilVisibleInBrowse(tester, text);
+      expect(text, findsOne);
     });
 
     testWidgets('Switching back to Principal restores the original view',
@@ -90,34 +59,17 @@ void main() {
       await tester.tap(find.text('Completo'));
       await tester.pumpAndSettle();
 
-      int completoCardCount = find.byType(HetCardWidget).evaluate().length;
-      expect(completoCardCount, greaterThan(9));
+      var text = find.text('Textos Filosóficos');
+      await scrollUntilVisibleInBrowse(tester, text);
+      expect(text, findsOne);
 
       await tester.tap(find.text('Principal'));
       await tester.pumpAndSettle();
 
-      int principalCardCount = find.byType(HetCardWidget).evaluate().length;
-      expect(principalCardCount, equals(9));
-      expect(find.text('Cinco hetónimos · Uma vida de máscaras'), findsOne);
-    });
-
-    testWidgets('Toggle buttons are tappable and responsive', (tester) async {
-      await startApp(tester);
-
-      await tester.tap(find.text('Principal'));
+      scrollToEnd(tester, BrowseTab);
       await tester.pumpAndSettle();
 
-      expect(find.text('Cinco hetónimos · Uma vida de máscaras'), findsOne);
-
-      await tester.tap(find.text('Completo'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Índice completo'), findsOne);
-
-      await tester.tap(find.text('Principal'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Cinco hetónimos · Uma vida de máscaras'), findsOne);
+      expect(text, findsNothing);
     });
 
     testWidgets('Toggle state persists during tab navigation away and back',
@@ -137,7 +89,6 @@ void main() {
 
       int cardCountAfterReturn = find.byType(HetCardWidget).evaluate().length;
       expect(cardCountAfterReturn, equals(completoCardCount));
-      expect(find.text('Índice completo'), findsOne);
     });
 
     testWidgets(
@@ -215,8 +166,6 @@ void main() {
       }
 
       await tester.pumpAndSettle();
-
-      expect(find.text('Cinco hetónimos · Uma vida de máscaras'), findsOne);
     });
 
     testWidgets(
@@ -246,4 +195,34 @@ void main() {
       expect(find.byType(HetCardWidget), findsWidgets);
     });
   });
+}
+
+Future<void> expectAllMainCategories(WidgetTester tester) async {
+  const curatedCategories = [
+    'Poemas de Alberto Caeiro',
+    'Poesia de Álvaro de Campos',
+    'Odes de Ricardo Reis',
+    'Poesia Ortónima de Fernando Pessoa',
+    'Livro do Desassossego',
+    'MENSAGEM',
+    'Textos Heterónimos',
+    'Textos Publicados em vida',
+    'Rubaiyat',
+  ];
+
+  for (var name in curatedCategories) {
+    await scrollUntilVisibleInBrowse(tester, find.text(name));
+    expect(find.text(name), findsOne);
+  }
+}
+
+void scrollToEnd(WidgetTester tester, Type parentType) {
+  final scrollableFinder = find.descendant(
+    of: find.byType(parentType),
+    matching: find.byType(Scrollable),
+  ).first;
+  final scrollable = tester.state<ScrollableState>(scrollableFinder);
+  final controller = scrollable.widget.controller!;
+
+  controller.jumpTo(controller.positions.first.maxScrollExtent);
 }
