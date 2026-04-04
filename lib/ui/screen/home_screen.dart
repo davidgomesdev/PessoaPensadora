@@ -23,6 +23,7 @@ class HomeScreen extends StatelessWidget {
           appBar: AppBar(
             backgroundColor: BonitoTheme.bgSecondary,
             elevation: 0,
+            scrolledUnderElevation: 0,
             titleSpacing: 14,
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(1.0),

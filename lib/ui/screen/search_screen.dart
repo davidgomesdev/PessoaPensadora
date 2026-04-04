@@ -27,6 +27,7 @@ class SearchScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: BonitoTheme.bgSecondary,
         elevation: 0,
+        scrolledUnderElevation: 0,
         title: Text(
           'Pesquisa',
           style: GoogleFonts.inter(
