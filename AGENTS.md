@@ -502,3 +502,11 @@ No changes to existing repository classes or Hive box names.
     ```
 
 12. **Group-by for Saved** — Iterate `mainCategories` order from `TextStore`, filter against `SavedController.savedIds`, emit a `GroupHeaderWidget` before each non-empty group.
+
+---
+
+## 13. Code Style Notes
+
+1. **No inline comments** — Unless there is a special use-case where the code cannot be made clearer, do not add explanatory comments in the code. The code should be self-documenting through clear naming and structure.
+2. **Preserve existing comments** — If existing code has comments, keep them as-is.
+3. **Exception** — Region markers like `// ...existing code...` used only in editing tools for structural clarity are acceptable.
