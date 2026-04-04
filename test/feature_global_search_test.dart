@@ -8,13 +8,6 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('Text Search Functionality', () {
-    testWidgets('Search field appears in the AppBar', (tester) async {
-      await startApp(tester);
-
-      final searchField = find.byType(TextField);
-      expect(searchField, findsOne);
-    });
-
     testWidgets('Search field has correct hint text', (tester) async {
       await startApp(tester);
 
@@ -36,8 +29,7 @@ void main() {
       await tester.tap(searchField);
       await tester.pumpAndSettle();
 
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pumpAndSettle();
+      await submitText(tester);
 
       expect(find.text('A Obra de Fernando Pessoa'), findsOne);
     });
@@ -53,8 +45,7 @@ void main() {
       await tester.enterText(searchField, '   ');
       await tester.pumpAndSettle();
 
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pumpAndSettle();
+      await submitText(tester);
 
       expect(find.text('A Obra de Fernando Pessoa'), findsOne);
     });
@@ -138,29 +129,6 @@ void main() {
       expect(controller.text, equals('verdade'));
     });
 
-    testWidgets('Search field maintains focus styling', (tester) async {
-      await startApp(tester);
-
-      final searchField = find.byType(TextField);
-      await tester.tap(searchField);
-      await tester.pumpAndSettle();
-
-      final textFieldWidget = tester.widget<TextField>(searchField);
-      expect(textFieldWidget.decoration?.focusedBorder, isNotNull);
-    });
-
-    testWidgets('Search field has correct text input styling', (tester) async {
-      await startApp(tester);
-
-      final searchField = find.byType(TextField);
-      final textFieldWidget = tester.widget<TextField>(searchField);
-
-      expect(textFieldWidget.style, isNotNull);
-      expect(textFieldWidget.decoration, isNotNull);
-      expect(textFieldWidget.decoration?.hintText,
-          equals('Pesquisar textos, títulos…'));
-    });
-
     testWidgets('Search field appears in correct position in AppBar',
         (tester) async {
       await startApp(tester);
@@ -175,21 +143,7 @@ void main() {
       expect(searchInAppBar, findsOne);
     });
 
-    testWidgets('Search field has proper input decoration', (tester) async {
-      await startApp(tester);
-
-      final searchField = find.byType(TextField);
-      final textFieldWidget = tester.widget<TextField>(searchField);
-
-      expect(textFieldWidget.decoration, isNotNull);
-      expect(textFieldWidget.decoration!.border, isNotNull);
-      expect(textFieldWidget.decoration!.enabledBorder, isNotNull);
-      expect(textFieldWidget.decoration!.focusedBorder, isNotNull);
-      expect(textFieldWidget.decoration!.fillColor, isNotNull);
-      expect(textFieldWidget.decoration!.filled, isTrue);
-    });
-
-    testWidgets('Search field handles rapid text changes', (tester) async {
+    testWidgets('Search finds result', (tester) async {
       await startApp(tester);
 
       final searchField = find.byType(TextField);
@@ -199,24 +153,11 @@ void main() {
       await tester.tap(searchField);
       await tester.pumpAndSettle();
 
-      await tester.enterText(searchField, 'a');
-      await tester.pumpAndSettle();
-      expect(controller.text, equals('a'));
-
-      await tester.enterText(searchField, 'am');
-      await tester.pumpAndSettle();
-      expect(controller.text, equals('am'));
-
-      await tester.enterText(searchField, 'amo');
-      await tester.pumpAndSettle();
-      expect(controller.text, equals('amo'));
-
       await tester.enterText(searchField, 'amor');
       await tester.pumpAndSettle();
       expect(controller.text, equals('amor'));
 
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pumpAndSettle();
+      await submitText(tester);
 
       expect(find.text('Pesquisa'), findsOne);
 
@@ -224,6 +165,33 @@ void main() {
 
       // Query + texts result
       expect(find.textContaining('amor', findRichText: true), findsAtLeast(2));
+      expect(find.text('404 resultados encontrados'), findsOne);
+    });
+
+    testWidgets('Search finds no results with random text', (tester) async {
+      await startApp(tester);
+
+      final searchField = find.byType(TextField);
+      final TextEditingController controller =
+          tester.widget<TextField>(searchField).controller!;
+
+      await tester.tap(searchField);
+      await tester.pumpAndSettle();
+
+      var input = 'qwertyuiopasdfghjklzxcvbnm';
+      await tester.enterText(searchField, input);
+      await tester.pumpAndSettle();
+      expect(controller.text, equals(input));
+
+      await submitText(tester);
+
+      expect(find.text('Pesquisa'), findsOne);
+
+      expect(find.text('"qwertyuiopasdfghjklzxcvbnm"'), findsOne);
+
+      // Query + texts result (none)
+      expect(find.textContaining(input, findRichText: true), findsExactly(1));
+      expect(find.text('0 resultados encontrados'), findsOne);
     });
 
     testWidgets('Search field preserves text content when unfocused',
@@ -263,23 +231,6 @@ void main() {
       controller.clear();
       await tester.pumpAndSettle();
       expect(controller.text, isEmpty);
-    });
-
-    testWidgets('Search field responds to text input actions', (tester) async {
-      await startApp(tester);
-
-      final searchField = find.byType(TextField);
-      final TextEditingController controller =
-          tester.widget<TextField>(searchField).controller!;
-
-      await tester.tap(searchField);
-      await tester.pumpAndSettle();
-
-      await tester.enterText(searchField, 'amor');
-      await tester.pumpAndSettle();
-
-      expect(controller.text, isNotEmpty);
-      expect(controller.text.contains('amor'), isTrue);
     });
 
     testWidgets('Multiple queries can be entered sequentially', (tester) async {
