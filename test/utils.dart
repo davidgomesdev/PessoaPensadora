@@ -123,6 +123,11 @@ Future<void> saveCurrentText(WidgetTester tester) async {
   });
 }
 
+Future<void> submitText(WidgetTester tester) async {
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
+}
+
 Future<void> scrollUntilVisibleInBrowse(
   WidgetTester tester,
   Finder finder, {
