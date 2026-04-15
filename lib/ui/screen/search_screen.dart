@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/ui/routes.dart';
 import 'package:pessoa_pensadora/ui/widget/highlight_text_widget.dart';
+import 'text_reader_screen.dart';
 
 class SearchScreen extends StatelessWidget {
+  static const routeName = '/search';
+
   const SearchScreen({super.key});
 
   @override
@@ -68,7 +70,7 @@ class SearchScreen extends StatelessWidget {
 
                 return InkWell(
                   onTap: () => Get.toNamed(
-                    Routes.readTextScreen,
+                    TextReaderScreen.routeName,
                     arguments: {
                       'id': boxText.id,
                       'categoryTitle': boxText.category.title,

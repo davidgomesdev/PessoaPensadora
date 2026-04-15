@@ -4,13 +4,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/repository/reader_preference_store.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/ui/routes.dart';
 import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
 import 'package:pessoa_pensadora/ui/widget/bottom_nav_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/het_card_widget.dart';
+import 'category_screen.dart';
+import 'search_screen.dart';
 
 class HomeScreen extends StatelessWidget {
+  static const routeName = '/home';
+
   const HomeScreen({super.key});
 
   @override
@@ -34,7 +37,7 @@ class HomeScreen extends StatelessWidget {
                 // Logo
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
@@ -48,8 +51,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                     Text(
                       'Pensadora',
-                      style: GoogleFonts.inter(
-                        fontSize: 9,
+                      style: GoogleFonts.lora(
+                        fontSize: 11,
                         letterSpacing: 1.6,
                         color: BonitoTheme.textMuted,
                       ),
@@ -100,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                       onSubmitted: (q) {
                         if (q.trim().isNotEmpty) {
                           searchController.clear();
-                          Get.toNamed(Routes.searchScreen,
+                          Get.toNamed(SearchScreen.routeName,
                               parameters: {'q': q.trim()});
                         }
                       },
@@ -164,7 +167,6 @@ class _BrowseTabState extends State<BrowseTab> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-
         Container(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
           decoration: const BoxDecoration(
@@ -198,7 +200,6 @@ class _BrowseTabState extends State<BrowseTab> {
             ],
           ),
         ),
-
         Expanded(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(14, 16, 14, 24),
@@ -207,7 +208,7 @@ class _BrowseTabState extends State<BrowseTab> {
                       category: cat,
                       subtitle: _subtitles[cat.id] ?? '',
                       onTap: () =>
-                          Get.toNamed(Routes.categoryScreen, arguments: cat),
+                          Get.toNamed(CategoryScreen.routeName, arguments: cat),
                     ))
                 .toList(),
           ),

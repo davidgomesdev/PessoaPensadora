@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/ui/routes.dart';
+import 'package:pessoa_pensadora/ui/screen/boot_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/category_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/home_screen.dart';
@@ -13,7 +13,6 @@ import 'package:pessoa_pensadora/ui/screen/search_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/splash_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/texts_list_screen.dart';
 
-import 'boot_screen.dart';
 
 var startedAt = DateTime.timestamp();
 DateTime? finishedAt;
@@ -23,10 +22,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) {
-      BrowserContextMenu.disableContextMenu();
-    }
-
     return GetMaterialApp(
       title: kIsWeb
           ? "Pessoa Pensadora - Toda a obra de Fernando Pessoa"
@@ -52,21 +47,21 @@ class App extends StatelessWidget {
         textTheme: bonitoTextTheme.apply(bodyColor: BonitoTheme.textPrimary),
         dividerColor: BonitoTheme.borderMid,
       ),
-      initialRoute: Routes.bootScreen,
+      initialRoute: BootScreen.routeName,
       getPages: buildAppPages(),
     );
   }
 
   List<GetPage<dynamic>> buildAppPages() {
     return [
-      GetPage(name: Routes.bootScreen, page: () => const BootScreen()),
-      buildPage(Routes.homeScreen, const HomeScreen()),
-      buildPage(Routes.savedScreen, const SavedTextsScreen()),
-      buildPage(Routes.readTextScreen, const TextReaderScreen()),
-      buildPage(Routes.historyScreen, const HistoryScreen()),
-      buildPage(Routes.searchScreen, const SearchScreen()),
-      buildPage(Routes.categoryScreen, const CategoryScreen()),
-      buildPage(Routes.textsListScreen, const TextsListScreen()),
+      GetPage(name: BootScreen.routeName, page: () => const BootScreen()),
+      buildPage(HomeScreen.routeName, const HomeScreen()),
+      buildPage(SavedTextsScreen.routeName, const SavedTextsScreen()),
+      buildPage(TextReaderScreen.routeName, const TextReaderScreen()),
+      buildPage(HistoryScreen.routeName, const HistoryScreen()),
+      buildPage(SearchScreen.routeName, const SearchScreen()),
+      buildPage(CategoryScreen.routeName, const CategoryScreen()),
+      buildPage(TextsListScreen.routeName, const TextsListScreen()),
     ];
   }
 
@@ -74,12 +69,12 @@ class App extends StatelessWidget {
     return GetPage(
         name: route,
         page: () {
-          if (finishedAt == null) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Get.offNamed(Routes.bootScreen);
-            });
-            return SplashScreen();
-          }
+           if (finishedAt == null) {
+             WidgetsBinding.instance.addPostFrameCallback((_) {
+               Get.offNamed(BootScreen.routeName);
+             });
+             return SplashScreen();
+           }
           return screen;
         });
   }

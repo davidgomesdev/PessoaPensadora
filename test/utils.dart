@@ -21,7 +21,6 @@ import 'package:pessoa_pensadora/service/read_controller.dart';
 import 'package:pessoa_pensadora/service/saved_controller.dart';
 import 'package:pessoa_pensadora/service/selection_action_service.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
-import 'package:pessoa_pensadora/ui/routes.dart';
 import 'package:pessoa_pensadora/ui/screen/base_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/home_screen.dart';
 import 'package:pessoa_pensadora/ui/widget/text_row_widget.dart';
@@ -36,7 +35,7 @@ Future<void> startApp(WidgetTester tester) async {
     await tester.pumpAndSettle();
   });
 
-  Get.offAndToNamed(Routes.homeScreen);
+  Get.offAndToNamed(HomeScreen.routeName);
 
   await tester.pumpAndSettle();
 }

@@ -12,6 +12,8 @@ import 'package:pessoa_pensadora/ui/widget/button/share_text_button.dart';
 import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
 
 class TextReaderScreen extends StatelessWidget {
+  static const routeName = '/textReader';
+
   const TextReaderScreen({super.key});
 
   @override

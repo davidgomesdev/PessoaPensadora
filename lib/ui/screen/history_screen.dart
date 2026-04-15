@@ -4,10 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/repository/history_store.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/ui/routes.dart';
 import 'package:pessoa_pensadora/ui/widget/s_item_widget.dart';
+import 'text_reader_screen.dart';
 
 class HistoryScreen extends StatelessWidget {
+  static const routeName = '/history';
+
   const HistoryScreen({super.key});
 
   @override
@@ -42,7 +44,7 @@ class HistoryScreen extends StatelessWidget {
                     subtitle: boxText.category.title,
                     trailing: '',
                     onTap: () => Get.toNamed(
-                      Routes.readTextScreen,
+                      TextReaderScreen.routeName,
                       arguments: {
                         'id': boxText.id,
                         'categoryTitle': boxText.category.title,

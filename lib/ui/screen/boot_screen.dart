@@ -10,13 +10,15 @@ import 'package:pessoa_pensadora/service/read_controller.dart';
 import 'package:pessoa_pensadora/service/saved_controller.dart';
 import 'package:pessoa_pensadora/service/selection_action_service.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
-import 'package:pessoa_pensadora/ui/routes.dart';
 import 'package:pessoa_pensadora/ui/screen/base_screen.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
 
+import 'home_screen.dart';
 import 'splash_screen.dart';
 
 class BootScreen extends StatefulWidget {
+  static const routeName = '/boot';
+
   const BootScreen({super.key});
 
   @override
@@ -71,7 +73,7 @@ class _BootScreenState extends State<BootScreen> {
     log.d("Took ${durationSinceStart.inMilliseconds}ms "
         "to load dependencies.");
 
-    Get.offAndToNamed(Routes.homeScreen);
+    Get.offAndToNamed(HomeScreen.routeName);
 
     return Future.value();
   }

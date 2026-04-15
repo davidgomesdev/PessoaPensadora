@@ -4,11 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/service/saved_controller.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/ui/routes.dart';
 import 'package:pessoa_pensadora/ui/widget/group_header_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/s_item_widget.dart';
+import 'text_reader_screen.dart';
 
 class SavedTextsScreen extends StatelessWidget {
+  static const routeName = '/saved';
+
   const SavedTextsScreen({super.key});
 
   @override
@@ -24,22 +26,29 @@ class SavedTextsScreen extends StatelessWidget {
             final savedIdSet = savedCtrl.savedIds.toSet();
             if (savedIdSet.isEmpty) {
               return SliverFillRemaining(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 16.0,
-                  children: [
-                    Text(
-                      'Pessoa tem tantos textos incríveis, ainda não gostaste de nenhum? :( ',
-                      style: GoogleFonts.inter(
-                          fontSize: 14, color: BonitoTheme.textMuted),
-                    ),
-                    Text(
-                      'Para guardar um texto, basta clicar no ícone de coração quando estiveres a ler um texto.',
-                      style: GoogleFonts.inter(
-                          fontSize: 14, color: BonitoTheme.textMuted),
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 16.0,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'Pessoa tem tantos textos incríveis, ainda não gostaste de nenhum? :(',
+                          style: GoogleFonts.inter(
+                              fontSize: 12, color: BonitoTheme.textMuted),
+                        ),
+                      ),
+                      Flexible(
+                        child: Text(
+                          'Para guardar um texto, basta clicar no ícone de coração quando estiveres a ler um texto.',
+                          style: GoogleFonts.inter(
+                              fontSize: 12, color: BonitoTheme.textMuted),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }
@@ -64,7 +73,7 @@ class SavedTextsScreen extends StatelessWidget {
                   title: boxText.title,
                   subtitle: boxText.category.title,
                   onTap: () => Get.toNamed(
-                    Routes.readTextScreen,
+                    TextReaderScreen.routeName,
                     arguments: {
                       'id': boxText.id,
                       'categoryTitle': boxText.category.title,
