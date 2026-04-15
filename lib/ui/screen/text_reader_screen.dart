@@ -9,6 +9,7 @@ import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/widget/button/arquivo_pessoa_button.dart';
 import 'package:pessoa_pensadora/ui/widget/button/share_text_button.dart';
+import 'package:pessoa_pensadora/ui/widget/reader/reader_nav_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
 
 class TextReaderScreen extends StatelessWidget {
@@ -90,53 +91,6 @@ class TextReaderScreen extends StatelessWidget {
       );
     });
 
-    // todo: extract widget
-    final navWidget = siblings.isNotEmpty
-        ? Row(
-            children: [
-
-              Expanded(
-                flex: 42,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: _NavBtn(
-                    label: '← ${prev?.title ?? "Anterior"}',
-                    enabled: prev != null,
-                    onTap: () { if (prev != null) navigateTo(prev); },
-                  ),
-                ),
-              ),
-
-              Expanded(
-                flex: 16,
-                child: Center(
-                  child: Text(
-                    currentIdx >= 0
-                        ? '${currentIdx + 1} / ${siblings.length}'
-                        : '',
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      color: BonitoTheme.textMuted,
-                    ),
-                  ),
-                ),
-              ),
-
-              Expanded(
-                flex: 42,
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: _NavBtn(
-                    label: '${next?.title ?? "Seguinte"} →',
-                    enabled: next != null,
-                    onTap: () { if (next != null) navigateTo(next); },
-                  ),
-                ),
-              ),
-            ],
-          )
-        : null;
-
     return Scaffold(
       backgroundColor: BonitoTheme.bgPrimary,
       appBar: AppBar(
@@ -161,7 +115,13 @@ class TextReaderScreen extends StatelessWidget {
             content: text,
             author: author,
             actions: actionsWidget,
-            readerNav: navWidget,
+            readerNav: ReaderNavWidget(
+              siblings: siblings,
+              currentIdx: currentIdx,
+              prev: prev,
+              next: next,
+              onNavigate: navigateTo,
+            ),
           ),
         ),
       ),
@@ -210,42 +170,3 @@ class _ReaderBtn extends StatelessWidget {
   }
 }
 
-class _NavBtn extends StatelessWidget {
-  final String label;
-  final bool enabled;
-  final VoidCallback onTap;
-
-  const _NavBtn({
-    required this.label,
-    required this.enabled,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: enabled ? onTap : null,
-      child: Opacity(
-        opacity: enabled ? 1.0 : 0.25,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          constraints: const BoxConstraints(maxWidth: 160),
-          decoration: BoxDecoration(
-            color: BonitoTheme.bgSecondary,
-            border: Border.all(color: BonitoTheme.borderCol),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Text(
-            label,
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              color: BonitoTheme.textDim,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ),
-    );
-  }
-}
