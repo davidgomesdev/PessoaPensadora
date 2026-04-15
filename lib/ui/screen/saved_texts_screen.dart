@@ -24,13 +24,22 @@ class SavedTextsScreen extends StatelessWidget {
             final savedIdSet = savedCtrl.savedIds.toSet();
             if (savedIdSet.isEmpty) {
               return SliverFillRemaining(
-                child: Center(
-                  child: Text(
-                    // todo: explain how to save texts and add something like "Pessoa tem tantos textos incríveis, não percas os teus favoritos!"
-                    'Nenhum texto guardado :(',
-                    style: GoogleFonts.inter(
-                        fontSize: 14, color: BonitoTheme.textMuted),
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 16.0,
+                  children: [
+                    Text(
+                      'Pessoa tem tantos textos incríveis, ainda não gostaste de nenhum? :( ',
+                      style: GoogleFonts.inter(
+                          fontSize: 14, color: BonitoTheme.textMuted),
+                    ),
+                    Text(
+                      'Para guardar um texto, basta clicar no ícone de coração quando estiveres a ler um texto.',
+                      style: GoogleFonts.inter(
+                          fontSize: 14, color: BonitoTheme.textMuted),
+                    ),
+                  ],
                 ),
               );
             }
@@ -51,7 +60,7 @@ class SavedTextsScreen extends StatelessWidget {
 
               items.add(GroupHeaderWidget(label: cat.title));
               for (final boxText in savedInGroup) {
-                items.add(SItemWidget(
+                items.add(TextListItemWidget(
                   title: boxText.title,
                   subtitle: boxText.category.title,
                   onTap: () => Get.toNamed(

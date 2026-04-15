@@ -39,7 +39,7 @@ void main() {
         await switchToSavedTab(tester);
 
         expect(find.text('Nenhum texto guardado :('), findsOne);
-        expect(find.byType(SItemWidget), findsNothing);
+        expect(find.byType(TextListItemWidget), findsNothing);
       });
 
   testWidgets('Saving a text makes it appear in the Saved tab',
@@ -58,7 +58,7 @@ void main() {
         await switchToSavedTab(tester);
 
         expect(
-            find.descendant(of: find.byType(SItemWidget), matching: textFinder),
+            find.descendant(of: find.byType(TextListItemWidget), matching: textFinder),
             findsOne);
       });
 
@@ -84,7 +84,7 @@ void main() {
                 matching: find.text('POEMAS DE ALBERTO CAEIRO')),
             findsOne);
         expect(
-            find.descendant(of: find.byType(SItemWidget), matching: textFinder),
+            find.descendant(of: find.byType(TextListItemWidget), matching: textFinder),
             findsOne);
       });
 
@@ -103,18 +103,18 @@ void main() {
         await switchToSavedTab(tester);
 
         expect(
-            find.descendant(of: find.byType(SItemWidget), matching: textFinder),
+            find.descendant(of: find.byType(TextListItemWidget), matching: textFinder),
             findsOne);
 
         await tester.tap(find.descendant(
-            of: find.byType(SItemWidget), matching: find.byIcon(Icons.close)));
+            of: find.byType(TextListItemWidget), matching: find.byIcon(Icons.close)));
         await tester.pumpAndSettle();
 
         await expectEventuallyWithPump(
           tester,
           () {
             expect(
-                find.descendant(of: find.byType(SItemWidget), matching: textFinder),
+                find.descendant(of: find.byType(TextListItemWidget), matching: textFinder),
                 findsNothing);
             expect(find.text('Nenhum texto guardado :('), findsOne);
           },
@@ -137,7 +137,7 @@ void main() {
         await switchToSavedTab(tester);
 
         await tester.tap(
-            find.ancestor(of: textFinder, matching: find.byType(SItemWidget)));
+            find.ancestor(of: textFinder, matching: find.byType(TextListItemWidget)));
         await tester.pumpAndSettle();
 
         final reader = tester.widget<TextReader>(find.byType(TextReader));
@@ -188,11 +188,11 @@ void main() {
             findsOne);
         expect(
             find.descendant(
-                of: find.byType(SItemWidget), matching: firstTextFinder),
+                of: find.byType(TextListItemWidget), matching: firstTextFinder),
             findsOne);
         expect(
             find.descendant(
-                of: find.byType(SItemWidget), matching: secondTextFinder),
+                of: find.byType(TextListItemWidget), matching: secondTextFinder),
             findsOne);
       });
 
@@ -240,11 +240,11 @@ void main() {
             findsOne);
         expect(
             find.descendant(
-                of: find.byType(SItemWidget), matching: firstTextFinder),
+                of: find.byType(TextListItemWidget), matching: firstTextFinder),
             findsOne);
         expect(
             find.descendant(
-                of: find.byType(SItemWidget), matching: secondTextFinder),
+                of: find.byType(TextListItemWidget), matching: secondTextFinder),
             findsOne);
       });
 }

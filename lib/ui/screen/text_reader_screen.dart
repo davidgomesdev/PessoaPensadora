@@ -11,7 +11,6 @@ import 'package:pessoa_pensadora/ui/widget/button/arquivo_pessoa_button.dart';
 import 'package:pessoa_pensadora/ui/widget/button/share_text_button.dart';
 import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
 
-// TODO: rename the file lol
 class TextReaderScreen extends StatelessWidget {
   const TextReaderScreen({super.key});
 
@@ -50,7 +49,6 @@ class TextReaderScreen extends StatelessWidget {
             : null;
 
     void navigateTo(BoxPessoaText boxText) {
-
       Get.off(
         () => const TextReaderScreen(),
         arguments: {
