@@ -37,7 +37,7 @@ class HistoryScreen extends StatelessWidget {
                 (ctx, i) {
                   final boxText = store.texts[ids[i]];
                   if (boxText == null) return const SizedBox.shrink();
-                  return SItemWidget(
+                  return TextListItemWidget(
                     title: boxText.title,
                     subtitle: boxText.category.title,
                     trailing: '',

@@ -7,7 +7,7 @@ import 'package:pessoa_pensadora/ui/routes.dart';
 import 'package:pessoa_pensadora/ui/screen/category_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/home_screen.dart';
-import 'package:pessoa_pensadora/ui/screen/saved_text_reader_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/text_reader_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/search_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/splash_screen.dart';

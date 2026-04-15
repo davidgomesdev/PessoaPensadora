@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 
-// todo: figure out what this is and rename
-class SItemWidget extends StatelessWidget {
+class TextListItemWidget extends StatelessWidget {
   final String title;
   final String subtitle;
   final String? trailing;
   final VoidCallback onTap;
   final VoidCallback? onRemove;
 
-  const SItemWidget({
+  const TextListItemWidget({
     super.key,
     required this.title,
     required this.subtitle,

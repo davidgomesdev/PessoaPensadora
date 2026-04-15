@@ -11,7 +11,7 @@ void main() {
     await switchToHistoryTab(tester);
 
     expect(find.text('Nenhum texto visitado'), findsOne);
-    expect(find.byType(SItemWidget), findsNothing);
+    expect(find.byType(TextListItemWidget), findsNothing);
   });
 
   testWidgets('Opening a text makes it appear in the History tab',
@@ -34,7 +34,7 @@ void main() {
     await switchToHistoryTab(tester);
 
     expect(
-        find.descendant(of: find.byType(SItemWidget), matching: textFinder),
+        find.descendant(of: find.byType(TextListItemWidget), matching: textFinder),
         findsOne);
   });
 
@@ -66,7 +66,7 @@ void main() {
 
     await switchToHistoryTab(tester);
 
-    final items = tester.widgetList<SItemWidget>(find.byType(SItemWidget)).toList();
+    final items = tester.widgetList<TextListItemWidget>(find.byType(TextListItemWidget)).toList();
     expect(items.length, greaterThanOrEqualTo(2));
 
     // Most recently opened should be first
