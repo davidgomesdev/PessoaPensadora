@@ -5,7 +5,7 @@ import 'package:pessoa_pensadora/model/pessoa_text.dart';
 import 'package:pessoa_pensadora/service/read_controller.dart';
 import 'package:pessoa_pensadora/service/saved_controller.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/ui/routes.dart';
+import 'package:pessoa_pensadora/ui/screen/text_reader_screen.dart';
 
 class TextRowWidget extends StatelessWidget {
   final PessoaText text;
@@ -23,7 +23,7 @@ class TextRowWidget extends StatelessWidget {
     final savedCtrl = Get.find<SavedController>();
 
     return InkWell(
-      onTap: () => Get.toNamed(Routes.readTextScreen, arguments: {
+      onTap: () => Get.toNamed(TextReaderScreen.routeName, arguments: {
         'id': text.id,
         'categoryTitle': text.category?.title ?? '',
         'title': text.title,

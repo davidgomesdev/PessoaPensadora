@@ -3,11 +3,12 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/model/pessoa_category.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/ui/routes.dart';
 import 'package:pessoa_pensadora/ui/widget/coll_item_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/text_row_widget.dart';
 
 class CategoryScreen extends StatelessWidget {
+  static const routeName = '/category';
+
   const CategoryScreen({super.key});
 
   @override
@@ -90,7 +91,7 @@ class CategoryScreen extends StatelessWidget {
                     return CollItemWidget(
                       category: sub,
                       onTap: () => Get.toNamed(
-                        Routes.categoryScreen,
+                        CategoryScreen.routeName,
                         arguments: sub,
                         preventDuplicates: false,
                       ),

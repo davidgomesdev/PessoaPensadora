@@ -6,6 +6,8 @@ import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/widget/text_row_widget.dart';
 
 class TextsListScreen extends StatelessWidget {
+  static const routeName = '/textsList';
+
   const TextsListScreen({super.key});
 
   @override

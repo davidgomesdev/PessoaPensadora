@@ -13,8 +13,8 @@ import 'package:pessoa_pensadora/ui/widget/text_selection_drawer_list_view.dart'
 import 'package:pessoa_pensadora/ui/widget/button/reading_type_button.dart';
 import 'package:pessoa_pensadora/util/generic_extensions.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
-
-import '../routes.dart';
+import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
 
 class SearchFilter {
   String textFilter;
@@ -195,18 +195,18 @@ class _TextSelectionDrawerState extends State<TextSelectionDrawer> {
                   onPress: (isFullReading) =>
                       widget.onFullReadingChange(isFullReading),
                 ),
-              IconButton(
-                  tooltip: 'Textos marcados',
-                  icon: const Icon(Icons.bookmarks),
-                  onPressed: () {
-                    Get.toNamed(Routes.savedScreen);
-                  }),
-              IconButton(
-                  tooltip: 'Histórico',
-                  icon: const Icon(Icons.history),
-                  onPressed: () {
-                    Get.toNamed(Routes.historyScreen);
-                  }),
+               IconButton(
+                   tooltip: 'Textos marcados',
+                   icon: const Icon(Icons.bookmarks),
+                   onPressed: () {
+                     Get.toNamed(SavedTextsScreen.routeName);
+                   }),
+               IconButton(
+                   tooltip: 'Histórico',
+                   icon: const Icon(Icons.history),
+                   onPressed: () {
+                     Get.toNamed(HistoryScreen.routeName);
+                   }),
             ],
           )
         ],
