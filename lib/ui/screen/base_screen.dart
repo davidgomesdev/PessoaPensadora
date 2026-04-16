@@ -7,10 +7,10 @@ import 'package:pessoa_pensadora/ui/screen/boot_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/category_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/home_screen.dart';
-import 'package:pessoa_pensadora/ui/screen/text_reader_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/search_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/splash_screen.dart';
+import 'package:pessoa_pensadora/ui/screen/text_reader_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/texts_list_screen.dart';
 
 
@@ -22,6 +22,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) {
+      BrowserContextMenu.disableContextMenu();
+    }
+
     return GetMaterialApp(
       title: kIsWeb
           ? "Pessoa Pensadora - Toda a obra de Fernando Pessoa"
