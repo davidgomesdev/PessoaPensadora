@@ -14,7 +14,6 @@ import 'package:pessoa_pensadora/ui/screen/text_reader_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/texts_list_screen.dart';
 
 
-var startedAt = DateTime.timestamp();
 DateTime? finishedAt;
 
 class App extends StatelessWidget {

@@ -140,7 +140,6 @@ class BrowseTab extends StatefulWidget {
 
 class _BrowseTabState extends State<BrowseTab> {
   // TODO: extract to assets or something, to avoid hardcoding these in the UI code
-  // todo: also make this a map of category id to subtitle and name
   static const Map<int, String> _subtitles = {
     26: 'Mestre dos Heterónimos',
     23: 'O Engenheiro Sensacionista',
@@ -152,8 +151,6 @@ class _BrowseTabState extends State<BrowseTab> {
     139: 'Textos publicados em vida',
     10000: 'Do persa ao português',
   };
-
-  // todo: extract every string in the app to a single file or something, to make it easier to manage and translate later on. maybe even create a simple i18n system for it, if we want to support multiple languages in the future
 
   @override
   Widget build(BuildContext context) {

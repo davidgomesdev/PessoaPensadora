@@ -45,7 +45,8 @@ class TextReaderScreen extends StatelessWidget {
             .toList()
         : [];
     final int currentIdx = siblings.indexWhere((t) => t.id == id);
-    final BoxPessoaText? prev = currentIdx > 0 ? siblings[currentIdx - 1] : null;
+    final BoxPessoaText? prev =
+        currentIdx > 0 ? siblings[currentIdx - 1] : null;
     final BoxPessoaText? next =
         currentIdx >= 0 && currentIdx < siblings.length - 1
             ? siblings[currentIdx + 1]
@@ -169,4 +170,3 @@ class _ReaderBtn extends StatelessWidget {
     );
   }
 }
-
