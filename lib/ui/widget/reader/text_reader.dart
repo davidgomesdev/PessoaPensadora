@@ -16,7 +16,6 @@ const _scrollHintGradient = LinearGradient(
 );
 
 class TextReader extends StatefulWidget {
-  final String categoryTitle;
   final String title;
   final String content;
   final String author;
@@ -25,7 +24,6 @@ class TextReader extends StatefulWidget {
 
   const TextReader({
     super.key,
-    required this.categoryTitle,
     required this.title,
     required this.content,
     required this.author,

@@ -23,7 +23,8 @@ class TextReaderScreen extends StatelessWidget {
     final int id = args['id'];
     final String text = args['content'];
     final String author = args['author'];
-    final String categoryTitle = args['categoryTitle'];
+    // unused but received
+    // final String categoryTitle = args['categoryTitle'];
     final String title = args['title'];
     final int textIndex = args['textIndex'];
     final List<int> filteredCategoryTexts = args['filteredCategoryTexts'];
@@ -110,7 +111,6 @@ class TextReaderScreen extends StatelessWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints.expand(),
           child: TextReader(
-            categoryTitle: categoryTitle,
             title: title,
             content: text,
             author: author,

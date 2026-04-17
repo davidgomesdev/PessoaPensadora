@@ -143,7 +143,6 @@ void main() {
         final reader = tester.widget<TextReader>(find.byType(TextReader));
 
         expect(reader.author, equals('Ricardo Reis'));
-        expect(reader.categoryTitle, equals('Odes de Ricardo Reis'));
         expect(reader.title,
             equals('A flor que és, não a que dás, eu quero. [2]'));
         expect(reader.content, contains('Porque me negas o que te não peço?'));
