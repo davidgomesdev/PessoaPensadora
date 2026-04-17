@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pessoa_pensadora/dto/box/box_person_text.dart';
 import 'package:pessoa_pensadora/service/saved_controller.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/widget/group_header_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/s_item_widget.dart';
+import '../../util/logger_factory.dart';
 import 'text_reader_screen.dart';
 
 class SavedTextsScreen extends StatelessWidget {
@@ -23,8 +25,8 @@ class SavedTextsScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           Obx(() {
-            final savedIdSet = savedCtrl.savedIds.toSet();
-            if (savedIdSet.isEmpty) {
+            final savedIds = savedCtrl.savedIds;
+            if (savedIds.isEmpty) {
               return SliverFillRemaining(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -54,12 +56,15 @@ class SavedTextsScreen extends StatelessWidget {
             }
 
             final items = <Widget>[];
+            final groupedSavedTexts = <String, List<BoxPessoaText>>{};
 
-            for (final cat in store.mainIndex.subcategories) {
-              final savedInGroup = savedIdSet
+            for (final cat in store.fullIndex.subcategories) {
+              final savedInGroup = savedIds
                   .where((id) {
                     final text = store.texts[id];
+
                     if (text == null) return false;
+
                     return text.rootCategory.id == cat.id;
                   })
                   .map((id) => store.texts[id]!)
@@ -67,21 +72,40 @@ class SavedTextsScreen extends StatelessWidget {
 
               if (savedInGroup.isEmpty) continue;
 
-              items.add(GroupHeaderWidget(label: cat.title));
+              final group = groupedSavedTexts.putIfAbsent(
+                  cat.title, () => List.empty(growable: true));
+
               for (final boxText in savedInGroup) {
+                group.add(boxText);
+              }
+            }
+
+            for (final group in groupedSavedTexts.entries) {
+              items.add(GroupHeaderWidget(label: group.key));
+
+              for (final boxText in group.value) {
                 items.add(TextListItemWidget(
                   title: boxText.title,
                   subtitle: boxText.category.title,
-                  onTap: () => Get.toNamed(
-                    TextReaderScreen.routeName,
-                    arguments: {
-                      'id': boxText.id,
-                      'categoryTitle': boxText.category.title,
-                      'title': boxText.title,
-                      'content': boxText.content,
-                      'author': boxText.author,
-                    },
-                  ),
+                  onTap: () {
+                    var textIndex = savedIds.indexOf(boxText.id);
+
+                    log.i('Navigating to text ${boxText.id} from saved texts '
+                        '(position $textIndex, on texts: $savedIds)');
+
+                    Get.toNamed(
+                      TextReaderScreen.routeName,
+                      arguments: {
+                        'id': boxText.id,
+                        'textIndex': textIndex,
+                        'filteredCategoryTexts': savedIds,
+                        'categoryTitle': boxText.category.title,
+                        'title': boxText.title,
+                        'content': boxText.content,
+                        'author': boxText.author,
+                      },
+                    );
+                  },
                   onRemove: () => savedCtrl.toggle(boxText.id),
                 ));
               }

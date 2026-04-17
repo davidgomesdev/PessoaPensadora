@@ -5,11 +5,11 @@ import 'package:pessoa_pensadora/model/pessoa_category.dart';
 import 'package:pessoa_pensadora/service/read_controller.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 
-class CollItemWidget extends StatelessWidget {
+class SubcategoryRowWidget extends StatelessWidget {
   final PessoaCategory category;
   final VoidCallback onTap;
 
-  const CollItemWidget({
+  const SubcategoryRowWidget({
     super.key,
     required this.category,
     required this.onTap,
@@ -34,12 +34,10 @@ class CollItemWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
           child: Row(
             children: [
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     Text(
                       category.title,
                       style: GoogleFonts.inter(
@@ -50,12 +48,10 @@ class CollItemWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 3),
-
                     Obx(() {
                       final allTextIds = _getAllTextIds(category);
-                      final readCount = allTextIds
-                          .where((id) => readCtrl.isRead(id))
-                          .length;
+                      final readCount =
+                          allTextIds.where((id) => readCtrl.isRead(id)).length;
                       return Text(
                         '$readCount/$totalCount lidos',
                         style: GoogleFonts.inter(
@@ -68,10 +64,8 @@ class CollItemWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 14),
-
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: BonitoTheme.bgHover,
                   borderRadius: BorderRadius.circular(3),

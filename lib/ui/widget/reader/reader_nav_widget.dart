@@ -4,16 +4,16 @@ import 'package:pessoa_pensadora/dto/box/box_person_text.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 
 class ReaderNavWidget extends StatelessWidget {
-  final List<BoxPessoaText> siblings;
-  final int currentIdx;
+  final int textCount;
+  final int currentIndex;
   final BoxPessoaText? prev;
   final BoxPessoaText? next;
-  final Function(BoxPessoaText) onNavigate;
+  final Function(int, BoxPessoaText) onNavigate;
 
   const ReaderNavWidget({
     super.key,
-    required this.siblings,
-    required this.currentIdx,
+    required this.textCount,
+    required this.currentIndex,
     required this.prev,
     required this.next,
     required this.onNavigate,
@@ -21,7 +21,7 @@ class ReaderNavWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (siblings.isEmpty) {
+    if (textCount == 0) {
       return const SizedBox.shrink();
     }
 
@@ -35,7 +35,7 @@ class ReaderNavWidget extends StatelessWidget {
               label: '← ${prev?.title ?? "Anterior"}',
               enabled: prev != null,
               onTap: () {
-                if (prev != null) onNavigate(prev!);
+                if (prev != null) onNavigate(currentIndex - 1, prev!);
               },
             ),
           ),
@@ -44,8 +44,8 @@ class ReaderNavWidget extends StatelessWidget {
           flex: 16,
           child: Center(
             child: Text(
-              currentIdx >= 0
-                  ? '${currentIdx + 1} / ${siblings.length}'
+              currentIndex >= 0
+                  ? '${currentIndex + 1} / $textCount'
                   : '',
               style: GoogleFonts.inter(
                 fontSize: 11,
@@ -62,7 +62,7 @@ class ReaderNavWidget extends StatelessWidget {
               label: '${next?.title ?? "Seguinte"} →',
               enabled: next != null,
               onTap: () {
-                if (next != null) onNavigate(next!);
+                if (next != null) onNavigate(currentIndex + 1, next!);
               },
             ),
           ),

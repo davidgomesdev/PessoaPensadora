@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/model/pessoa_category.dart';
 import 'package:pessoa_pensadora/repository/read_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/ui/widget/coll_item_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/subcategory_row_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/text_row_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/text_selection_drawer.dart';
 import 'package:pessoa_pensadora/util/logger_factory.dart';
@@ -45,7 +45,7 @@ class CategoryScreen extends StatelessWidget {
             child: Obx(() {
               final query = filterQuery.value.toLowerCase();
               final mode = filterMode.value;
-              final subs = category.subcategories
+              final subcategories = category.subcategories
                   .where((c) =>
                       query.isEmpty || c.title.toLowerCase().contains(query))
                   .toList();
@@ -62,7 +62,7 @@ class CategoryScreen extends StatelessWidget {
                     .toList();
               }
 
-              if (subs.isEmpty && texts.isEmpty) {
+              if (subcategories.isEmpty && texts.isEmpty) {
                 return Center(
                   child: Text(
                     'Nenhum resultado',
@@ -72,14 +72,15 @@ class CategoryScreen extends StatelessWidget {
                 );
               }
 
-              final totalItems = subs.length + texts.length;
+              final totalItems = subcategories.length + texts.length;
 
               return ListView.builder(
                 itemCount: totalItems,
                 itemBuilder: (ctx, i) {
-                  if (i < subs.length) {
-                    final sub = subs[i];
-                    return CollItemWidget(
+                  var isSubcategory = i < subcategories.length;
+                  if (isSubcategory) {
+                    final sub = subcategories[i];
+                    return SubcategoryRowWidget(
                       category: sub,
                       onTap: () => Get.toNamed(
                         CategoryScreen.routeName,
@@ -88,8 +89,13 @@ class CategoryScreen extends StatelessWidget {
                       ),
                     );
                   } else {
-                    final text = texts[i - subs.length];
-                    return TextRowWidget(text: text, index: i - subs.length);
+                    final text = texts[i - subcategories.length];
+                    return TextRowWidget(
+                      text: text,
+                    // todo: texts don't seem sorted
+                      filteredCategoryTexts: texts,
+                      index: i - subcategories.length,
+                    );
                   }
                 },
               );
