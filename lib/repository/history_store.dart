@@ -28,7 +28,13 @@ class HistoryRepository {
   }
 
   Future<void> saveVisit(int id) async {
-    historyIds.assignAll([id, ..._box.values.toList().reversed]);
+    var current = _box.values.toList();
+
+    // prevent duplicate
+    current.remove(id);
+
+    historyIds.assignAll([id, ...current.reversed]);
+
     await _box.add(id);
 
     log.i("Appended text '$id' to history");
