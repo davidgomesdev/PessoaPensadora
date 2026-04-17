@@ -3,110 +3,164 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/service/selection_action_service.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/util/widget_extensions.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-class TextReader extends StatelessWidget {
-  final ScrollController _scrollController;
+const double _scrollThreshold = 10;
+const _scrollHintGradient = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: [
+    Color(0x00080808),
+    Color(0xFF080808),
+  ],
+);
+
+class TextReader extends StatefulWidget {
   final String categoryTitle;
   final String title;
   final String content;
   final String author;
-
   final Widget? actions;
-
   final Widget? readerNav;
 
-  TextReader({
+  const TextReader({
     super.key,
-    ScrollController? scrollController,
     required this.categoryTitle,
     required this.title,
     required this.content,
     required this.author,
     this.actions,
     this.readerNav,
-  }) : _scrollController =
-            scrollController ?? ScrollController(keepScrollOffset: false);
+  });
+
+  @override
+  State<TextReader> createState() => _TextReaderState();
+}
+
+class _TextReaderState extends State<TextReader> {
+  late final ScrollController _scrollController;
+  final _isAtBottom = false.obs;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController(keepScrollOffset: false);
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final isAtBottom = _scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - _scrollThreshold;
+    if (_isAtBottom.value != isAtBottom) _isAtBottom.value = isAtBottom;
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     WakelockPlus.enable();
 
-    return ScrollConfiguration(
-      behavior: const ScrollBehavior().copyWith(overscroll: false),
-      child: SingleChildScrollView(
-        controller: _scrollController,
-
-        padding: const EdgeInsets.fromLTRB(14, 16, 14, 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-
-            Container(
-              padding: const EdgeInsets.only(bottom: 24),
-              margin: const EdgeInsets.only(bottom: 30),
-              decoration: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: BonitoTheme.borderCol),
+    return Column(
+      children: [
+        Expanded(
+          child: Stack(
+            children: [
+              ScrollConfiguration(
+                behavior: const ScrollBehavior().copyWith(overscroll: false),
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  padding: const EdgeInsets.fromLTRB(14, 16, 14, 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 24),
+                        margin: const EdgeInsets.only(bottom: 30),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: BonitoTheme.borderCol),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              widget.author.toUpperCase(),
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.inter(
+                                fontSize: 10,
+                                letterSpacing: 3.0,
+                                color: BonitoTheme.textMuted,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              widget.title,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.inter(
+                                fontSize: 21,
+                                fontWeight: FontWeight.w600,
+                                color: BonitoTheme.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Container(
+                              width: 36,
+                              height: 1,
+                              color: BonitoTheme.goldDim,
+                            ),
+                            const SizedBox(height: 16),
+                            if (widget.actions != null) widget.actions!,
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child:
+                            ReaderContentText(widget.author, widget.content),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-
-                  Text(
-                    author.toUpperCase(),
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                      fontSize: 10,
-                      letterSpacing: 3.0,
-                      color: BonitoTheme.textMuted,
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Obx(
+                  () {
+                    return IgnorePointer(
+                    child: AnimatedOpacity(
+                      opacity: _isAtBottom.value ? 0.0 : 1.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: Container(
+                        height: 56,
+                        decoration: const BoxDecoration(
+                          gradient: _scrollHintGradient,
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                      fontSize: 21,
-                      fontWeight: FontWeight.w600,
-                      color: BonitoTheme.textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  Container(
-                    width: 36,
-                    height: 1,
-                    color: BonitoTheme.goldDim,
-                  ),
-                  const SizedBox(height: 16),
-
-                  if (actions != null) actions!,
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: ReaderContentText(author, content),
-            ),
-
-            if (readerNav != null) ...[
-              Container(
-                margin: const EdgeInsets.only(top: 22),
-                padding: const EdgeInsets.only(top: 22),
-                decoration: const BoxDecoration(
-                  border: Border(top: BorderSide(color: BonitoTheme.borderCol)),
+                  );
+                  },
                 ),
-                child: readerNav!,
               ),
             ],
-          ],
+          ),
         ),
-      ),
+        if (widget.readerNav != null)
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 22),
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: BonitoTheme.borderCol)),
+            ),
+            child: widget.readerNav!,
+          ),
+      ],
     );
   }
 }
@@ -132,9 +186,11 @@ class _ReaderContentTextState extends State<ReaderContentText> {
         _selectedText = value?.plainText ?? '';
       },
       contextMenuBuilder: (ctx, state) {
-        final List<ContextMenuButtonItem> buttonItems = state.contextMenuButtonItems;
+        final List<ContextMenuButtonItem> buttonItems =
+            state.contextMenuButtonItems;
 
-        final isSingleWord = _selectedText.isNotEmpty && !_selectedText.contains(' ');
+        final isSingleWord =
+            _selectedText.isNotEmpty && !_selectedText.contains(' ');
 
         if (isSingleWord) {
           buttonItems.add(_buildDefinitionButton(_selectedText));
@@ -193,6 +249,7 @@ class _ReaderContentTextState extends State<ReaderContentText> {
 
 class ReaderCategoryText extends StatelessWidget {
   final String category;
+
   const ReaderCategoryText(this.category, {super.key});
 
   @override
@@ -208,6 +265,7 @@ class ReaderCategoryText extends StatelessWidget {
 
 class ReaderTitleText extends StatelessWidget {
   final String title;
+
   const ReaderTitleText(this.title, {super.key});
 
   @override
@@ -224,6 +282,7 @@ class ReaderTitleText extends StatelessWidget {
 
 class ReaderAuthorText extends StatelessWidget {
   final String author;
+
   const ReaderAuthorText(this.author, {super.key});
 
   @override
