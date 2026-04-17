@@ -111,40 +111,36 @@ class TextReader extends StatelessWidget {
   }
 }
 
-class ReaderContentText extends StatelessWidget {
-  final SelectionActionService _actionService = Get.find();
-
+class ReaderContentText extends StatefulWidget {
   final String author;
   final String text;
 
-  ReaderContentText(
-    this.author,
-    this.text, {
-    super.key,
-  });
+  const ReaderContentText(this.author, this.text, {super.key});
+
+  @override
+  State<ReaderContentText> createState() => _ReaderContentTextState();
+}
+
+class _ReaderContentTextState extends State<ReaderContentText> {
+  final SelectionActionService _actionService = Get.find();
+  String _selectedText = '';
 
   @override
   Widget build(BuildContext context) {
-    return SelectableText(
-      text,
-      textAlign: TextAlign.left,
-      style: GoogleFonts.lora(
-        fontSize: 17,
-        height: 1.95,
-        color: BonitoTheme.textPrimary,
-      ),
+    return SelectionArea(
+      onSelectionChanged: (value) {
+        _selectedText = value?.plainText ?? '';
+      },
       contextMenuBuilder: (ctx, state) {
-        final String selectedText = state.getSelectedText();
-        final List<ContextMenuButtonItem> buttonItems =
-            state.contextMenuButtonItems;
+        final List<ContextMenuButtonItem> buttonItems = state.contextMenuButtonItems;
 
-        final isSingleWord = !selectedText.contains(' ');
+        final isSingleWord = _selectedText.isNotEmpty && !_selectedText.contains(' ');
 
         if (isSingleWord) {
-          buttonItems.add(buildDefinitionButton(selectedText));
-        } else {
-          buttonItems.add(buildSearchButton(selectedText));
-          buttonItems.add(buildShareButton(selectedText));
+          buttonItems.add(_buildDefinitionButton(_selectedText));
+        } else if (_selectedText.isNotEmpty) {
+          buttonItems.add(_buildSearchButton(_selectedText));
+          buttonItems.add(_buildShareButton(_selectedText));
         }
 
         return AdaptiveTextSelectionToolbar.buttonItems(
@@ -152,33 +148,44 @@ class ReaderContentText extends StatelessWidget {
           buttonItems: buttonItems,
         );
       },
+      child: Text(
+        widget.text,
+        textAlign: TextAlign.left,
+        style: GoogleFonts.lora(
+          fontSize: 17,
+          height: 1.95,
+          color: BonitoTheme.textPrimary,
+        ),
+      ),
     );
   }
 
-  ContextMenuButtonItem buildDefinitionButton(String selectedWord) {
+  ContextMenuButtonItem _buildDefinitionButton(String selectedWord) {
     return ContextMenuButtonItem(
-        label: '📖 Definir',
-        onPressed: () {
-          ContextMenuController.removeAny();
-          _actionService.defineWord(selectedWord);
-        });
+      label: '📖 Definir',
+      onPressed: () {
+        ContextMenuController.removeAny();
+        _actionService.defineWord(selectedWord);
+      },
+    );
   }
 
-  ContextMenuButtonItem buildSearchButton(String selectedText) {
+  ContextMenuButtonItem _buildSearchButton(String selectedText) {
     return ContextMenuButtonItem(
-        label: '🔍 Pesquisar',
-        onPressed: () {
-          ContextMenuController.removeAny();
-          _actionService.searchOnline(selectedText);
-        });
+      label: '🔍 Pesquisar',
+      onPressed: () {
+        ContextMenuController.removeAny();
+        _actionService.searchOnline(selectedText);
+      },
+    );
   }
 
-  ContextMenuButtonItem buildShareButton(String selectedText) {
+  ContextMenuButtonItem _buildShareButton(String selectedText) {
     return ContextMenuButtonItem(
       label: '📤 Partilhar',
       onPressed: () {
         ContextMenuController.removeAny();
-        _actionService.shareQuote(selectedText, author);
+        _actionService.shareQuote(selectedText, widget.author);
       },
     );
   }

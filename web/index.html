@@ -1,37 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-  <base href="$FLUTTER_BASE_HREF">
+    <base href="$FLUTTER_BASE_HREF">
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Toda a obra de Fernando Pessoa.">
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="Toda a obra de Fernando Pessoa.">
 
-  <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Pessoa Pensadora">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+    <!-- iOS meta tags & icons -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Pessoa Pensadora">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>Pessoa Pensadora - Toda a obra de Fernando Pessoa</title>
-  <link rel="manifest" href="manifest.json">
+    <title>Pessoa Pensadora - Toda a obra de Fernando Pessoa</title>
+    <link rel="manifest" href="manifest.json">
 
-  <style>
-    html, body {
-      overscroll-behavior-x: none;
-    }
-  </style>
+    <style>
+        html, body {
+          overscroll-behavior-x: none;
+        }
+
+        /* Fixes text selection on mobile */
+        flt-glass-pane, flutter-view, flt-scene-host {
+          -webkit-user-select: none;
+          user-select: none;
+          -webkit-touch-callout: none;
+        }
+    </style>
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
-  <script>
+<script src="flutter_bootstrap.js" async></script>
+<script>
     document.addEventListener('touchstart', (startEvent) => {
       if (startEvent.touches.length > 1) return;
       startEvent.preventDefault();
     }, { passive: false } );
-  </script>
+</script>
 </body>
 </html>
