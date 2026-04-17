@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pessoa_pensadora/ui/widget/coll_item_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/subcategory_row_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
 import 'package:pessoa_pensadora/ui/widget/text_row_widget.dart';
 
@@ -53,7 +53,7 @@ void main() {
     await tester.tap(find.text('Poemas de Alberto Caeiro'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(CollItemWidget), findsAtLeast(1));
+    expect(find.byType(SubcategoryRowWidget), findsAtLeast(1));
   });
 
   testWidgets(

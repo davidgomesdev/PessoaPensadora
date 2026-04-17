@@ -11,7 +11,7 @@ class SavedController extends GetxController {
 
   SavedController(this._repo);
 
-  final savedIds = <int>{}.obs;
+  final RxList<int> savedIds = List<int>.empty().obs;
 
   @override
   void onInit() {

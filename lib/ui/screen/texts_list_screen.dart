@@ -68,6 +68,7 @@ class TextsListScreen extends StatelessWidget {
               return ListView.builder(
                 itemCount: texts.length,
                 itemBuilder: (ctx, i) => TextRowWidget(
+                  filteredCategoryTexts: texts,
                   text: texts[i],
                   index: i,
                 ),

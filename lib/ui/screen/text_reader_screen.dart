@@ -25,6 +25,8 @@ class TextReaderScreen extends StatelessWidget {
     final String author = args['author'];
     final String categoryTitle = args['categoryTitle'];
     final String title = args['title'];
+    final int textIndex = args['textIndex'];
+    final List<int> filteredCategoryTexts = args['filteredCategoryTexts'];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       try {
@@ -37,32 +39,18 @@ class TextReaderScreen extends StatelessWidget {
     final savedCtrl = Get.find<SavedController>();
     final store = Get.find<TextStoreService>();
 
-    // Compute sibling texts for prev/next navigation
-    final textData = store.texts[id];
-    final List<BoxPessoaText> siblings = textData != null
-        ? store.texts.values
-            .where((t) => t.categoryId == textData.categoryId)
-            .toList()
-        : [];
-    final int currentIdx = siblings.indexWhere((t) => t.id == id);
-    final BoxPessoaText? prev =
-        currentIdx > 0 ? siblings[currentIdx - 1] : null;
-    final BoxPessoaText? next =
-        currentIdx >= 0 && currentIdx < siblings.length - 1
-            ? siblings[currentIdx + 1]
-            : null;
-
-    void navigateTo(BoxPessoaText boxText) {
-      Get.off(
-        () => const TextReaderScreen(),
+    void navigateTo(int newTextIndex, BoxPessoaText boxText) {
+      Get.offNamed(
+        routeName,
         arguments: {
           'id': boxText.id,
+          'textIndex': newTextIndex,
           'categoryTitle': boxText.category.title,
           'title': boxText.title,
           'content': boxText.content,
           'author': boxText.author,
+          'filteredCategoryTexts': filteredCategoryTexts,
         },
-        transition: Transition.noTransition,
         preventDuplicates: false,
       );
     }
@@ -92,6 +80,17 @@ class TextReaderScreen extends StatelessWidget {
       );
     });
 
+    // Compute sibling texts for prev/next navigation
+    final List<BoxPessoaText> siblings = filteredCategoryTexts
+        .map((textId) => store.texts[textId])
+        .whereType<BoxPessoaText>()
+        .toList();
+    final BoxPessoaText? prev = textIndex > 0 ? siblings[textIndex - 1] : null;
+    final BoxPessoaText? next =
+        textIndex >= 0 && textIndex < siblings.length - 1
+            ? siblings[textIndex + 1]
+            : null;
+
     return Scaffold(
       backgroundColor: BonitoTheme.bgPrimary,
       appBar: AppBar(
@@ -117,8 +116,8 @@ class TextReaderScreen extends StatelessWidget {
             author: author,
             actions: actionsWidget,
             readerNav: ReaderNavWidget(
-              siblings: siblings,
-              currentIdx: currentIdx,
+              textCount: filteredCategoryTexts.length,
+              currentIndex: textIndex,
               prev: prev,
               next: next,
               onNavigate: navigateTo,

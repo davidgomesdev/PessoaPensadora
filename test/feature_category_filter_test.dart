@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pessoa_pensadora/ui/widget/coll_item_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/subcategory_row_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/text_row_widget.dart';
 
 import 'utils.dart';
@@ -91,7 +91,7 @@ void main() {
       await submitText(tester);
 
       expect(find.byType(TextRowWidget), findsNWidgets(2));
-      expect(find.byType(CollItemWidget), findsOne);
+      expect(find.byType(SubcategoryRowWidget), findsOne);
 
       // Text Input + results
       expect(find.text('notas', findRichText: true), findsOne);
@@ -118,7 +118,7 @@ void main() {
 
       // Should show "Nenhum resultado"
       expect(find.text('Nenhum resultado'), findsOne);
-      expect(find.byType(CollItemWidget), findsNothing);
+      expect(find.byType(SubcategoryRowWidget), findsNothing);
     });
 
     testWidgets('Clearing filter shows all items again', (tester) async {
@@ -260,7 +260,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Should have results
-      final items = find.byType(CollItemWidget).evaluate();
+      final items = find.byType(SubcategoryRowWidget).evaluate();
       expect(items.length, equals(1));
     });
 

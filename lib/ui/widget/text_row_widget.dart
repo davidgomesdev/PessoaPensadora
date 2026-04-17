@@ -10,11 +10,13 @@ import 'package:pessoa_pensadora/ui/screen/text_reader_screen.dart';
 class TextRowWidget extends StatelessWidget {
   final PessoaText text;
   final int index;
+  final List<PessoaText> filteredCategoryTexts;
 
   const TextRowWidget({
     super.key,
     required this.text,
     required this.index,
+    required this.filteredCategoryTexts,
   });
 
   @override
@@ -23,13 +25,20 @@ class TextRowWidget extends StatelessWidget {
     final savedCtrl = Get.find<SavedController>();
 
     return InkWell(
-      onTap: () => Get.toNamed(TextReaderScreen.routeName, arguments: {
-        'id': text.id,
-        'categoryTitle': text.category?.title ?? '',
-        'title': text.title,
-        'content': text.content,
-        'author': text.author,
-      }),
+      onTap: () {
+        var id = text.id;
+
+        Get.toNamed(TextReaderScreen.routeName, arguments: {
+          'id': id,
+          'textIndex': index,
+          'categoryTitle': text.category?.title ?? '',
+          'title': text.title,
+          'content': text.content,
+          'author': text.author,
+          'filteredCategoryTexts':
+              filteredCategoryTexts.map((t) => t.id).toList(),
+        });
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(

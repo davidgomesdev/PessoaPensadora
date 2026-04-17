@@ -47,6 +47,8 @@ class HistoryScreen extends StatelessWidget {
                       TextReaderScreen.routeName,
                       arguments: {
                         'id': boxText.id,
+                        'textIndex': i,
+                        'filteredCategoryTexts': ids,
                         'categoryTitle': boxText.category.title,
                         'title': boxText.title,
                         'content': boxText.content,
