@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:pessoa_pensadora/repository/collapsable_store.dart';
 import 'package:pessoa_pensadora/repository/history_store.dart';
 import 'package:pessoa_pensadora/repository/read_store.dart';
 import 'package:pessoa_pensadora/repository/reader_preference_store.dart';
@@ -56,7 +55,6 @@ class _BootScreenState extends State<BootScreen> {
     Get.put(saveRepo, permanent: true);
     Get.put(readRepo, permanent: true);
     Get.put(await HistoryRepository.initialize(), permanent: true);
-    Get.put(await CollapsableRepository.initialize(), permanent: true);
     Get.put(await ReaderPreferenceStore.initialize(), permanent: true);
 
     Get.put(ReadController(readRepo), permanent: true);

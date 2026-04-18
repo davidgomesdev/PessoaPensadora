@@ -7,7 +7,7 @@ import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
 import 'package:pessoa_pensadora/ui/widget/bottom_nav_widget.dart';
-import 'package:pessoa_pensadora/ui/widget/het_card_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/category_card_widget.dart';
 import 'category_screen.dart';
 import 'search_screen.dart';
 
@@ -34,82 +34,11 @@ class HomeScreen extends StatelessWidget {
             ),
             title: Row(
               children: [
-                // Logo
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Pessoa',
-                      style: GoogleFonts.lora(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 1.2,
-                        color: BonitoTheme.textPrimary,
-                      ),
-                    ),
-                    Text(
-                      'Pensadora',
-                      style: GoogleFonts.lora(
-                        fontSize: 11,
-                        letterSpacing: 1.6,
-                        color: BonitoTheme.textMuted,
-                      ),
-                    ),
-                  ],
-                ),
+                Logo(),
                 const SizedBox(width: 10),
                 Container(width: 1, height: 28, color: BonitoTheme.borderMid),
                 const SizedBox(width: 10),
-                // Search
-                Expanded(
-                  child: SizedBox(
-                    height: 34,
-                    child: TextField(
-                      controller: searchController,
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        color: BonitoTheme.textPrimary,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Pesquisar textos, títulos…',
-                        hintStyle: GoogleFonts.inter(
-                          fontSize: 12,
-                          color: BonitoTheme.textMuted,
-                        ),
-                        filled: true,
-                        fillColor: BonitoTheme.bgElevated,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 0),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide:
-                              const BorderSide(color: BonitoTheme.borderCol),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide:
-                              const BorderSide(color: BonitoTheme.borderCol),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          borderSide:
-                              const BorderSide(color: BonitoTheme.goldDim),
-                        ),
-                        suffixIcon: const Icon(Icons.search,
-                            size: 16, color: BonitoTheme.textMuted),
-                      ),
-                      onSubmitted: (q) {
-                        if (q.trim().isNotEmpty) {
-                          searchController.clear();
-                          Get.toNamed(SearchScreen.routeName,
-                              parameters: {'q': q.trim()});
-                        }
-                      },
-                    ),
-                  ),
-                ),
+                GlobalSearchField(searchController: searchController),
               ],
             ),
           ),
@@ -128,6 +57,100 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ));
+  }
+}
+
+class Logo extends StatelessWidget {
+  const Logo({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Pessoa',
+          style: GoogleFonts.lora(
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 1.2,
+            color: BonitoTheme.textPrimary,
+          ),
+        ),
+        Text(
+          'Pensadora',
+          style: GoogleFonts.lora(
+            fontSize: 11,
+            letterSpacing: 1.6,
+            color: BonitoTheme.textMuted,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class GlobalSearchField extends StatelessWidget {
+  const GlobalSearchField({
+    super.key,
+    required this.searchController,
+  });
+
+  final TextEditingController searchController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: SizedBox(
+        height: 34,
+        child: TextField(
+          controller: searchController,
+          style: GoogleFonts.inter(
+            fontSize: 12,
+            color: BonitoTheme.textPrimary,
+          ),
+          decoration: InputDecoration(
+            hintText: 'Pesquisar textos, títulos…',
+            hintStyle: GoogleFonts.inter(
+              fontSize: 12,
+              color: BonitoTheme.textMuted,
+            ),
+            filled: true,
+            fillColor: BonitoTheme.bgElevated,
+            contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12, vertical: 0),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide:
+                  const BorderSide(color: BonitoTheme.borderCol),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide:
+                  const BorderSide(color: BonitoTheme.borderCol),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5),
+              borderSide:
+                  const BorderSide(color: BonitoTheme.goldDim),
+            ),
+            suffixIcon: const Icon(Icons.search,
+                size: 16, color: BonitoTheme.textMuted),
+          ),
+          onSubmitted: (q) {
+            if (q.trim().isNotEmpty) {
+              searchController.clear();
+              Get.toNamed(SearchScreen.routeName,
+                  parameters: {'q': q.trim()});
+            }
+          },
+        ),
+      ),
+    );
   }
 }
 
@@ -201,7 +224,7 @@ class _BrowseTabState extends State<BrowseTab> {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(14, 16, 14, 24),
             children: cats
-                .map((cat) => HetCardWidget(
+                .map((cat) => CategoryCardWidget(
                       category: cat,
                       subtitle: _subtitles[cat.id] ?? '',
                       onTap: () =>

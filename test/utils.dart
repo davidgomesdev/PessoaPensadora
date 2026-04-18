@@ -12,7 +12,6 @@ import 'package:mockito/mockito.dart';
 import 'package:pessoa_pensadora/dto/box/box_person_category.dart';
 import 'package:pessoa_pensadora/dto/box/box_person_text.dart';
 import 'package:pessoa_pensadora/model/saved_text.dart';
-import 'package:pessoa_pensadora/repository/collapsable_store.dart';
 import 'package:pessoa_pensadora/repository/history_store.dart';
 import 'package:pessoa_pensadora/repository/read_store.dart';
 import 'package:pessoa_pensadora/repository/reader_preference_store.dart';
@@ -87,7 +86,6 @@ Future<TextStoreService> initializeDependencies(WidgetTester tester) async {
     Get.put(savedRepository, permanent: true);
     Get.put(readRepository, permanent: true);
     Get.put(await HistoryRepository.initialize(), permanent: true);
-    Get.put(await CollapsableRepository.initialize(), permanent: true);
     Get.put(await ReaderPreferenceStore.initialize(), permanent: true);
     Get.put(SavedController(savedRepository), permanent: true);
     Get.put(ReadController(readRepository), permanent: true);

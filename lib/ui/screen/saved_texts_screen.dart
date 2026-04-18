@@ -6,7 +6,7 @@ import 'package:pessoa_pensadora/service/saved_controller.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/widget/group_header_widget.dart';
-import 'package:pessoa_pensadora/ui/widget/s_item_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/text_list_item_widget.dart';
 import '../../util/logger_factory.dart';
 import 'text_reader_screen.dart';
 
