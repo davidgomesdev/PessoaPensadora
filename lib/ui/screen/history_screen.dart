@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/repository/history_store.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
-import 'package:pessoa_pensadora/ui/widget/s_item_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/text_list_item_widget.dart';
 import 'text_reader_screen.dart';
 
 class HistoryScreen extends StatelessWidget {

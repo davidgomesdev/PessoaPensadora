@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pessoa_pensadora/ui/screen/home_screen.dart';
-import 'package:pessoa_pensadora/ui/widget/het_card_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/category_card_widget.dart';
 
 import 'utils.dart';
 
@@ -79,7 +79,7 @@ void main() {
       await tester.tap(find.text('Completo'));
       await tester.pumpAndSettle();
 
-      int completoCardCount = find.byType(HetCardWidget).evaluate().length;
+      int completoCardCount = find.byType(CategoryCardWidget).evaluate().length;
 
       await switchToSavedTab(tester);
       await tester.pumpAndSettle();
@@ -87,7 +87,7 @@ void main() {
       await switchToBrowseTab(tester);
       await tester.pumpAndSettle();
 
-      int cardCountAfterReturn = find.byType(HetCardWidget).evaluate().length;
+      int cardCountAfterReturn = find.byType(CategoryCardWidget).evaluate().length;
       expect(cardCountAfterReturn, equals(completoCardCount));
     });
 
@@ -100,7 +100,7 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.scrollUntilVisible(
-        find.byType(HetCardWidget).last,
+        find.byType(CategoryCardWidget).last,
         200,
         scrollable: find.descendant(
           of: find.byType(BrowseTab),
@@ -109,7 +109,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(HetCardWidget), findsWidgets);
+      expect(find.byType(CategoryCardWidget), findsWidgets);
     });
 
     testWidgets('Tapping a card from Principal index navigates correctly',
@@ -183,7 +183,7 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.scrollUntilVisible(
-        find.byType(HetCardWidget).last,
+        find.byType(CategoryCardWidget).last,
         200,
         scrollable: find.descendant(
           of: find.byType(BrowseTab),
@@ -192,7 +192,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(HetCardWidget), findsWidgets);
+      expect(find.byType(CategoryCardWidget), findsWidgets);
     });
   });
 }

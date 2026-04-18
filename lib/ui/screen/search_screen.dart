@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pessoa_pensadora/dto/box/box_person_text.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/widget/highlight_text_widget.dart';
@@ -16,13 +17,17 @@ class SearchScreen extends StatelessWidget {
     final query = Get.parameters['q'] ?? '';
     final TextStoreService store = Get.find();
 
-    final results = query.isEmpty
+    final List<BoxPessoaText> results = query.isEmpty
         ? []
         : store.texts.values
             .where((t) =>
                 t.title.toLowerCase().contains(query.toLowerCase()) ||
                 t.content.toLowerCase().contains(query.toLowerCase()))
             .toList();
+
+    final resultCountLabel = results.length == 1
+        ? "1 resultado encontrado"
+        : "${results.length} resultados encontrados";
 
     return Scaffold(
       backgroundColor: BonitoTheme.bgPrimary,
@@ -45,9 +50,9 @@ class SearchScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Text(
-              '${results.length} resultado${results.length == 1 ? '' : 's'} encontrado${results.length == 1 ? '' : 's'}',
-              style: GoogleFonts.inter(
-                  fontSize: 14, color: BonitoTheme.textDim),
+              resultCountLabel,
+              style:
+                  GoogleFonts.inter(fontSize: 14, color: BonitoTheme.textDim),
             ),
           ),
           Padding(
@@ -84,8 +89,8 @@ class SearchScreen extends StatelessWidget {
                         horizontal: 16, vertical: 14),
                     decoration: BoxDecoration(
                       border: Border(
-                        bottom: BorderSide(
-                            color: BonitoTheme.borderCol, width: 1),
+                        bottom:
+                            BorderSide(color: BonitoTheme.borderCol, width: 1),
                       ),
                     ),
                     child: Column(

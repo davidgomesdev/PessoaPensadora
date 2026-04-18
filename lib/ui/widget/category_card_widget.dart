@@ -5,12 +5,12 @@ import 'package:pessoa_pensadora/model/pessoa_category.dart';
 import 'package:pessoa_pensadora/service/read_controller.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 
-class HetCardWidget extends StatelessWidget {
+class CategoryCardWidget extends StatelessWidget {
   final PessoaCategory category;
   final String subtitle;
   final VoidCallback onTap;
 
-  const HetCardWidget({
+  const CategoryCardWidget({
     super.key,
     required this.category,
     required this.subtitle,

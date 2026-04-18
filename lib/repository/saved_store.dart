@@ -1,8 +1,6 @@
-import 'package:collection/collection.dart';
 import 'package:get/get.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:pessoa_pensadora/model/saved_text.dart';
-import 'package:pessoa_pensadora/repository/collapsable_store.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 
 import '../util/logger_factory.dart';
@@ -39,21 +37,6 @@ class SaveRepository {
       log.e('Error during Hive.put(). Proceeding anyway.', error: e);
     });
 
-    final rootCategoryId = service.getTextRootCategory(text.id).id;
-    final isFirstOfRootCategory = _box.values
-        .map((text) => service.getTextRootCategory(text.id).id)
-        .none((current) => current == rootCategoryId);
-
-    if (isFirstOfRootCategory) {
-      final CollapsableRepository collapsableStore = Get.find();
-
-      try {
-        await collapsableStore.addCategory(rootCategoryId);
-      } catch (e) {
-        log.w('Error adding category: $e');
-      }
-    }
-
     log.i('Saved text ${text.id}');
   }
 
@@ -66,17 +49,6 @@ class SaveRepository {
     ).catchError((e) {
       log.e('Error during Hive.put(): $e. Proceeding anyway.', error: e);
     });
-
-    final rootCategoryId = service.getTextRootCategory(id).id;
-    final isLastOfRootCategory = _box.values
-        .map((text) => service.getTextRootCategory(text.id).id)
-        .none((current) => current == rootCategoryId);
-
-    if (isLastOfRootCategory) {
-      final CollapsableRepository collapsableStore = Get.find();
-
-      await collapsableStore.removeCategory(rootCategoryId);
-    }
 
     log.i('Deleted saved text $id');
   }

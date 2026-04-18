@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pessoa_pensadora/ui/widget/s_item_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/text_list_item_widget.dart';
 
 import 'utils.dart';
 

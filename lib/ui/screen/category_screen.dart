@@ -92,7 +92,6 @@ class CategoryScreen extends StatelessWidget {
                     final text = texts[i - subcategories.length];
                     return TextRowWidget(
                       text: text,
-                    // todo: texts don't seem sorted
                       filteredCategoryTexts: texts,
                       index: i - subcategories.length,
                     );

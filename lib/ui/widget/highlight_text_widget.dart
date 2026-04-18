@@ -22,7 +22,10 @@ class HighlightTextWidget extends StatelessWidget {
         GoogleFonts.inter(fontSize: 14, color: BonitoTheme.textDim);
 
     if (query.isEmpty) {
-      return Text(text, style: style, maxLines: maxLines, overflow: maxLines != null ? TextOverflow.ellipsis : null);
+      return Text(text,
+          style: style,
+          maxLines: maxLines,
+          overflow: maxLines != null ? TextOverflow.ellipsis : null);
     }
 
     final spans = <TextSpan>[];

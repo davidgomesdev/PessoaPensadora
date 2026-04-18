@@ -19,16 +19,16 @@ class TextReader extends StatefulWidget {
   final String title;
   final String content;
   final String author;
-  final Widget? actions;
-  final Widget? readerNav;
+  final Widget actions;
+  final Widget readerNav;
 
   const TextReader({
     super.key,
     required this.title,
     required this.content,
     required this.author,
-    this.actions,
-    this.readerNav,
+    required this.actions,
+    required this.readerNav,
   });
 
   @override
@@ -113,14 +113,13 @@ class _TextReaderState extends State<TextReader> {
                               color: BonitoTheme.goldDim,
                             ),
                             const SizedBox(height: 16),
-                            if (widget.actions != null) widget.actions!,
+                            widget.actions,
                           ],
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child:
-                            ReaderContentText(widget.author, widget.content),
+                        child: ReaderContentText(widget.author, widget.content),
                       ),
                     ],
                   ),
@@ -133,31 +132,30 @@ class _TextReaderState extends State<TextReader> {
                 child: Obx(
                   () {
                     return IgnorePointer(
-                    child: AnimatedOpacity(
-                      opacity: _isAtBottom.value ? 0.0 : 1.0,
-                      duration: const Duration(milliseconds: 200),
-                      child: Container(
-                        height: 56,
-                        decoration: const BoxDecoration(
-                          gradient: _scrollHintGradient,
+                      child: AnimatedOpacity(
+                        opacity: _isAtBottom.value ? 0.0 : 1.0,
+                        duration: const Duration(milliseconds: 200),
+                        child: Container(
+                          height: 56,
+                          decoration: const BoxDecoration(
+                            gradient: _scrollHintGradient,
+                          ),
                         ),
                       ),
-                    ),
-                  );
+                    );
                   },
                 ),
               ),
             ],
           ),
         ),
-        if (widget.readerNav != null)
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 22),
-            decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: BonitoTheme.borderCol)),
-            ),
-            child: widget.readerNav!,
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 22),
+          decoration: const BoxDecoration(
+            border: Border(top: BorderSide(color: BonitoTheme.borderCol)),
           ),
+          child: widget.readerNav,
+        ),
       ],
     );
   }
