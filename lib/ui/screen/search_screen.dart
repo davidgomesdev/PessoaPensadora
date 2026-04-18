@@ -74,16 +74,16 @@ class SearchScreen extends StatelessWidget {
                 final snippet = _getSnippet(boxText.content, query);
 
                 return InkWell(
-                  onTap: () => Get.toNamed(
-                    TextReaderScreen.routeName,
-                    arguments: {
-                      'id': boxText.id,
-                      'categoryTitle': boxText.category.title,
-                      'title': boxText.title,
-                      'content': boxText.content,
-                      'author': boxText.author,
-                    },
-                  ),
+                  onTap: () =>
+                      Get.toNamed(TextReaderScreen.routeName, arguments: {
+                    'id': boxText.id,
+                    'categoryTitle': boxText.category.title,
+                    'title': boxText.title,
+                    'content': boxText.content,
+                    'author': boxText.author,
+                    'textIndex': i,
+                    'filteredCategoryTexts': results.map((t) => t.id).toList(),
+                  }),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16, vertical: 14),

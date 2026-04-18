@@ -23,7 +23,7 @@ class TextReaderScreen extends StatelessWidget {
     final int id = args['id'];
     final String text = args['content'];
     final String author = args['author'];
-    // unused but received
+    // unused but received, for the future
     // final String categoryTitle = args['categoryTitle'];
     final String title = args['title'];
     final int textIndex = args['textIndex'];
