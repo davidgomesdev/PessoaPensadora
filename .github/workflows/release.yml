@@ -231,7 +231,7 @@ jobs:
         run: flutter build web --release
 
       - name: 🚀 - Deploy to Cloudflare Pages
-        uses: andykenward/github-actions-cloudflare-pages@271dc9ded31dd29f5741cee160513a54b8f9b64e # v3.1.0
+        uses: davidgomesdev/github-actions-cloudflare-pages@03279b4a90b80274ccd646b35ca788efe82bb952 # v1.0.0
         id: pages
         with:
           cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
