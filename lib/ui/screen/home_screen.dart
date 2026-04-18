@@ -7,6 +7,8 @@ import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
 import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
 import 'package:pessoa_pensadora/ui/widget/bottom_nav_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/button/bug_report_button.dart';
+import 'package:pessoa_pensadora/ui/widget/button/buy_me_a_tea_button.dart';
 import 'package:pessoa_pensadora/ui/widget/category_card_widget.dart';
 import 'category_screen.dart';
 import 'search_screen.dart';
@@ -38,7 +40,14 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(width: 10),
                 Container(width: 1, height: 28, color: BonitoTheme.borderMid),
                 const SizedBox(width: 10),
-                GlobalSearchField(searchController: searchController),
+                Expanded(
+                    child:
+                        GlobalSearchField(searchController: searchController)),
+                // The Bug report button isn't working on web, need to change the dependency
+                if (!GetPlatform.isWeb) const SizedBox(width: 10),
+                if (!GetPlatform.isWeb) const BugReportButton(),
+                const SizedBox(width: 10),
+                const BuyMeATeaButton()
               ],
             ),
           ),
@@ -104,51 +113,45 @@ class GlobalSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: SizedBox(
-        height: 34,
-        child: TextField(
-          controller: searchController,
-          style: GoogleFonts.inter(
-            fontSize: 12,
-            color: BonitoTheme.textPrimary,
-          ),
-          decoration: InputDecoration(
-            hintText: 'Pesquisar textos, títulos…',
-            hintStyle: GoogleFonts.inter(
-              fontSize: 12,
-              color: BonitoTheme.textMuted,
-            ),
-            filled: true,
-            fillColor: BonitoTheme.bgElevated,
-            contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12, vertical: 0),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-              borderSide:
-                  const BorderSide(color: BonitoTheme.borderCol),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-              borderSide:
-                  const BorderSide(color: BonitoTheme.borderCol),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5),
-              borderSide:
-                  const BorderSide(color: BonitoTheme.goldDim),
-            ),
-            suffixIcon: const Icon(Icons.search,
-                size: 16, color: BonitoTheme.textMuted),
-          ),
-          onSubmitted: (q) {
-            if (q.trim().isNotEmpty) {
-              searchController.clear();
-              Get.toNamed(SearchScreen.routeName,
-                  parameters: {'q': q.trim()});
-            }
-          },
+    return SizedBox(
+      height: 34,
+      child: TextField(
+        controller: searchController,
+        style: GoogleFonts.inter(
+          fontSize: 12,
+          color: BonitoTheme.textPrimary,
         ),
+        decoration: InputDecoration(
+          hintText: 'Pesquisar textos, títulos…',
+          hintStyle: GoogleFonts.inter(
+            fontSize: 12,
+            color: BonitoTheme.textMuted,
+          ),
+          filled: true,
+          fillColor: BonitoTheme.bgElevated,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: const BorderSide(color: BonitoTheme.borderCol),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: const BorderSide(color: BonitoTheme.borderCol),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+            borderSide: const BorderSide(color: BonitoTheme.goldDim),
+          ),
+          suffixIcon:
+              const Icon(Icons.search, size: 16, color: BonitoTheme.textMuted),
+        ),
+        onSubmitted: (q) {
+          if (q.trim().isNotEmpty) {
+            searchController.clear();
+            Get.toNamed(SearchScreen.routeName, parameters: {'q': q.trim()});
+          }
+        },
       ),
     );
   }
