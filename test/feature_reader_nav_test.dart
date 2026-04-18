@@ -12,7 +12,7 @@ void main() {
   const text2 = 'A cada qual, como a estatura, é dada';
   const text3 = 'A flor que és, não a que dás, eu quero. [2]';
 
-  const textLast = 'Vou dormir, dormir, dormir,';
+  const textLast = 'É tão suave a fuga deste dia,';
 
   Future<void> openOdesText(WidgetTester tester, String textTitle) async {
     await tester.tap(find.text('Odes de Ricardo Reis'));
@@ -52,8 +52,6 @@ void main() {
 
   Future<Finder> nextBtn(WidgetTester tester, [String? nextTitle]) async {
     final nextBtn = find.text('${nextTitle ?? "Seguinte"} →');
-
-    await scrollUntilVisibleInReader(tester, nextBtn);
 
     expect(nextBtn, findsOne);
     return nextBtn;
