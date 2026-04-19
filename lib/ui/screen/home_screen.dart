@@ -40,13 +40,10 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(width: 10),
                 Container(width: 1, height: 28, color: BonitoTheme.borderMid),
                 const SizedBox(width: 10),
-                Expanded(
-                    child:
-                        GlobalSearchField(searchController: searchController)),
+                Expanded(child: GlobalSearchField(searchController: searchController)),
                 // The Bug report button isn't working on web, need to change the dependency
                 if (!GetPlatform.isWeb) const SizedBox(width: 10),
                 if (!GetPlatform.isWeb) const BugReportButton(),
-                const SizedBox(width: 10),
                 const BuyMeATeaButton()
               ],
             ),
@@ -122,7 +119,7 @@ class GlobalSearchField extends StatelessWidget {
           color: BonitoTheme.textPrimary,
         ),
         decoration: InputDecoration(
-          hintText: 'Pesquisar textos, títulos…',
+          hintText: 'Pesquisar textos...',
           hintStyle: GoogleFonts.inter(
             fontSize: 12,
             color: BonitoTheme.textMuted,
@@ -205,7 +202,7 @@ class _BrowseTabState extends State<BrowseTab> {
                     Text(
                       'A Obra de Fernando Pessoa',
                       style: GoogleFonts.inter(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: BonitoTheme.textPrimary,
                       ),
