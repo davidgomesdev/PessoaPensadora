@@ -210,6 +210,9 @@ jobs:
     name: 🌐 Publish to Cloudflare Pages
     needs: [ version ]
     runs-on: ubuntu-latest
+    # Merge to main always releases to production (even if it's an internal release)
+    # so I only want it to deploy manually - like on a branch
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     permissions:
       contents: read
       deployments: write
