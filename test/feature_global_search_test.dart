@@ -11,7 +11,7 @@ void main() {
     testWidgets('Search field has correct hint text', (tester) async {
       await startApp(tester);
 
-      final hintText = find.text('Pesquisar textos, títulos…');
+      final hintText = find.text('Pesquisar textos...');
       expect(hintText, findsOne);
     });
 
