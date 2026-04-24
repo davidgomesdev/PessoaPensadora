@@ -15,11 +15,11 @@ Também disponível em versão Web: https://pessoa.davidgomes.blog.
 
 ## Imagens
 
-  <img alt="Página Inicial" src="images/phone/homepage.jpg" width="200px" hspace="20"/> <img alt="Índice" src="images/phone/index.jpg" width="200px" hspace="20"/> <img alt="Exemplo de um poema de Mensagem" src="images/phone/text-example.jpg" width="200px" hspace="20"/>
+  <img alt="Página Inicial" src="images/phone/indice.png" width="200px" hspace="20"/> <img alt="Exemplo de um poema de Mensagem" src="images/phone/leitor.png" width="200px" hspace="20"/>
 
 ### Funcionalidades
 
-  <img alt="Textos guardados" src="images/phone/saved-texts.jpg" width="200px" hspace="20"/> <img alt="Histórico" src="images/phone/history.jpg" width="200px" hspace="20"/>
+  <img alt="Textos guardados" src="images/phone/guardados.png" width="200px" hspace="20"/> <img alt="Histórico" src="images/phone/historico.png" width="200px" hspace="20"/>
 
 ## Textos principais
 
@@ -33,7 +33,7 @@ Para problemas com a aplicação, peço que cries um issue aqui no GitHub, descr
 
 Em alternativa, utiliza o botão na aplicação para reportar problemas, via e-mail.
 
-  <img alt="Botão para reportar problemas" src="images/phone/bug-report-button.jpg" width="200px" hspace="20"/>
+  <img alt="Botão para reportar problemas" src="images/phone/bug-report.png" width="200px" hspace="20"/>
 
 ## Nota importante
 
