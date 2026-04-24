@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 
@@ -14,17 +15,39 @@ class BottomNavWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bottomPadding =
+        (GetPlatform.isWeb && GetPlatform.isMobile) ? 16.0 : 0.0;
+
     return Container(
-      height: 58,
+      height: 58 + bottomPadding,
+      padding: EdgeInsets.only(bottom: bottomPadding),
       decoration: const BoxDecoration(
         color: BonitoTheme.bgSecondary,
         border: Border(top: BorderSide(color: BonitoTheme.borderCol)),
       ),
       child: Row(
         children: [
-          _NavBtn(icon: Icons.explore_outlined, activeIcon: Icons.explore, label: 'Explorar', index: 0, currentIndex: currentIndex, onTap: onTap),
-          _NavBtn(icon: Icons.bookmark_outline, activeIcon: Icons.bookmark, label: 'Guardados', index: 1, currentIndex: currentIndex, onTap: onTap),
-          _NavBtn(icon: Icons.history_outlined, activeIcon: Icons.history, label: 'Histórico', index: 2, currentIndex: currentIndex, onTap: onTap),
+          _NavBtn(
+              icon: Icons.explore_outlined,
+              activeIcon: Icons.explore,
+              label: 'Explorar',
+              index: 0,
+              currentIndex: currentIndex,
+              onTap: onTap),
+          _NavBtn(
+              icon: Icons.bookmark_outline,
+              activeIcon: Icons.bookmark,
+              label: 'Guardados',
+              index: 1,
+              currentIndex: currentIndex,
+              onTap: onTap),
+          _NavBtn(
+              icon: Icons.history_outlined,
+              activeIcon: Icons.history,
+              label: 'Histórico',
+              index: 2,
+              currentIndex: currentIndex,
+              onTap: onTap),
         ],
       ),
     );
@@ -58,7 +81,6 @@ class _NavBtn extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,7 +101,6 @@ class _NavBtn extends StatelessWidget {
                 ),
               ],
             ),
-
             if (isActive)
               Align(
                 alignment: Alignment.topCenter,
