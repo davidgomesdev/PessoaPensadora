@@ -1,5 +1,7 @@
 # Pessoa Pensadora
 
+  <img alt="Imagem de destaque" src="images/feature-graphic.png" width="1024px"/>
+
 A primeira aplicação para ler toda a obra de [Fernando Pessoa](https://pt.wikipedia.org/wiki/Fernando_Pessoa), provenientes de [Arquivo Pessoa](http://arquivopessoa.net/).
 
 Criada para serem lidos numa interface mais moderna e de fácil leitura no telemóvel.
