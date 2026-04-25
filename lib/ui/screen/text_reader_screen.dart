@@ -13,21 +13,26 @@ import 'package:pessoa_pensadora/ui/widget/reader/reader_nav_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/reader/text_reader.dart';
 
 class TextReaderScreen extends StatelessWidget {
-  static const routeName = '/textReader';
+  static const routeName = '/textReader/:id';
+  static String routeFor(int id) => '/textReader/$id';
 
   const TextReaderScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final args = Get.arguments as Map<String, dynamic>;
-    final int id = args['id'];
-    final String text = args['content'];
-    final String author = args['author'];
+    final store = Get.find<TextStoreService>();
+    final int id = int.parse(Get.parameters['id']!);
+    final boxText = store.texts[id];
+
+    final Map<String, dynamic>? args = Get.arguments as Map<String, dynamic>?;
+    final String text = args?['content'] ?? boxText?.content ?? '';
+    final String author = args?['author'] ?? boxText?.author ?? '';
     // unused but received, for the future
-    // final String categoryTitle = args['categoryTitle'];
-    final String title = args['title'];
-    final int textIndex = args['textIndex'];
-    final List<int> filteredCategoryTexts = args['filteredCategoryTexts'];
+    // final String categoryTitle = args?['categoryTitle'];
+    final String title = args?['title'] ?? boxText?.title ?? '';
+    final int textIndex = args?['textIndex'] ?? 0;
+    final List<int> filteredCategoryTexts =
+        (args?['filteredCategoryTexts'] as List?)?.cast<int>() ?? [id];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       try {
@@ -38,18 +43,17 @@ class TextReaderScreen extends StatelessWidget {
 
     final readCtrl = Get.find<ReadController>();
     final savedCtrl = Get.find<SavedController>();
-    final store = Get.find<TextStoreService>();
 
-    void navigateTo(int newTextIndex, BoxPessoaText boxText) {
+    void navigateTo(int newTextIndex, BoxPessoaText navBoxText) {
       Get.offNamed(
-        routeName,
+        routeFor(navBoxText.id),
         arguments: {
-          'id': boxText.id,
+          'id': navBoxText.id,
           'textIndex': newTextIndex,
-          'categoryTitle': boxText.category.title,
-          'title': boxText.title,
-          'content': boxText.content,
-          'author': boxText.author,
+          'categoryTitle': navBoxText.category.title,
+          'title': navBoxText.title,
+          'content': navBoxText.content,
+          'author': navBoxText.author,
           'filteredCategoryTexts': filteredCategoryTexts,
         },
         preventDuplicates: false,
