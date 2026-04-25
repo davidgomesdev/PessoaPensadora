@@ -68,6 +68,7 @@ class TextListItemWidget extends StatelessWidget {
                     ),
                   )
                 : IconButton(
+                    tooltip: 'Remover',
                     icon: const Icon(Icons.close, size: 18, color: BonitoTheme.textMuted),
                     onPressed: onRemove,
                     padding: EdgeInsets.zero,
