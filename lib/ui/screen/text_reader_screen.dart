@@ -108,7 +108,7 @@ class TextReaderScreen extends StatelessWidget {
         ),
         actions: [
           ArquivoPessoaButton(textId: id),
-          ShareTextButton(text: text, author: author),
+          ShareTextButton(textId: id, text: text, author: author),
         ],
       ),
       body: SafeArea(
