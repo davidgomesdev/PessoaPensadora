@@ -16,10 +16,10 @@ class _ArquivoPessoaButtonState extends State<ArquivoPessoaButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
+        tooltip: "Ver no Arquivo Pessoa",
         onPressed: () async {
           await launchUrlString('$arquivoPessoaTextUrl/${widget.textId}');
         },
-        icon: const Icon(Icons.open_in_new)
-    );
+        icon: const Icon(Icons.open_in_new));
   }
 }

@@ -15,11 +15,15 @@ class SelectionActionService {
     SharePlus.instance.share(ShareParams(text: '"$text" - $author'));
   }
 
+  void shareUrl(int textId) {
+    SharePlus.instance.share(ShareParams(text: 'https://pessoa.davidgomes.blog/#/textReader/$textId'));
+  }
+
   void shareText(String text, String author) {
     SharePlus.instance.share(ShareParams(text: """
 $text
 
             $author
-    """.trim()));
+""".trim()));
   }
 }
