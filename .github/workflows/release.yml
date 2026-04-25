@@ -23,8 +23,6 @@ on:
   push:
     branches:
       - main
-      # Temp, do not merge to main
-      - fix/bottom-padding-on-web-mobile
     paths:
       - .github/workflows/**
       - android/**
