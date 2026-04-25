@@ -4,7 +4,7 @@
 
 A mobile reading app for Fernando Pessoa's heteronyms. The new design introduces a bottom navigation shell, grouped saved texts, and a dark B&W theme. All new screens and state management must follow the existing project's conventions.
 
-**Target:** Android + iOS + Web (already supported by the existing project).
+**Target:** Android + Web. The project can build to iOS but is not actively developed or tested for it — do not make iOS-specific changes or suggestions.
 
 ---
 
