@@ -16,7 +16,7 @@ class SelectionActionService {
   }
 
   void shareUrl(int textId) {
-    SharePlus.instance.share(ShareParams(text: 'https://pessoa.davidgomes.blog/#/textReader/$textId'));
+    SharePlus.instance.share(ShareParams(text: 'https://pessoa.davidgomes.blog/textReader/$textId'));
   }
 
   void shareText(String text, String author) {

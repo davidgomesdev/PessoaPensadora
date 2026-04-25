@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "me.l3n.pessoapensadora.pessoa_pensadora",
+      "sha256_cert_fingerprints": ["E3:F4:AC:87:F0:96:F1:8A:D1:25:DF:3D:38:0D:41:47:F4:E5:11:A6:46:96:81:CE:7F:30:C1:E0:7A:30:01:00"]
+    }
+  }
+]
