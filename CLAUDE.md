@@ -17,9 +17,9 @@ Match the existing `pubspec.yaml` exactly. Do **not** introduce Riverpod or go_r
 | State management          | `get: ^4.6.5` (GetX)                                    |
 | Navigation                | GetX named routes (`Get.toNamed`, `GetMaterialApp`)     |
 | Fonts                     | `google_fonts: ^8.0.1`                                  |
-| Persistence (user state)  | `hive: ^2.2.3` + `hive_flutter: ^1.1.0`                 |
+| Persistence (user state)  | `hive_ce` + `hive_ce_flutter` (Dart 3.x fork of hive)  |
 | Persistence (preferences) | `shared_preferences: ^2.0.7`                            |
-| HTTP                      | `http: ^1.2.1` (fetches from arquivopessoa.net)         |
+| Data source               | bundled JSON asset (`assets/json_files/all_texts.json`) |
 | HTML parsing              | `html: ^0.15.0`                                         |
 | Serialization             | `json_serializable: ^6.1.4` + `json_annotation: ^4.8.1` |
 | Value equality            | `equatable: ^2.0.3`                                     |
@@ -28,6 +28,22 @@ Match the existing `pubspec.yaml` exactly. Do **not** introduce Riverpod or go_r
 | Code gen                  | `build_runner`                                          |
 
 ---
+
+## Architecture
+
+**Boot sequence:** `main.dart` → `BaseScreen` (GetMaterialApp + routes) → `BootScreen` (DI + JSON load) → `HomeScreen`.
+
+**Data:** All texts bundled as `assets/json_files/all_texts.json`. `TextStoreService.initialize(assetBundle)` loads it on boot into in-memory `Map<int, ...>` caches. No network calls at runtime.
+
+**State:** GetX exclusively — `.obs` variables, `Obx()` widgets, `Get.put()` registration in `boot_screen.dart`. No Riverpod, ChangeNotifier, or setState for shared state.
+
+**Navigation:** GetX named routes. Static route constants on each screen class + `buildAppPages()` in `base_screen.dart`. Tab switches mutate `currentTab.obs` directly (no route push, IndexedStack preserves scroll). Reader prev/next uses `Get.offNamed` (replace, no stack growth).
+
+**Persistence:** Hive CE (`hive_ce` + `hive_ce_flutter`) for user state. Boxes: `'readTexts'` (Box\<bool\>, key=int text id), `'savedTexts'` (Box\<SavedText\>). `SaveRepository` calls `Get.find<TextStoreService>()` — must initialize after TextStoreService in boot sequence.
+
+**Text sorting:** `TextStoreService` handles roman numerals, Portuguese numerals, and special cases for category id=2 (O Guardador de Rebanhos). See `lib/service/text_store.dart` lines ~127–162.
+
+**Packages:** `hive_ce`/`hive_ce_flutter` (not `hive`) — community fork for Dart 3.x. The tech stack table below lists the spec versions; actual pubspec.yaml is authoritative.
 
 ## 3. Project Structure
 
