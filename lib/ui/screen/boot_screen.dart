@@ -5,6 +5,7 @@ import 'package:pessoa_pensadora/repository/history_store.dart';
 import 'package:pessoa_pensadora/repository/read_store.dart';
 import 'package:pessoa_pensadora/repository/reader_preference_store.dart';
 import 'package:pessoa_pensadora/repository/saved_store.dart';
+import 'package:pessoa_pensadora/service/deep_link_service.dart';
 import 'package:pessoa_pensadora/service/read_controller.dart';
 import 'package:pessoa_pensadora/service/saved_controller.dart';
 import 'package:pessoa_pensadora/service/selection_action_service.dart';
@@ -46,6 +47,10 @@ class _BootScreenState extends State<BootScreen> {
   Future initializeDependencies(BuildContext context) async {
     final assetBundle = DefaultAssetBundle.of(context);
 
+    final deepLinkService = DeepLinkService();
+    await deepLinkService.initialize();
+    Get.put(deepLinkService, permanent: true);
+
     Get.put(await TextStoreService.initialize(assetBundle), permanent: true);
     Get.put(SelectionActionService(), permanent: true);
 
@@ -71,7 +76,13 @@ class _BootScreenState extends State<BootScreen> {
     log.d("Took ${durationSinceStart.inMilliseconds}ms "
         "to load dependencies.");
 
-    Get.offAndToNamed(HomeScreen.routeName);
+    final pendingPath = deepLinkService.consumePendingPath();
+    if (pendingPath != null && RegExp(r'^/textReader/\d+$').hasMatch(pendingPath)) {
+      Get.offAllNamed(HomeScreen.routeName);
+      Get.toNamed(pendingPath);
+    } else {
+      Get.offAndToNamed(HomeScreen.routeName);
+    }
 
     return Future.value();
   }
