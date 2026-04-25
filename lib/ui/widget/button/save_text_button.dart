@@ -24,6 +24,7 @@ class _SaveTextButtonState extends State<SaveTextButton> {
     final ReadRepository readRepository = Get.find();
 
     return IconButton(
+        tooltip: repository.isTextSaved(textId) ? 'Remover dos guardados' : 'Guardar texto',
         onPressed: () {
           setState(() {
             if (repository.isTextSaved(textId)) {
