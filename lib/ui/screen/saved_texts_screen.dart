@@ -94,7 +94,7 @@ class SavedTextsScreen extends StatelessWidget {
                         '(position $textIndex, on texts: $savedIds)');
 
                     Get.toNamed(
-                      TextReaderScreen.routeName,
+                      TextReaderScreen.routeFor(boxText.id),
                       arguments: {
                         'id': boxText.id,
                         'textIndex': textIndex,

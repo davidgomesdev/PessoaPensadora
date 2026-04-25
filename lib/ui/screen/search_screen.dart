@@ -75,7 +75,7 @@ class SearchScreen extends StatelessWidget {
 
                 return InkWell(
                   onTap: () =>
-                      Get.toNamed(TextReaderScreen.routeName, arguments: {
+                      Get.toNamed(TextReaderScreen.routeFor(boxText.id), arguments: {
                     'id': boxText.id,
                     'categoryTitle': boxText.category.title,
                     'title': boxText.title,

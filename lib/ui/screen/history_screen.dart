@@ -44,7 +44,7 @@ class HistoryScreen extends StatelessWidget {
                     subtitle: boxText.category.title,
                     trailing: '',
                     onTap: () => Get.toNamed(
-                      TextReaderScreen.routeName,
+                      TextReaderScreen.routeFor(boxText.id),
                       arguments: {
                         'id': boxText.id,
                         'textIndex': i,

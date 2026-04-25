@@ -28,7 +28,7 @@ class TextRowWidget extends StatelessWidget {
       onTap: () {
         var id = text.id;
 
-        Get.toNamed(TextReaderScreen.routeName, arguments: {
+        Get.toNamed(TextReaderScreen.routeFor(id), arguments: {
           'id': id,
           'textIndex': index,
           'categoryTitle': text.category?.title ?? '',
