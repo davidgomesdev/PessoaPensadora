@@ -57,7 +57,6 @@ flutter:
   assets:
     - google_fonts/
     - assets/json_files/all_texts.json
-    - assets/images/splash_art.jpg
     # fonts
     - assets/fonts/Roboto/Roboto-Black.ttf
     - assets/fonts/Roboto/Roboto-BlackItalic.ttf
@@ -91,9 +90,10 @@ flutter:
     - assets/fonts/Inter/Inter-ThinItalic.ttf
 
 flutter_launcher_icons:
-  image_path: "assets/icon/web.png"
+  image_path: "assets/icon/icon.png"
+  android: "launcher_icon"
   web:
     generate: true
-    image_path: "assets/icon/web.jpeg"
+    image_path: "assets/icon/icon.png"
     background_color: "#ffffff"
     theme_color: "#000000"
