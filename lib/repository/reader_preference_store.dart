@@ -3,7 +3,10 @@ import 'package:pessoa_pensadora/util/logger_factory.dart';
 
 const _readerPreferenceBoxName = 'reader_preference';
 
+// Not used anymore - index is always full reading mode, but keeping it for future use if needed
+// since the store is there
 class ReaderPreferenceStore {
+  // ignore:unused_field
   final Box<String> _box;
 
   ReaderPreferenceStore(this._box);
@@ -17,16 +20,16 @@ class ReaderPreferenceStore {
     return instance;
   }
 
-  Future<void> swapReadingMode() async {
-    final newModeValue = isFullReadingMode ? 'main' : 'full';
-
-    await _box.put('isReadingMode', newModeValue);
-
-    log.i("Set reading mode to '$newModeValue'");
-  }
-
-  bool get isFullReadingMode {
-    final modeValue = _box.get('isReadingMode', defaultValue: 'main');
-    return modeValue == 'full';
-  }
+  // Future<void> swapReadingMode() async {
+  //   final newModeValue = isFullReadingMode ? 'main' : 'full';
+  //
+  //   await _box.put('isReadingMode', newModeValue);
+  //
+  //   log.i("Set reading mode to '$newModeValue'");
+  // }
+  //
+  // bool get isFullReadingMode {
+  //   final modeValue = _box.get('isReadingMode', defaultValue: 'main');
+  //   return modeValue == 'full';
+  // }
 }

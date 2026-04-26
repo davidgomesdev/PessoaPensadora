@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pessoa_pensadora/repository/reader_preference_store.dart';
 import 'package:pessoa_pensadora/service/text_store.dart';
 import 'package:pessoa_pensadora/ui/bonito_theme.dart';
 import 'package:pessoa_pensadora/ui/screen/history_screen.dart';
@@ -9,8 +8,9 @@ import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
 import 'package:pessoa_pensadora/ui/widget/bottom_nav_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/button/bug_report_button.dart';
 import 'package:pessoa_pensadora/ui/widget/button/buy_me_a_tea_button.dart';
-import 'package:pessoa_pensadora/ui/widget/play_store_banner.dart';
 import 'package:pessoa_pensadora/ui/widget/category_card_widget.dart';
+import 'package:pessoa_pensadora/ui/widget/play_store_banner.dart';
+
 import 'category_screen.dart';
 import 'search_screen.dart';
 
@@ -175,7 +175,7 @@ class _BrowseTabState extends State<BrowseTab> {
     26: 'Mestre dos Heterónimos',
     23: 'O Engenheiro Sensacionista',
     25: 'Ode ao Classicismo',
-    27: 'Ortónimo de Fernando Pessoa',
+    27: 'Poesia em nome do próprio Fernando Pessoa',
     33: 'Bernardo Soares',
     24: 'A epopeia da nação',
     67: 'Outros heterónimos',
@@ -186,11 +186,7 @@ class _BrowseTabState extends State<BrowseTab> {
   @override
   Widget build(BuildContext context) {
     final TextStoreService store = Get.find();
-    final ReaderPreferenceStore prefStore = Get.find();
-    final showFullIndex = prefStore.isFullReadingMode;
-    final cats = showFullIndex
-        ? store.fullIndex.subcategories
-        : store.mainIndex.subcategories;
+    final categories = store.fullIndex.subcategories;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -219,19 +215,13 @@ class _BrowseTabState extends State<BrowseTab> {
                 ),
               ),
               const SizedBox(width: 12),
-              _IndexToggle(
-                showFull: showFullIndex,
-                onChanged: (v) => setState(() {
-                  prefStore.swapReadingMode();
-                }),
-              ),
             ],
           ),
         ),
         Expanded(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(14, 16, 14, 24),
-            children: cats
+            children: categories
                 .map((cat) => CategoryCardWidget(
                       category: cat,
                       subtitle: _subtitles[cat.id] ?? '',
@@ -242,85 +232,6 @@ class _BrowseTabState extends State<BrowseTab> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _IndexToggle extends StatelessWidget {
-  final bool showFull;
-  final ValueChanged<bool> onChanged;
-
-  const _IndexToggle({required this.showFull, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 28,
-      decoration: BoxDecoration(
-        color: BonitoTheme.bgElevated,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: BonitoTheme.borderMid),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _ToggleSegment(
-            label: 'Principal',
-            active: !showFull,
-            isFirst: true,
-            onTap: () => onChanged(false),
-          ),
-          Container(width: 1, color: BonitoTheme.borderMid),
-          _ToggleSegment(
-            label: 'Completo',
-            active: showFull,
-            isFirst: false,
-            onTap: () => onChanged(true),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ToggleSegment extends StatelessWidget {
-  final String label;
-  final bool active;
-  final bool isFirst;
-  final VoidCallback onTap;
-
-  const _ToggleSegment({
-    required this.label,
-    required this.active,
-    required this.isFirst,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          color: active ? BonitoTheme.bgHover : Colors.transparent,
-          borderRadius: BorderRadius.horizontal(
-            left: isFirst ? const Radius.circular(3) : Radius.zero,
-            right: isFirst ? Radius.zero : const Radius.circular(3),
-          ),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: 10,
-            letterSpacing: 0.4,
-            fontWeight: active ? FontWeight.w600 : FontWeight.normal,
-            color: active ? BonitoTheme.textPrimary : BonitoTheme.textMuted,
-          ),
-        ),
-      ),
     );
   }
 }
