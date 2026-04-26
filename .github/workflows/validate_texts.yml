@@ -1,0 +1,37 @@
+name: Validate all_texts.json
+
+on:
+  pull_request:
+    paths:
+      - assets/json_files/all_texts.json
+      - scripts/validate_all_texts.sh
+      - .github/workflows/validate_texts.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          path: pr
+
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main
+          sparse-checkout: assets/json_files/all_texts.json
+
+      - name: Validate PR file structure
+        run: bash pr/scripts/validate_all_texts.sh pr/assets/json_files/all_texts.json
+
+      - name: Compare PR against main
+        run: bash pr/scripts/validate_all_texts.sh pr/assets/json_files/all_texts.json main/assets/json_files/all_texts.json
