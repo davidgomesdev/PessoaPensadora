@@ -9,6 +9,7 @@ import 'package:pessoa_pensadora/ui/screen/saved_texts_screen.dart';
 import 'package:pessoa_pensadora/ui/widget/bottom_nav_widget.dart';
 import 'package:pessoa_pensadora/ui/widget/button/bug_report_button.dart';
 import 'package:pessoa_pensadora/ui/widget/button/buy_me_a_tea_button.dart';
+import 'package:pessoa_pensadora/ui/widget/play_store_banner.dart';
 import 'package:pessoa_pensadora/ui/widget/category_card_widget.dart';
 import 'category_screen.dart';
 import 'search_screen.dart';
@@ -54,12 +55,19 @@ class HomeScreen extends StatelessWidget {
               onTap: (i) => currentTab.value = i,
             ),
           ),
-          body: IndexedStack(
-            index: currentTab.value,
-            children: const [
-              BrowseTab(),
-              SavedTextsScreen(),
-              HistoryScreen(),
+          body: Column(
+            children: [
+              const PlayStoreBanner(),
+              Expanded(
+                child: IndexedStack(
+                  index: currentTab.value,
+                  children: const [
+                    BrowseTab(),
+                    SavedTextsScreen(),
+                    HistoryScreen(),
+                  ],
+                ),
+              ),
             ],
           ),
         ));

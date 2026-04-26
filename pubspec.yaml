@@ -17,6 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^8.0.1
   html: ^0.15.0
+  web: ^1.1.1
   http: ^1.2.1
   equatable: ^2.0.3
   logger: ^2.2.0
